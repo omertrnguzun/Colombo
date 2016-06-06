@@ -16,8 +16,7 @@ import com.riccardobusetti.colombo.view.ObservableWebView;
 
 public class VideoEnabledWebChromeClient extends WebChromeClient implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener
 {
-    public interface ToggledFullscreenCallback
-    {
+    public interface ToggledFullscreenCallback {
         public void toggledFullscreen(boolean fullscreen);
     }
 
