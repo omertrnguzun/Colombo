@@ -2,11 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="riccardobusetti.globee.MainActivity"
     android:id="@+id/coordinatorLayout">
 
     <FrameLayout
@@ -36,7 +34,7 @@
                  android:id="@+id/swipe_layout"
                  android:layout_width="match_parent"
                  android:layout_height="match_parent">
-                 <riccardobusetti.globee.view.ObservableWebView
+                 <com.riccardobusetti.colombo.view.ObservableWebView
                      android:layout_width="match_parent"
                      android:layout_height="match_parent"
                      android:id="@+id/webview"/>
@@ -47,6 +45,7 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
         <com.arlib.floatingsearchview.FloatingSearchView
             app:floatingSearch_searchBarMarginLeft="8dp"
             app:floatingSearch_searchBarMarginRight="8dp"
@@ -59,5 +58,6 @@
             app:floatingSearch_searchHint="Search on Google"
             app:floatingSearch_leftActionMode="showSearch"
             app:floatingSearch_menu="@menu/menu_main" />
+
     </FrameLayout>
 </RelativeLayout>
