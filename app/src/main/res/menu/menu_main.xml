@@ -26,6 +26,4 @@
         android:orderInCategory="100"
         android:title="Share"
         app:showAsAction="never" />
-
-
 </menu>

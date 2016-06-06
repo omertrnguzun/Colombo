@@ -6,11 +6,13 @@
 
     <color name="colorPrimaryIncognito">#424242</color>
     <color name="colorPrimaryDarkIncognito">#212121</color>
-    <color name="colorAccentIngognito">#9E9E9E</color>
+    <color name="colorAccentIncognito">#9E9E9E</color>
+
+    <color name="swipeRefresh">#757575</color>
+    <color name="swipeRefreshIncognito">#424242</color>
 
     <color name="text_black_87">#000000</color>
     <color name="text_white_87">#FAFAFA</color>
 
     <color name="colorIconGrey">#757575</color>
-
 </resources>
