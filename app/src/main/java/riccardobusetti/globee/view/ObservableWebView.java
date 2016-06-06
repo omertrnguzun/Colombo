@@ -50,7 +50,7 @@ public class ObservableWebView extends WebView {
             View card = getRootView().findViewById(R.id.card);
 
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) card.getLayoutParams();
-            layoutParams.topMargin = dpToPx(30);
+            layoutParams.topMargin = dpToPx(0);
             card.setLayoutParams(layoutParams);
 
             card.setTranslationY(searchBar.getHeight() + newY);
@@ -59,6 +59,16 @@ public class ObservableWebView extends WebView {
             if ((int) (newY - oldY) != 0) {
                 scrollBy(0, deltaT);
             }
+        }
+
+        View swipe = getRootView().findViewById(R.id.swipe_layout);
+
+        int height = (int) Math.floor(this.getContentHeight() * this.getScale());
+        int webViewHeight = this.getMeasuredHeight();
+        if(this.getScrollY() + webViewHeight < height){
+            swipe.setEnabled(true);
+        } else {
+            swipe.setEnabled(false);
         }
     }
 

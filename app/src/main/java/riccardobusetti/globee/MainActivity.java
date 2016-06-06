@@ -1,17 +1,25 @@
 package riccardobusetti.globee;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
@@ -23,12 +31,14 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
+import android.webkit.GeolocationPermissions;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.amqtech.permissions.helper.objects.Permission;
@@ -56,12 +66,16 @@ public class MainActivity extends PlaceholderUiActivity {
 
     private boolean isIncognito;
 
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         cardView = (CardView) findViewById(R.id.card);
+        webView = (ObservableWebView) findViewById(R.id.webview);
 
         if (cardView != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             if (cardView.getVisibility() == View.VISIBLE) {
@@ -69,13 +83,41 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         }
 
+        controlConnection();
+
         setupUi();
+    }
+
+    private void setLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Without GPS permissions the location won't work!", Toast.LENGTH_SHORT).show();
+        } else {
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                }
+
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+                }
+
+                @Override
+                public void onProviderEnabled(String s) {
+                }
+
+                @Override
+                public void onProviderDisabled(String s) {
+                }
+            };
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+        }
     }
 
     private void launchPerms() {
         new PermissionsActivity(getBaseContext())
                 .withAppName(getResources().getString(R.string.app_name))
-                .withPermissions(new Permission(Permissions.WRITE_EXTERNAL_STORAGE, "To download files, Colombo must have access to your internal memory!"))
+                .withPermissions(new Permission(Permissions.WRITE_EXTERNAL_STORAGE, "To download files, Colombo must have access to your internal memory!"), new Permission(Permissions.ACCESS_FINE_LOCATION, "If you want to use WebApps with geolocation Colombo must have access to your position!"))
                 .withPermissionFlowCallback(new PermissionsActivity.PermissionFlowCallback() {
                     @Override
                     public void onPermissionGranted(Permission permission) {
@@ -178,6 +220,9 @@ public class MainActivity extends PlaceholderUiActivity {
                     case R.id.action_incognito:
                         handleIncognito();
                         break;
+                    case R.id.action_perms:
+                        launchPerms();
+                        break;
                 }
             }
         });
@@ -196,6 +241,8 @@ public class MainActivity extends PlaceholderUiActivity {
     }
 
     private void setupWebView() {
+        setLocation();
+
         webView = (ObservableWebView) findViewById(R.id.webview);
 
         if (webView != null) {
@@ -234,7 +281,7 @@ public class MainActivity extends PlaceholderUiActivity {
 
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     if (url.startsWith("market://") || url.startsWith("https://www.youtube.com")
-                            || url.startsWith("https://play.google.com") || url.startsWith("mailto:")) {
+                            || url.startsWith("https://play.google.com") || url.startsWith("mailto:") || url.startsWith("intent://")) {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse(url));
                         startActivity(intent);
@@ -298,8 +345,10 @@ public class MainActivity extends PlaceholderUiActivity {
             });
 
             webView.setWebChromeClient(new WebChromeClient() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                 public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback,
                                                  WebChromeClient.FileChooserParams fileChooserParams) {
+
                     if (uploadMessage != null) {
                         uploadMessage.onReceiveValue(null);
                         uploadMessage = null;
@@ -316,6 +365,10 @@ public class MainActivity extends PlaceholderUiActivity {
                         return false;
                     }
                     return true;
+                }
+
+                public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                    callback.invoke(origin, true, false);
                 }
             });
 
@@ -353,7 +406,6 @@ public class MainActivity extends PlaceholderUiActivity {
         }
     }
 
-    // Gesture detector
     private class CustomGestureDetector extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -385,5 +437,67 @@ public class MainActivity extends PlaceholderUiActivity {
                 return false;
             }
         }
+    }
+
+    private void controlConnection() {
+        ImageView image_no_connection = (ImageView) findViewById(R.id.image_no_connection);
+        //Verifica connessione
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+
+        if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
+
+            webView.setVisibility(View.GONE);
+            image_no_connection.setVisibility(View.VISIBLE);
+
+        } else {
+
+            webView.setVisibility(View.VISIBLE);
+            image_no_connection.setVisibility(View.GONE);
+
+        }
+    }
+
+    private void controlConnectionResume() {
+        ImageView image_no_connection = (ImageView) findViewById(R.id.image_no_connection);
+        //Verifica connessione
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+
+        if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
+
+            webView.setVisibility(View.GONE);
+            image_no_connection.setVisibility(View.VISIBLE);
+
+        } else {
+
+            webView.setVisibility(View.VISIBLE);
+            image_no_connection.setVisibility(View.GONE);
+            webView.reload();
+
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        controlConnectionResume();
     }
 }

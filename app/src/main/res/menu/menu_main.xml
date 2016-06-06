@@ -26,4 +26,10 @@
         android:orderInCategory="100"
         android:title="Share"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_perms"
+        android:orderInCategory="100"
+        android:title="Permissions"
+        app:showAsAction="never" />
 </menu>
