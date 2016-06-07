@@ -1,17 +1,5 @@
 <resources>
     <string name="app_name">Colombo</string>
+    <string name="msg_no_history">You haven\'t any history!</string>
 
-    <string name="search_query">Search on Google…</string>
-
-    <string name="menu_home">Homepage</string>
-    <string name="menu_refresh">Refresh</string>
-    <string name="menu_incognito">Incognito Mode</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_perms">Permissions</string>
-
-    <string name="msg_no_history">You don\'t have any history</string>
-    <string name="msg_upload_failed">Upload failed >:(</string>
-    <string name="msg_connection_failed">No connection :_(</string>
-
-    <string name="action_network_settings">Network Settings</string>
 </resources>
