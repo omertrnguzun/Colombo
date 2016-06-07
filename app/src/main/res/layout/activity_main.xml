@@ -25,13 +25,7 @@
             android:layout_marginTop="72dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <ImageView
-                android:id="@+id/image_no_connection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_no_connection"/>
+            <include layout="@layout/layout_no_connection"/>
             <android.support.v4.widget.SwipeRefreshLayout
                  android:id="@+id/swipe_layout"
                  android:layout_width="match_parent"
@@ -52,12 +46,12 @@
             app:floatingSearch_searchBarMarginRight="8dp"
             app:floatingSearch_searchBarMarginTop="8dp"
             app:floatingSearch_dimBackground="false"
+            app:floatingSearch_searchHint="@string/search_label"
+            app:floatingSearch_leftActionMode="showSearch"
+            app:floatingSearch_menu="@menu/menu_main"
             android:id="@+id/floating_search_view"
             android:layout_width="match_parent"
             android:layout_height="68dp"
-            android:background="@color/colorPrimary"
-            app:floatingSearch_searchHint="Search on Google"
-            app:floatingSearch_leftActionMode="showSearch"
-            app:floatingSearch_menu="@menu/menu_main" />
+            android:background="@color/colorPrimary" />
     </FrameLayout>
 </RelativeLayout>

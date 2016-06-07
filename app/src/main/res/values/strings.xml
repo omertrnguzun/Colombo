@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Colombo</string>
     <string name="msg_no_history">You haven\'t any history!</string>
+    <string name="search_label">Search</string>
+    <string name="connection_ok">Connection now is working!</string>
+    <string name="connection_no">Connection isn\'t working :_(</string>
 
 </resources>

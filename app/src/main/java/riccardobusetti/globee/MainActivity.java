@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -43,7 +44,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.amqtech.permissions.helper.objects.Permission;
@@ -68,6 +70,7 @@ public class MainActivity extends PlaceholderUiActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private CardView cardView;
     private View static_backround;
+    private Button refresh_no_connection;
 
     private boolean isIncognito;
 
@@ -79,9 +82,28 @@ public class MainActivity extends PlaceholderUiActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /** Import all primary UI elements*/
         cardView = (CardView) findViewById(R.id.card);
         webView = (ObservableWebView) findViewById(R.id.webview);
         static_backround = findViewById(R.id.static_background);
+        refresh_no_connection = (Button) findViewById(R.id.button);
+
+        /** ClickListerner for button in refresh */
+        refresh_no_connection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                controlConnection();
+                checkInternetResponse();
+                webView.reload();
+            }
+        });
+        refresh_no_connection.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                return true;
+            }
+        });
 
         if (cardView != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             if (cardView.getVisibility() == View.VISIBLE) {
@@ -93,6 +115,7 @@ public class MainActivity extends PlaceholderUiActivity {
 
         setupUi();
 
+        /** Intent Reciever */
         if (savedInstanceState != null) {
             webView.loadUrl(savedInstanceState.getString("url"));
         } else if (getIntent().getAction().matches(Intent.ACTION_VIEW)) {
@@ -257,7 +280,7 @@ public class MainActivity extends PlaceholderUiActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                     WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
-            WebSettings webSettings = webView.getSettings();
+            final WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webSettings.setGeolocationEnabled(true);
             webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
@@ -281,6 +304,28 @@ public class MainActivity extends PlaceholderUiActivity {
             webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
             webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
+            webView.setLongClickable(true);
+            webView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Snackbar snackbar = Snackbar
+                            .make(cardView, "Do you want to copy current URL?", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("COPY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                            android.content.ClipData clip = android.content.ClipData.newPlainText("Link", webView.getUrl());
+                            clipboard.setPrimaryClip(clip);
+                            Snackbar snackbar1 = Snackbar
+                                    .make(cardView, "URL: " + webView.getUrl() + " copied!", Snackbar.LENGTH_LONG);
+                            snackbar1.show();
+                        }
+                    });
+                    snackbar.show();
+                    return false;
+                }
+            });
+
             /** Client with useful methods */
             webView.setWebViewClient(new WebViewClient() {
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -303,7 +348,7 @@ public class MainActivity extends PlaceholderUiActivity {
                 public void onPageFinished(WebView view, String url) {
                     swipeRefreshLayout.setRefreshing(false);
                     swipeRefreshLayout.setEnabled(false);
-                    // mSearchView.setSearchBarTitle(webView.getTitle());
+                    //searchView.setSearchBarTitle(webView.getTitle());
                 }
             });
 
@@ -316,9 +361,6 @@ public class MainActivity extends PlaceholderUiActivity {
 
                     final Snackbar snackbar = Snackbar
                             .make(cardView, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
-                    View snackBarView = snackbar.getView();
-                    snackbar.setActionTextColor(Color.parseColor("#FAFAFA"));
-                    snackBarView.setBackgroundColor(Color.parseColor("#4690CD"));
                     snackbar.setAction("DOWNLOAD", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -496,20 +538,37 @@ public class MainActivity extends PlaceholderUiActivity {
 
     /** Checking internet before proceed */
     private void controlConnection() {
-        ImageView image_no_connection = (ImageView) findViewById(R.id.image_no_connection);
-        //Verifica connessione
+        RelativeLayout no_connection = (RelativeLayout) findViewById(R.id.relative_connection);
+
         ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
+        /** First if is if there isn't connection */
         if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
 
             webView.setVisibility(View.GONE);
-            image_no_connection.setVisibility(View.VISIBLE);
+            no_connection.setVisibility(View.VISIBLE);
 
         } else {
 
             webView.setVisibility(View.VISIBLE);
-            image_no_connection.setVisibility(View.GONE);
+            no_connection.setVisibility(View.GONE);
+
+        }
+    }
+
+    private void checkInternetResponse() {
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+
+        /** First if is if there isn't connection */
+        if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
+
+            Snackbar.make(webView, R.string.connection_no, Snackbar.LENGTH_SHORT).show();
+
+        } else {
+
+            Snackbar.make(webView, R.string.connection_ok, Snackbar.LENGTH_SHORT).show();
 
         }
     }

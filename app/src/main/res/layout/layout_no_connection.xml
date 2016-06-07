@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative_connection"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/image_no_connection"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_cloud_off_black_24dp"/>
+
+    <TextView
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp"
+        android:textColor="@color/colorPrimaryDarkIncognito"
+        android:text="No connection!"
+        android:id="@+id/textView"
+        android:layout_below="@id/image_no_connection"/>
+
+    <TextView
+        android:textAlignment="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="16dp"
+        android:textColor="@color/colorIconGrey"
+        android:text="Enable Cellular Data or WI-FI to use Colombo!"
+        android:id="@+id/textView_2"
+        android:layout_below="@id/textView"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:text="REFRESH"
+        android:textColor="@color/colorPrimaryDarkIncognito"
+        android:backgroundTint="@color/text_white_87"
+        android:background="@color/text_white_87"
+        android:layout_above="@+id/image_no_connection"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/button" />
+
+</RelativeLayout>
