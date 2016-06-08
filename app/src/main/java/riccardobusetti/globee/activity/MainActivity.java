@@ -1,4 +1,4 @@
-package riccardobusetti.globee;
+package riccardobusetti.globee.activity;
 
 import android.Manifest;
 import android.animation.ArgbEvaluator;
@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -53,7 +54,15 @@ import com.amqtech.permissions.helper.objects.Permissions;
 import com.amqtech.permissions.helper.objects.PermissionsActivity;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import riccardobusetti.globee.R;
 import riccardobusetti.globee.util.StaticUtils;
 import riccardobusetti.globee.view.ObservableWebView;
 
@@ -71,11 +80,15 @@ public class MainActivity extends PlaceholderUiActivity {
     private CardView cardView;
     private View static_backround;
     private Button refresh_no_connection;
+    private FloatingActionButton fab;
 
     private boolean isIncognito;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
+
+    private AccountHeader accountHeader;
+    private Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +100,12 @@ public class MainActivity extends PlaceholderUiActivity {
         webView = (ObservableWebView) findViewById(R.id.webview);
         static_backround = findViewById(R.id.static_background);
         refresh_no_connection = (Button) findViewById(R.id.button);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        /** Fab that set as visible on INTENT */
+        if (fab != null) {
+            fab.setVisibility(View.GONE);
+        }
 
         /** ClickListerner for button in refresh */
         refresh_no_connection.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +124,7 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         });
 
+        /** Cardview animation */
         if (cardView != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             if (cardView.getVisibility() == View.VISIBLE) {
                 cardView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up_in));
@@ -120,7 +140,37 @@ public class MainActivity extends PlaceholderUiActivity {
             webView.loadUrl(savedInstanceState.getString("url"));
         } else if (getIntent().getAction().matches(Intent.ACTION_VIEW)) {
             webView.loadUrl(getIntent().getData().toString());
+            fabIntentShow();
         } else webView.loadUrl("https://www.google.com/");
+    }
+
+    /** Fab animation */
+    private void fabIntentShow() {
+
+        Toast.makeText(this, "Long press FAB to hide it!", Toast.LENGTH_SHORT).show();
+
+        if (fab.getVisibility() == View.GONE) {
+            fab.setVisibility(View.VISIBLE);
+            fab.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_in));
+        }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (fab.getVisibility() == View.VISIBLE) {
+                    fab.setVisibility(View.GONE);
+                    fab.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_out));
+                }
+                return true;
+            }
+        });
     }
 
     /** Location setup for aquiring GPS */
@@ -193,6 +243,40 @@ public class MainActivity extends PlaceholderUiActivity {
         setupSearchView();
         setupWebView();
         setupSwipeRefreshView();
+        setupDrawer();
+    }
+
+    /** Nav Drawer */
+    private void setupDrawer() {
+        accountHeader = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.color.colorPrimary)
+                .build();
+
+        PrimaryDrawerItem item0 = new PrimaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info).withIdentifier(0).withSelectable(false);
+
+        drawer = new DrawerBuilder()
+                .withActivity(this)
+                .withShowDrawerOnFirstLaunch(false)
+                .withAccountHeader(accountHeader)
+                .withSelectedItem(-1)
+                .addDrawerItems(
+                        item0
+                ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+
+                        if (drawerItem != null) {
+                            switch ((int) drawerItem.getIdentifier()) {
+                                case 0:
+
+                                    break;
+                            }
+                        }
+                        return false;
+                    }
+                })
+                .build();
     }
 
     /** Searchview ed elementi */
@@ -219,6 +303,18 @@ public class MainActivity extends PlaceholderUiActivity {
                 } else {
                     webView.loadUrl("https://www.google.com/search?q=" + currentQuery);
                 }
+            }
+        });
+
+        searchView.setOnLeftMenuClickListener(new FloatingSearchView.OnLeftMenuClickListener() {
+            @Override
+            public void onMenuOpened() {
+                drawer.openDrawer();
+            }
+
+            @Override
+            public void onMenuClosed() {
+
             }
         });
 
