@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -27,6 +28,7 @@ import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
@@ -34,6 +36,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -42,17 +45,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amqtech.permissions.helper.objects.Permission;
@@ -60,7 +68,7 @@ import com.amqtech.permissions.helper.objects.Permissions;
 import com.amqtech.permissions.helper.objects.PermissionsActivity;
 import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.ObservableWebView;
-import com.riccardobusetti.colombo.view.VideoEnabledWebChromeClient;
+import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 
 public class MainActivity extends PlaceholderUiActivity {
 
@@ -75,7 +83,7 @@ public class MainActivity extends PlaceholderUiActivity {
     private SearchView searchView;
     private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private VideoEnabledWebChromeClient webChromeClient;
+    private CustomWebChromeClient webChromeClient;
 
     private boolean isIncognito;
 
@@ -83,6 +91,9 @@ public class MainActivity extends PlaceholderUiActivity {
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
+
+    private AlertDialog customViewDialog;
+    private BottomSheetDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +156,6 @@ public class MainActivity extends PlaceholderUiActivity {
         }
 
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
         WebSettings webSettings = webView.getSettings();
@@ -160,7 +170,7 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setSaveFormData(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
-        webSettings.setPluginState(WebSettings.PluginState.ON);
+        //plugins are deprecated, nobody uses Flash anymore :P {webSettings.setPluginState(WebSettings.PluginState.ON);}
 
         webSettings.setBuiltInZoomControls(true);
         webSettings.setSupportZoom(true);
@@ -175,8 +185,7 @@ public class MainActivity extends PlaceholderUiActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("market://") || url.startsWith("https://www.youtube.com")
-                        || url.startsWith("https://play.google.com") || url.startsWith("mailto:") || url.startsWith("intent://")) {
+                if (url.startsWith("market://") || url.startsWith("https://www.youtube.com") || url.startsWith("https://play.google.com") || url.startsWith("mailto:") || url.startsWith("intent://")) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(url));
                     startActivity(intent);
@@ -237,7 +246,7 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         });
 
-        webView.setWebChromeClient(new VideoEnabledWebChromeClient() {
+        webChromeClient = new CustomWebChromeClient(this, webView) {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
 
@@ -281,22 +290,11 @@ public class MainActivity extends PlaceholderUiActivity {
                     });
                 }
             }
-        });
+        };
+
+        webView.setWebChromeClient(webChromeClient);
 
         webView.setGestureDetector(new GestureDetector(new CustomGestureDetector()));
-
-        /*webView.setOnScrollListener(new ObservableWebView.OnScrollListener() {
-            @Override
-            public void onScrollChanged(int l, int t, int oldl, int oldt) {
-                if (Math.abs(oldt - t) > 15) {
-                    if (oldt - t > 0) {
-                        appbar.setExpanded(true);
-                    } else {
-                        appbar.setExpanded(false);
-                    }
-                }
-            }
-        });*/
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.swipeRefresh));
@@ -308,11 +306,9 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         });
 
-        if (savedInstanceState != null) {
-            webView.loadUrl(savedInstanceState.getString("url"));
-        } else if (getIntent().getAction().matches(Intent.ACTION_VIEW)) {
-            webView.loadUrl(getIntent().getData().toString());
-        } else webView.loadUrl("https://www.google.com/");
+        if (savedInstanceState != null) webView.loadUrl(savedInstanceState.getString("url"));
+        else if (getIntent().getAction().matches(Intent.ACTION_VIEW)) webView.loadUrl(getIntent().getData().toString());
+        else webView.loadUrl("https://www.google.com/");
     }
 
     private void launchPerms() {

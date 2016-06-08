@@ -28,10 +28,9 @@ public class ObservableWebView extends WebView {
     private NestedScrollingChildHelper mChildHelper;
 
     private GestureDetector gestureDetector;
-    private OnScrollListener onScrollListener;
     private boolean flag;
 
-    private VideoEnabledWebChromeClient videoEnabledWebChromeClient;
+    private CustomWebChromeClient videoEnabledWebChromeClient;
     private boolean addedJavascriptInterface;
 
     public ObservableWebView(Context context) {
@@ -58,14 +57,9 @@ public class ObservableWebView extends WebView {
         setNestedScrollingEnabled(true);
     }
 
-    public void setOnScrollListener(OnScrollListener onScrollListener) {
-        this.onScrollListener = onScrollListener;
-    }
-
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        if (onScrollListener != null) onScrollListener.onScrollChanged(l, t, oldl, oldt);
 
         if (flag) {
             flag = false;
@@ -96,13 +90,10 @@ public class ObservableWebView extends WebView {
         public void notifyVideoEnd() {
             Log.d("___", "GOT IT");
             // This code is not executed in the UI thread, so we must force that to happen
-            new Handler(Looper.getMainLooper()).post(new Runnable()
-            {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
-                public void run()
-                {
-                    if (videoEnabledWebChromeClient != null)
-                    {
+                public void run() {
+                    if (videoEnabledWebChromeClient != null) {
                         videoEnabledWebChromeClient.onHideCustomView();
                     }
                 }
@@ -120,17 +111,11 @@ public class ObservableWebView extends WebView {
     }
 
     /**
-     * Pass only a VideoEnabledWebChromeClient instance.
+     * Pass only a CustomWebChromeClient instance.
      */
     @Override @SuppressLint("SetJavaScriptEnabled")
     public void setWebChromeClient(WebChromeClient client) {
-        getSettings().setJavaScriptEnabled(true);
-
-        if (client instanceof VideoEnabledWebChromeClient)
-        {
-            this.videoEnabledWebChromeClient = (VideoEnabledWebChromeClient) client;
-        }
-
+        if (client instanceof CustomWebChromeClient) this.videoEnabledWebChromeClient = (CustomWebChromeClient) client;
         super.setWebChromeClient(client);
     }
 

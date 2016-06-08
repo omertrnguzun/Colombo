@@ -15,10 +15,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="android:windowTitleSize">128dp</item>
-        <item name="android:windowTitleStyle">@style/CustomWindowTitle</item>
-        <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
-        <item name="android:windowNoTitle">false</item>
+        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <style name="ToolbarSearchView" parent="Base.ThemeOverlay.AppCompat.ActionBar">
