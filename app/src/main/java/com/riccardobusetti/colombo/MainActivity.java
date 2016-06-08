@@ -41,6 +41,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private SearchView searchView;
     private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CardView cardView;
+    private CardView cardView, search;
 
     private boolean isIncognito;
 
@@ -88,6 +89,16 @@ public class MainActivity extends AppCompatActivity {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         cardView = (CardView) findViewById(R.id.card);
         webView = (ObservableWebView) findViewById(R.id.webview);
+        search = (CardView) findViewById(R.id.search);
+
+        if (cardView != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            if (cardView.getVisibility() == View.VISIBLE) {
+                cardView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up_in));
+            }
+            if (search.getVisibility() == View.VISIBLE) {
+                search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down_in));
+            }
+        }
 
         setSupportActionBar(toolbar);
         ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
