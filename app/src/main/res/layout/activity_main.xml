@@ -19,6 +19,7 @@
             android:background="@android:color/transparent">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
@@ -26,6 +27,7 @@
                 app:cardCornerRadius="2dp">
 
                 <android.support.v7.widget.Toolbar
+                    app:titleTextColor="@color/colorIconGrey"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:id="@+id/toolbar" />
