@@ -32,9 +32,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
@@ -59,10 +57,10 @@ import com.amqtech.permissions.helper.objects.Permission;
 import com.amqtech.permissions.helper.objects.Permissions;
 import com.amqtech.permissions.helper.objects.PermissionsActivity;
 import com.riccardobusetti.colombo.util.StaticUtils;
-import com.riccardobusetti.colombo.util.VideoEnabledWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
+import com.riccardobusetti.colombo.view.VideoEnabledWebChromeClient;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends PlaceholderUiActivity {
 
     private static final int REQUEST_SELECT_FILE = 100;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
@@ -75,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private SearchView searchView;
     private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private VideoEnabledWebChromeClient webChromeClient;
 
     private boolean isIncognito;
 
@@ -270,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                 Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
-                        setColor(palette.getLightVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                        setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                     }
                 });
             }

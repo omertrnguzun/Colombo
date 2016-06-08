@@ -1,4 +1,4 @@
-package com.riccardobusetti.colombo.util;
+package com.riccardobusetti.colombo.view;
 
 import android.media.MediaPlayer;
 import android.view.SurfaceView;
@@ -6,17 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.widget.FrameLayout;
-import android.widget.VideoView;
-
-import com.riccardobusetti.colombo.view.ObservableWebView;
 
 /**
- * Created by riccardobusetti on 03/06/16.
+ * Created by riccardobusetti on 08/06/16.
  */
 
 public class VideoEnabledWebChromeClient extends WebChromeClient implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener
 {
-    public interface ToggledFullscreenCallback {
+    public interface ToggledFullscreenCallback
+    {
         public void toggledFullscreen(boolean fullscreen);
     }
 
@@ -127,15 +125,18 @@ public class VideoEnabledWebChromeClient extends WebChromeClient implements Medi
             activityVideoView.addView(videoViewContainer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             activityVideoView.setVisibility(View.VISIBLE);
 
-            if (focusedChild instanceof android.widget.VideoView) {
+            if (focusedChild instanceof android.widget.VideoView)
+            {
                 // android.widget.VideoView (typically API level <11)
-                VideoView videoView = (android.widget.VideoView) focusedChild;
+                android.widget.VideoView videoView = (android.widget.VideoView) focusedChild;
 
                 // Handle all the required events
                 videoView.setOnPreparedListener(this);
                 videoView.setOnCompletionListener(this);
                 videoView.setOnErrorListener(this);
-            } else {
+            }
+            else
+            {
                 // Other classes, including:
                 // - android.webkit.HTML5VideoFullScreen$VideoSurfaceView, which inherits from android.view.SurfaceView (typically API level 11-18)
                 // - android.webkit.HTML5VideoFullScreen$VideoTextureView, which inherits from android.view.TextureView (typically API level 11-18)
