@@ -8,6 +8,7 @@ import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -23,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
@@ -80,10 +82,14 @@ public class MainActivity extends PlaceholderUiActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
+    private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -143,8 +149,8 @@ public class MainActivity extends PlaceholderUiActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
         WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setGeolocationEnabled(true);
+        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
+        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 
         webSettings.setAppCacheEnabled(true);
@@ -266,17 +272,20 @@ public class MainActivity extends PlaceholderUiActivity {
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
-                Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
-                    @Override
-                    public void onGenerated(Palette palette) {
-                        setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
-                    }
-                });
+                if (prefs.getBoolean("dynamic_colors", true)) {
+                    Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
+                        @Override
+                        public void onGenerated(Palette palette) {
+                            setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                        }
+                    });
+                }
             }
         });
 
         webView.setGestureDetector(new GestureDetector(new CustomGestureDetector()));
-        webView.setOnScrollListener(new ObservableWebView.OnScrollListener() {
+
+        /*webView.setOnScrollListener(new ObservableWebView.OnScrollListener() {
             @Override
             public void onScrollChanged(int l, int t, int oldl, int oldt) {
                 if (Math.abs(oldt - t) > 15) {
@@ -287,7 +296,7 @@ public class MainActivity extends PlaceholderUiActivity {
                     }
                 }
             }
-        });
+        });*/
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.swipeRefresh));
@@ -513,6 +522,8 @@ public class MainActivity extends PlaceholderUiActivity {
             case R.id.action_perms:
                 launchPerms();
                 break;
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -532,6 +543,13 @@ public class MainActivity extends PlaceholderUiActivity {
                     startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
                 }
             }).show();
+        }
+
+        if (prefs != null && webView != null) {
+            //change preference dependent variables
+            WebSettings webSettings = webView.getSettings();
+            webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
+            webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         }
     }
 }

@@ -1,0 +1,9 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="dynamic_colors"
+        android:title="@string/pref_dynamic_colors"
+        android:summary="@string/pref_dynamic_colors_summary"/>
+
+</PreferenceScreen>
