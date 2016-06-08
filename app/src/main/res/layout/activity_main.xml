@@ -1,66 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="riccardobusetti.globee.activity.MainActivity"
     android:id="@+id/coordinatorLayout">
 
-    <FrameLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:id="@+id/static_background"
-        android:background="@color/colorPrimary"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/appbar"
+        android:background="@color/colorPrimary">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.v7.widget.CardView
-            android:id="@+id/card"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="72dp"
+        <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <include layout="@layout/layout_no_connection"/>
-            <android.support.v4.widget.SwipeRefreshLayout
-                 android:id="@+id/swipe_layout"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent">
-                 <riccardobusetti.globee.view.ObservableWebView
-                     android:layout_width="match_parent"
-                     android:layout_height="match_parent"
-                     android:id="@+id/webview"/>
-            </android.support.v4.widget.SwipeRefreshLayout>
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_margin="16dp"
-                android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+            android:background="@android:color/transparent">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:src="@drawable/ic_arrow_back_black_24dp"
-                app:backgroundTint="@color/colorPrimaryDark"/>
-        </android.support.v7.widget.CardView>
-    </RelativeLayout>
+                android:layout_margin="4dp"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="2dp">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <com.arlib.floatingsearchview.FloatingSearchView
-            app:floatingSearch_searchBarMarginLeft="5dp"
-            app:floatingSearch_searchBarMarginRight="5dp"
-            app:floatingSearch_searchBarMarginTop="8dp"
-            app:floatingSearch_dimBackground="false"
-            app:floatingSearch_searchHint="@string/search_label"
-            app:floatingSearch_leftActionMode="showHamburger"
-            app:floatingSearch_menu="@menu/menu_main"
-            android:id="@+id/floating_search_view"
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:id="@+id/toolbar" />
+
+            </android.support.v7.widget.CardView>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="128dp" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="128dp"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="2dp"
+        android:layout_margin="4dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:behavior_overlapTop="64dp">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_layout"
             android:layout_width="match_parent"
-            android:layout_height="68dp"
-            android:background="@color/colorPrimary" />
-    </FrameLayout>
+            android:layout_height="wrap_content">
 
-</RelativeLayout>
+            <com.riccardobusetti.colombo.view.ObservableWebView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/webview" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </android.support.v7.widget.CardView>
+
+</android.support.design.widget.CoordinatorLayout>

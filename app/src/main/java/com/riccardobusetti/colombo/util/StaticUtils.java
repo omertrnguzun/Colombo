@@ -1,4 +1,4 @@
-package riccardobusetti.globee.util;
+package com.riccardobusetti.colombo.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -6,10 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-
-/**
- * Created by riccardobusetti on 07/06/16.
- */
 
 public class StaticUtils {
 
