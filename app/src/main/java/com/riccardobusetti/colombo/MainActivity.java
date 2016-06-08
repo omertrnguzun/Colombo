@@ -26,8 +26,10 @@ import android.os.PersistableBundle;
 import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -73,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
     private SearchView searchView;
     private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CardView cardView, search;
 
     private boolean isIncognito;
 
@@ -87,15 +88,16 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
-        cardView = (CardView) findViewById(R.id.card);
         webView = (ObservableWebView) findViewById(R.id.webview);
-        search = (CardView) findViewById(R.id.search);
 
-        if (cardView != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            if (cardView.getVisibility() == View.VISIBLE) {
+        View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            if (cardView != null && cardView.getVisibility() == View.VISIBLE) {
                 cardView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up_in));
             }
-            if (search.getVisibility() == View.VISIBLE) {
+
+            if (search != null && search.getVisibility() == View.VISIBLE) {
                 search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down_in));
             }
         }
@@ -197,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDownloadStart(final String url, String userAgent, final String contentDisposition, final String mimeType, long contentLength) {
                 final String filename1 = URLUtil.guessFileName(url, contentDisposition, mimeType);
 
-                Snackbar snackbar = Snackbar.make(cardView, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(webView, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
                 View snackBarView = snackbar.getView();
                 snackBarView.setBackgroundColor(Color.parseColor("#4690CD"));
                 snackbar.setAction("DOWNLOAD", new View.OnClickListener() {
@@ -278,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setOnScrollListener(new ObservableWebView.OnScrollListener() {
             @Override
             public void onScrollChanged(int l, int t, int oldl, int oldt) {
-                if (Math.abs(oldt - t) > 25) {
+                if (Math.abs(oldt - t) > 15) {
                     if (oldt - t > 0) {
                         appbar.setExpanded(true);
                     } else {
@@ -436,13 +438,13 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query.startsWith("www") || query.startsWith("http")) {
+                if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
                 } else {
                     webView.loadUrl("https://www.google.com/search?q=" + query);
                 }
-                searchView.setIconified(true);
+                searchView.setVisibility(View.GONE);
                 return false;
             }
 
@@ -452,6 +454,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                searchView.setIconified(false);
+                searchView.setVisibility(View.GONE);
+                return false;
+            }
+        });
+
+        searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
+        searchView.setVisibility(View.GONE);
+
+        Drawable search = VectorDrawableCompat.create(getResources(), R.drawable.ic_search, getTheme());
+        DrawableCompat.setTint(search, ContextCompat.getColor(this, R.color.colorIconGrey));
+        toolbar.setNavigationIcon(search);
+
         menu.findItem(R.id.action_perms).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
 
         return super.onCreateOptionsMenu(menu);
@@ -460,6 +478,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                searchView.setVisibility(View.VISIBLE);
+                searchView.setIconified(false);
+                break;
             case R.id.action_home:
                 webView.loadUrl("https://www.google.com");
                 break;
