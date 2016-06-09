@@ -29,6 +29,9 @@
     <string name="pref_dynamic_colors">Dynamic Colors</string>
     <string name="pref_dynamic_colors_summary">Affects whether the color scheme changes based on the website.</string>
 
+    <string name="navbar_tint">Navigation Bar Tint</string>
+    <string name="navbar_tint_summary">Tints the navigation bar to the color scheme of the app. Note that this will not work on devices that have physical navigation buttons.</string>
+
     <string name="pref_header_website">Website Settings</string>
 
     <string name="pref_javascript">Enable JavaScript</string>
@@ -36,4 +39,7 @@
 
     <string name="pref_location">Location Services</string>
     <string name="pref_location_summary">Allow websites to access your location.</string>
+
+    <string name="pref_zoom">Enable Zooming</string>
+    <string name="pref_zoom_summary">Allows websites to be zoomed in and out using the pinch gesture.</string>
 </resources>

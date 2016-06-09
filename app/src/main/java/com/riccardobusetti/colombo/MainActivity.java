@@ -92,9 +92,6 @@ public class MainActivity extends PlaceholderUiActivity {
 
     private SharedPreferences prefs;
 
-    private AlertDialog customViewDialog;
-    private BottomSheetDialog alertDialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,9 +169,9 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setLoadWithOverviewMode(true);
         //plugins are deprecated, nobody uses Flash anymore :P {webSettings.setPluginState(WebSettings.PluginState.ON);}
 
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.setSupportZoom(true);
-        webSettings.setDisplayZoomControls(false);
+        webSettings.setBuiltInZoomControls(prefs.getBoolean("zooming", false));
+        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+        webSettings.setDisplayZoomControls(prefs.getBoolean("zooming", false));
 
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setAllowFileAccess(true);
@@ -400,8 +397,10 @@ public class MainActivity extends PlaceholderUiActivity {
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animator) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        getWindow().setStatusBarColor(((int) animator.getAnimatedValue()));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setStatusBarColor((int) animator.getAnimatedValue());
+                        if (prefs.getBoolean("navbar_tint", false)) getWindow().setNavigationBarColor((int) animator.getAnimatedValue());
+                    }
                 }
             });
 
@@ -546,6 +545,20 @@ public class MainActivity extends PlaceholderUiActivity {
             WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
             webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
+
+            webSettings.setBuiltInZoomControls(prefs.getBoolean("zooming", false));
+            webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+            webSettings.setDisplayZoomControls(prefs.getBoolean("zooming", false));
+
+            Bitmap favicon = webView.getFavicon();
+            if (favicon != null) {
+                Palette.from(webView.getFavicon()).generate(new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(Palette palette) {
+                        setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                    }
+                });
+            }
         }
     }
 }
