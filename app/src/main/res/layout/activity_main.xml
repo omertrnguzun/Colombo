@@ -69,12 +69,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.riccardobusetti.colombo.view.ObservableWebView
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/webview"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:behavior_overlapTop="80dp" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:src="@drawable/ic_previous"
+                    android:id="@+id/previous"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:scaleType="fitCenter"
+                    android:padding="8dp" />
+
+                <ImageView
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_next"
+                    android:id="@+id/next"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:scaleType="fitCenter"
+                    android:padding="8dp" />
+
+                <com.riccardobusetti.colombo.view.ObservableWebView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/webview"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:behavior_overlapTop="80dp" />
+
+            </FrameLayout>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

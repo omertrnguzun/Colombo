@@ -2,60 +2,52 @@ package com.riccardobusetti.colombo.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.riccardobusetti.colombo.R;
 
-import java.util.Map;
-
 public class ObservableWebView extends WebView {
 
-    private int mLastY;
-    private final int[] mScrollOffset = new int[2];
-    private final int[] mScrollConsumed = new int[2];
-    private int mNestedOffsetY;
-    private NestedScrollingChildHelper mChildHelper;
+    private int lastY;
+    private final int[] scrollOffset = new int[2];
+    private final int[] scrollConsumed = new int[2];
+    private int nestedOffsetY;
+    private NestedScrollingChildHelper childHelper;
 
     private float startX, endX;
 
-    private boolean flag;
+    private boolean flag, canScrollVertically;
 
-    private CustomWebChromeClient videoEnabledWebChromeClient;
-    private boolean addedJavascriptInterface;
+    private CustomWebChromeClient webChromeClient;
 
     public ObservableWebView(Context context) {
         super(context);
-        addedJavascriptInterface = false;
-
-        mChildHelper = new NestedScrollingChildHelper(this);
-        setNestedScrollingEnabled(true);
+        init();
     }
 
     public ObservableWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        addedJavascriptInterface = false;
-
-        mChildHelper = new NestedScrollingChildHelper(this);
-        setNestedScrollingEnabled(true);
+        init();
     }
 
     public ObservableWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        addedJavascriptInterface = false;
+        init();
+    }
 
-        mChildHelper = new NestedScrollingChildHelper(this);
+    private void init() {
+        childHelper = new NestedScrollingChildHelper(this);
         setNestedScrollingEnabled(true);
+    }
+
+    public void setCanScrollVertically(boolean canScrollVertically) {
+        this.canScrollVertically = canScrollVertically;
     }
 
     @Override
@@ -67,221 +59,122 @@ public class ObservableWebView extends WebView {
             return;
         }
 
-        View swipe = getRootView().findViewById(R.id.swipe_layout);
-
-        int height = (int) Math.floor(this.getContentHeight() * this.getScale());
-        int webViewHeight = this.getMeasuredHeight();
-        if(this.getScrollY() + webViewHeight < height){
-            swipe.setEnabled(true);
-        } else {
-            swipe.setEnabled(false);
-        }
+        getRootView().findViewById(R.id.swipe_layout).setEnabled(getScrollY() == 0 && !canScrollVertically);
     }
 
-    public class JavascriptInterface {
-        @android.webkit.JavascriptInterface @SuppressWarnings("unused")
-        public void notifyVideoEnd() {
-            Log.d("___", "GOT IT");
-            // This code is not executed in the UI thread, so we must force that to happen
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    if (videoEnabledWebChromeClient != null) {
-                        videoEnabledWebChromeClient.onHideCustomView();
-                    }
-                }
-            });
-        }
-    }
-
-    /**
-     * Indicates if the video is being displayed using a custom view (typically full-screen)
-     * @return true it the video is being displayed using a custom view (typically full-screen)
-     */
     @SuppressWarnings("unused")
     public boolean isVideoFullscreen() {
-        return videoEnabledWebChromeClient != null && videoEnabledWebChromeClient.isVideoFullscreen();
+        return webChromeClient != null && webChromeClient.isVideoFullscreen();
     }
 
-    /**
-     * Pass only a CustomWebChromeClient instance.
-     */
     @Override @SuppressLint("SetJavaScriptEnabled")
     public void setWebChromeClient(WebChromeClient client) {
-        if (client instanceof CustomWebChromeClient) this.videoEnabledWebChromeClient = (CustomWebChromeClient) client;
+        if (client instanceof CustomWebChromeClient)
+            this.webChromeClient = (CustomWebChromeClient) client;
         super.setWebChromeClient(client);
     }
 
     @Override
-    public void loadData(String data, String mimeType, String encoding) {
-        addJavascriptInterface();
-        super.loadData(data, mimeType, encoding);
-    }
-
-    @Override
-    public void loadDataWithBaseURL(String baseUrl, String data, String mimeType, String encoding, String historyUrl) {
-        addJavascriptInterface();
-        super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
-    }
-
-    @Override
-    public void loadUrl(String url) {
-        addJavascriptInterface();
-        super.loadUrl(url);
-    }
-
-    @Override
-    public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
-        addJavascriptInterface();
-        super.loadUrl(url, additionalHttpHeaders);
-    }
-
-    private void addJavascriptInterface() {
-        if (!addedJavascriptInterface) {
-            // Add javascript interface to be called when the video ends (must be done before page load)
-            //noinspection all
-            addJavascriptInterface(new JavascriptInterface(), "_VideoEnabledWebView"); // Must match Javascript interface name of VideoEnabledWebChromeClient
-
-            addedJavascriptInterface = true;
-        }
-    }
-
-    @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        boolean returnValue = false;
-
         MotionEvent event = MotionEvent.obtain(ev);
         final int action = MotionEventCompat.getActionMasked(event);
         if (action == MotionEvent.ACTION_DOWN) {
-            mNestedOffsetY = 0;
+            nestedOffsetY = 0;
         }
 
         int eventY = (int) event.getY();
-        event.offsetLocation(0, mNestedOffsetY);
+        event.offsetLocation(0, nestedOffsetY);
+
         switch (action) {
             case MotionEvent.ACTION_MOVE:
-                int deltaY = mLastY - eventY;
-                // NestedPreScroll
-                if (dispatchNestedPreScroll(0, deltaY, mScrollConsumed, mScrollOffset)) {
-                    deltaY -= mScrollConsumed[1];
-                    mLastY = eventY - mScrollOffset[1];
-                    event.offsetLocation(0, -mScrollOffset[1]);
-                    mNestedOffsetY += mScrollOffset[1];
-                }
-                returnValue = super.onTouchEvent(event);
+                int deltaY = lastY - eventY;
 
-                // NestedScroll
-                if (dispatchNestedScroll(0, mScrollOffset[1], 0, deltaY, mScrollOffset)) {
-                    event.offsetLocation(0, mScrollOffset[1]);
-                    mNestedOffsetY += mScrollOffset[1];
-                    mLastY -= mScrollOffset[1];
+                if (dispatchNestedPreScroll(0, deltaY, scrollConsumed, scrollOffset)) {
+                    deltaY -= scrollConsumed[1];
+                    lastY = eventY - scrollOffset[1];
+                    event.offsetLocation(0, -scrollOffset[1]);
+                    nestedOffsetY += scrollOffset[1];
                 }
 
-                if (!canScrollHorizontally(SCROLL_AXIS_HORIZONTAL)) {
-                    setX((event.getX() - startX) / 10);
+                if (dispatchNestedScroll(0, scrollOffset[1], 0, deltaY, scrollOffset)) {
+                    event.offsetLocation(0, scrollOffset[1]);
+                    nestedOffsetY += scrollOffset[1];
+                    lastY -= scrollOffset[1];
                 }
+
+                float scrollX = startX - event.getX();
+                if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
+                    setX(-scrollX / 5);
+
+                getRootView().findViewById(R.id.next).setPressed(scrollX > 400);
+                getRootView().findViewById(R.id.previous).setPressed(scrollX < -400);
 
                 break;
             case MotionEvent.ACTION_DOWN:
-                returnValue = super.onTouchEvent(event);
-                mLastY = eventY;
+                lastY = eventY;
                 startX = event.getX();
-                // start NestedScroll
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                getRootView().findViewById(R.id.next).setPressed(false);
+                getRootView().findViewById(R.id.previous).setPressed(false);
+
                 endX = event.getX();
-                if (!canScrollHorizontally(SCROLL_AXIS_HORIZONTAL)) {
-                    animate().x(0).setDuration(50).start();
+                animate().x(0).setDuration(50).start();
 
-                    if (startX - endX > 250) {
-                        if (canGoForward()) {
-                            goForward();
-                        } else {
-                            Snackbar.make(ObservableWebView.this, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
-                        }
-                    } else if (startX - endX < -250) {
-                        if (canGoBack()) {
-                            goBack();
-                        } else {
-                            Snackbar.make(ObservableWebView.this, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-                }
+                if (startX - endX > 400 && canGoForward()) goForward();
+                else if (startX - endX < -400 && canGoBack()) goBack();
 
-                returnValue = super.onTouchEvent(event);
                 stopNestedScroll();
                 break;
         }
 
-        return returnValue;
+        return super.onTouchEvent(event);
     }
 
-    // Nested Scroll implements
     @Override
     public void setNestedScrollingEnabled(boolean enabled) {
-        mChildHelper.setNestedScrollingEnabled(enabled);
+        childHelper.setNestedScrollingEnabled(enabled);
     }
 
     @Override
     public boolean isNestedScrollingEnabled() {
-        return mChildHelper.isNestedScrollingEnabled();
+        return childHelper.isNestedScrollingEnabled();
     }
 
     @Override
     public boolean startNestedScroll(int axes) {
-        return mChildHelper.startNestedScroll(axes);
+        return childHelper.startNestedScroll(axes);
     }
 
     @Override
     public void stopNestedScroll() {
-        mChildHelper.stopNestedScroll();
+        childHelper.stopNestedScroll();
     }
 
     @Override
     public boolean hasNestedScrollingParent() {
-        return mChildHelper.hasNestedScrollingParent();
+        return childHelper.hasNestedScrollingParent();
     }
 
     @Override
     public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
-        return mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+        return childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
     }
 
     @Override
     public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
-        return mChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
+        return childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
     }
 
     @Override
     public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
-        return mChildHelper.dispatchNestedFling(velocityX, velocityY, consumed);
+        return childHelper.dispatchNestedFling(velocityX, velocityY, consumed);
     }
 
     @Override
     public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
-        return mChildHelper.dispatchNestedPreFling(velocityX, velocityY);
-    }
-
-    @Override
-    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
-        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-
-        if (canScrollHorizontally(SCROLL_AXIS_HORIZONTAL)) {
-            if (scrollX > 250) {
-                if (canGoForward()) {
-                    goForward();
-                } else {
-                    Snackbar.make(this, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
-                }
-            } else if (scrollX < -250) {
-                if (canGoBack()) {
-                    goBack();
-                } else {
-                    Snackbar.make(this, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        }
+        return childHelper.dispatchNestedPreFling(velocityX, velocityY);
     }
 }
