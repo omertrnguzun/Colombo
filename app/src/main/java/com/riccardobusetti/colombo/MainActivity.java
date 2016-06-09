@@ -7,7 +7,6 @@ import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -28,7 +27,6 @@ import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
@@ -36,39 +34,31 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amqtech.permissions.helper.objects.Permission;
 import com.amqtech.permissions.helper.objects.Permissions;
 import com.amqtech.permissions.helper.objects.PermissionsActivity;
 import com.riccardobusetti.colombo.util.StaticUtils;
-import com.riccardobusetti.colombo.view.ObservableWebView;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
+import com.riccardobusetti.colombo.view.ObservableWebView;
 
 public class MainActivity extends PlaceholderUiActivity {
 
@@ -291,8 +281,6 @@ public class MainActivity extends PlaceholderUiActivity {
 
         webView.setWebChromeClient(webChromeClient);
 
-        webView.setGestureDetector(new GestureDetector(new CustomGestureDetector()));
-
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.swipeRefresh));
 
@@ -355,36 +343,6 @@ public class MainActivity extends PlaceholderUiActivity {
             webView.goBack();
         } else {
             super.onBackPressed();
-        }
-    }
-
-    private class CustomGestureDetector extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onFling(MotionEvent start, MotionEvent finish, float velocityX, float velocityY) {
-            if (start != null && finish != null && start.getPointerCount() > 0 && finish.getPointerCount() > 0) {
-                if (start.getX() - finish.getX() > 500 && Math.abs(velocityX) > 800) {
-                    // right to left swipe... go to next page
-
-                    if (webView.canGoForward()) {
-                        webView.goForward();
-                    } else {
-                        Snackbar.make(webView, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
-                    }
-                    return true;
-                }
-
-                if (finish.getX() - start.getX() > 500 && Math.abs(velocityX) > 800) {
-                    // left to right swipe... go to prev page
-
-                    if (webView.canGoBack()) {
-                        webView.goBack();
-                    } else {
-                        Snackbar.make(webView, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
-                    }
-                    return true;
-                }
-            }
-            return false;
         }
     }
 

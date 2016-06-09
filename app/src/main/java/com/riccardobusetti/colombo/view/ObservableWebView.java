@@ -4,12 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -27,7 +27,8 @@ public class ObservableWebView extends WebView {
     private int mNestedOffsetY;
     private NestedScrollingChildHelper mChildHelper;
 
-    private GestureDetector gestureDetector;
+    private float startX, endX;
+
     private boolean flag;
 
     private CustomWebChromeClient videoEnabledWebChromeClient;
@@ -75,14 +76,6 @@ public class ObservableWebView extends WebView {
         } else {
             swipe.setEnabled(false);
         }
-    }
-
-    public void setGestureDetector(GestureDetector gestureDetector) {
-        this.gestureDetector = gestureDetector;
-    }
-
-    public interface OnScrollListener {
-        void onScrollChanged(int l, int t, int oldl, int oldt);
     }
 
     public class JavascriptInterface {
@@ -144,8 +137,7 @@ public class ObservableWebView extends WebView {
     }
 
     private void addJavascriptInterface() {
-        if (!addedJavascriptInterface)
-        {
+        if (!addedJavascriptInterface) {
             // Add javascript interface to be called when the video ends (must be done before page load)
             //noinspection all
             addJavascriptInterface(new JavascriptInterface(), "_VideoEnabledWebView"); // Must match Javascript interface name of VideoEnabledWebChromeClient
@@ -184,21 +176,46 @@ public class ObservableWebView extends WebView {
                     mNestedOffsetY += mScrollOffset[1];
                     mLastY -= mScrollOffset[1];
                 }
+
+                if (!canScrollHorizontally(SCROLL_AXIS_HORIZONTAL)) {
+                    setX((event.getX() - startX) / 10);
+                }
+
                 break;
             case MotionEvent.ACTION_DOWN:
                 returnValue = super.onTouchEvent(event);
                 mLastY = eventY;
+                startX = event.getX();
                 // start NestedScroll
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                endX = event.getX();
+                if (!canScrollHorizontally(SCROLL_AXIS_HORIZONTAL)) {
+                    animate().x(0).setDuration(50).start();
+
+                    if (startX - endX > 250) {
+                        if (canGoForward()) {
+                            goForward();
+                        } else {
+                            Snackbar.make(ObservableWebView.this, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
+                        }
+                    } else if (startX - endX < -250) {
+                        if (canGoBack()) {
+                            goBack();
+                        } else {
+                            Snackbar.make(ObservableWebView.this, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
                 returnValue = super.onTouchEvent(event);
                 stopNestedScroll();
                 break;
         }
 
-        return returnValue || gestureDetector.onTouchEvent(ev) || super.onTouchEvent(ev);
+        return returnValue;
     }
 
     // Nested Scroll implements
@@ -228,8 +245,7 @@ public class ObservableWebView extends WebView {
     }
 
     @Override
-    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed,
-                                        int[] offsetInWindow) {
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
         return mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
     }
 
@@ -246,5 +262,26 @@ public class ObservableWebView extends WebView {
     @Override
     public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
         return mChildHelper.dispatchNestedPreFling(velocityX, velocityY);
+    }
+
+    @Override
+    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+
+        if (canScrollHorizontally(SCROLL_AXIS_HORIZONTAL)) {
+            if (scrollX > 250) {
+                if (canGoForward()) {
+                    goForward();
+                } else {
+                    Snackbar.make(this, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
+                }
+            } else if (scrollX < -250) {
+                if (canGoBack()) {
+                    goBack();
+                } else {
+                    Snackbar.make(this, R.string.msg_no_history, Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }
