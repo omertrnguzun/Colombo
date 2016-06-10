@@ -21,11 +21,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_new"
-        android:title="@string/menu_new"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_incognito"
         android:title="@string/menu_incognito"
         android:checkable="true"

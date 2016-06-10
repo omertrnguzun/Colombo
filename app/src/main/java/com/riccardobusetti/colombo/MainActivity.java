@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
+    private String browsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        browsers = prefs.getString("pref_browser", "no selection");
 
         if (prefs.getBoolean("first_time", true)) {
             startActivity(new Intent(this, MainIntroActivity.class));
@@ -422,8 +424,14 @@ public class MainActivity extends AppCompatActivity {
                 if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                } else {
+                } else if (browsers.contains("google")){
                     webView.loadUrl("https://www.google.com/search?q=" + query);
+                } else if (browsers.contains("yahoo")) {
+                    webView.loadUrl("https://www.yahoo.com/search?p=" + query);
+                } else if (browsers.contains("duckduckgo")) {
+                    webView.loadUrl("https://duckduckgo.com/?q=" + query);
+                } else if (browsers.contains("bing")) {
+                    webView.loadUrl("https://www.bing.com/search?q=" + query);
                 }
                 searchView.setVisibility(View.GONE);
                 return false;
@@ -477,11 +485,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_refresh:
                 webView.reload();
-                break;
-            case R.id.action_new:
-                Intent newIntent = new Intent(this, MainActivity.class);
-                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(newIntent);
                 break;
             case R.id.action_incognito:
                 item.setChecked(!item.isChecked());
@@ -552,7 +555,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
 
-            String browsers = prefs.getString("pref_browser", "no selection");
+            browsers = prefs.getString("pref_browser", "no selection");
             webView.loadUrl(browsers);
 
         }

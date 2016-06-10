@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Colombo</string>
 
-    <string name="search_query">Search on Google…</string>
+    <string name="search_query">Search</string>
 
     <string name="menu_home">Homepage</string>
     <string name="menu_refresh">Refresh</string>
-    <string name="menu_incognito">Incognito Mode</string>
+    <string name="menu_incognito">Incognito</string>
     <string name="menu_share">Share</string>
     <string name="menu_perms">Permissions</string>
     <string name="menu_settings">Settings</string>
@@ -42,7 +42,7 @@
 
     <string name="pref_zoom">Enable Zooming</string>
     <string name="pref_zoom_summary">Allows websites to be zoomed in and out using the pinch gesture.</string>
-    <string name="menu_dekstop">Request Dekstop Site</string>
+    <string name="menu_dekstop">Dekstop Site</string>
     <string name="title_1">Welcome to Colombo</string>
     <string name="description_1">Colombo is a lightweight, fast and beautifully designed Browser!</string>
     <string name="pref_header_intro">Show Tutorial</string>
@@ -61,12 +61,14 @@
         <item>Google</item>
         <item>Yahoo</item>
         <item>DuckDuckGo</item>
+        <item>Bing</item>
     </string-array>
 
     <string-array name="Browsers_Values">
         <item>https://www.google.com</item>
         <item>https://www.yahoo.com</item>
-        <item>https://duckduckgo.com</item>
+        <item>https://www.duckduckgo.com</item>
+        <item>https://www.bing.com</item>
     </string-array>
 
 </resources>
