@@ -28,7 +28,7 @@
 
     <item
         android:id="@+id/action_desktop"
-        android:title="@string/menu_dekstop"
+        android:title="@string/menu_desktop"
         android:checkable="true"
         app:showAsAction="never" />
 

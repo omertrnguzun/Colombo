@@ -1,4 +1,4 @@
-package com.riccardobusetti.colombo;
+package com.riccardobusetti.colombo.activities;
 
 
 import android.annotation.TargetApi;
@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+
+import com.riccardobusetti.colombo.R;
 
 import java.util.List;
 

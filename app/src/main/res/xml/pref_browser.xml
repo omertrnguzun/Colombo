@@ -2,9 +2,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:key="pref_browser"
-        android:title="Choose your browser engine!"
-        android:entries="@array/Browsers"
-        android:entryValues="@array/Browsers_Values" />
+        android:key="search_engine"
+        android:title="@string/search_engines"
+        android:summary="@string/search_engines_summary"
+        android:entries="@array/search_engines_titles"
+        android:entryValues="@array/search_engines_values" />
+
+    <EditTextPreference
+        android:key="homepage"
+        android:title="@string/homepage"
+        android:summary="@string/homepage_sumamry"
+        android:defaultValue="" />
 
 </PreferenceScreen>

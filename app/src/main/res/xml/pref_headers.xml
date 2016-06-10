@@ -1,17 +1,17 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
-        android:fragment="com.riccardobusetti.colombo.SettingsActivity$AppearancePreferenceFragment"
+        android:fragment="com.riccardobusetti.colombo.activities.SettingsActivity$AppearancePreferenceFragment"
         android:icon="@drawable/ic_palette"
         android:title="@string/pref_header_appearance" />
 
     <header
-        android:fragment="com.riccardobusetti.colombo.SettingsActivity$WebsitePreferenceFragment"
+        android:fragment="com.riccardobusetti.colombo.activities.SettingsActivity$WebsitePreferenceFragment"
         android:icon="@drawable/ic_settings"
         android:title="@string/pref_header_website" />
 
     <header
-        android:fragment="com.riccardobusetti.colombo.SettingsActivity$BrowserPreferenceFragment"
+        android:fragment="com.riccardobusetti.colombo.activities.SettingsActivity$BrowserPreferenceFragment"
         android:icon="@drawable/ic_website"
         android:title="@string/pref_header_browser" />
 
@@ -21,7 +21,7 @@
 
         <intent
             android:targetPackage="com.riccardobusetti.colombo"
-            android:targetClass="com.riccardobusetti.colombo.MainIntroActivity"/>
+            android:targetClass="com.riccardobusetti.colombo.activities.MainIntroActivity" />
 
     </header>
 

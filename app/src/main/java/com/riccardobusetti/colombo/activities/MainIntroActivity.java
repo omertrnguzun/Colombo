@@ -1,10 +1,11 @@
-package com.riccardobusetti.colombo;
+package com.riccardobusetti.colombo.activities;
 
 import android.Manifest;
 import android.os.Bundle;
 
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
+import com.riccardobusetti.colombo.R;
 
 /**
  * Created by riccardobusetti on 10/06/16.
@@ -13,7 +14,7 @@ import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 public class MainIntroActivity extends IntroActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         /**

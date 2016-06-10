@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/PlaceTheme"
             android:configChanges="screenSize|orientation">
@@ -25,6 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <intent-filter>
@@ -40,19 +46,26 @@
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".activities.MainActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.riccardobusetti.colombo.MainActivity" />
+                android:value=".activities.MainActivity" />
 
         </activity>
 
         <activity
-            android:name=".MainIntroActivity"
+            android:name=".activities.MainIntroActivity"
             android:theme="@style/Theme.Intro"/>
+
+        <provider
+            android:name=".util.RecentSuggestionsProvider"
+            android:authorities="com.riccardobusetti.colombo.util.RecentSuggestionsProvider" />
+        <meta-data
+            android:name="android.app.searchable"
+            android:resource="@xml/searchable" />
 
     </application>
 

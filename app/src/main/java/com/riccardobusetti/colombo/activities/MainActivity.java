@@ -1,13 +1,15 @@
-package com.riccardobusetti.colombo;
+package com.riccardobusetti.colombo.activities;
 
 import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
+import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SearchRecentSuggestionsProvider;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -25,6 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
+import android.provider.SearchRecentSuggestions;
 import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
@@ -55,6 +58,8 @@ import android.widget.Toast;
 import com.amqtech.permissions.helper.objects.Permission;
 import com.amqtech.permissions.helper.objects.Permissions;
 import com.amqtech.permissions.helper.objects.PermissionsActivity;
+import com.riccardobusetti.colombo.R;
+import com.riccardobusetti.colombo.util.RecentSuggestionsProvider;
 import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
@@ -66,12 +71,18 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_SELECT_FILE = 100;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
 
+    public static final int SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
+
     private ValueCallback<Uri[]> uploadMessage;
     private ValueCallback<Uri> uploadMessagePreLollipop;
 
     private Toolbar toolbar;
     private AppBarLayout appbar;
+
     private SearchView searchView;
+    private SearchManager searchManager;
+    private SearchRecentSuggestions suggestions;
+
     private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomWebChromeClient webChromeClient;
@@ -82,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
-    private String browsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        browsers = prefs.getString("pref_browser", "no selection");
 
         if (prefs.getBoolean("first_time", true)) {
             startActivity(new Intent(this, MainIntroActivity.class));
@@ -217,8 +226,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                        if (ContextCompat.checkSelfPermission(MainActivity.this,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                             launchPerms();
                         } else {
                             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
@@ -309,12 +317,42 @@ public class MainActivity extends AppCompatActivity {
         });
 
         String action = getIntent().getAction();
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null)
             webView.loadUrl(savedInstanceState.getString("url"));
-        } else if (action != null && action.matches(Intent.ACTION_VIEW)) {
+        else if (action != null && action.matches(Intent.ACTION_VIEW))
             webView.loadUrl(getIntent().getData().toString());
+        else
+            webView.loadUrl(getHomepage());
+    }
+
+    private String getHomepage() {
+        String homepage = prefs.getString("homepage", "");
+        if (homepage.length() > 0) {
+            return homepage;
         } else {
-            webView.loadUrl("https://www.google.com");
+            switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
+                case SEARCH_YAHOO:
+                    return "https://www.yahoo.com/";
+                case SEARCH_DUCKDUCKGO:
+                    return "https://duckduckgo.com/";
+                case SEARCH_BING:
+                    return "https://www.bing.com/";
+                default:
+                    return "https://www.google.com/";
+            }
+        }
+    }
+
+    private String getSearchPrefix() {
+        switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
+            case SEARCH_YAHOO:
+                return "https://www.yahoo.com/search?p=";
+            case SEARCH_DUCKDUCKGO:
+                return "https://duckduckgo.com/?q=";
+            case SEARCH_BING:
+                return "https://www.bing.com/search?q=";
+            default:
+                return "https://www.google.com/search?q=";
         }
     }
 
@@ -351,9 +389,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == FILE_CHOOSER_RESULT_CODE) {
             if (uploadMessagePreLollipop == null)
                 return;
-            Uri result = intent == null || resultCode != MainActivity.RESULT_OK
-                    ? null
-                    : intent.getData();
+            Uri result = intent == null || resultCode != MainActivity.RESULT_OK ? null : intent.getData();
             uploadMessagePreLollipop.onReceiveValue(result);
             uploadMessagePreLollipop = null;
         } else Snackbar.make(webView, R.string.msg_upload_failed, Snackbar.LENGTH_SHORT).show();
@@ -379,7 +415,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onAnimationUpdate(ValueAnimator animator) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         getWindow().setStatusBarColor((int) animator.getAnimatedValue());
-                        if (prefs.getBoolean("navbar_tint", false)) getWindow().setNavigationBarColor((int) animator.getAnimatedValue());
+                        if (prefs.getBoolean("navbar_tint", false))
+                            getWindow().setNavigationBarColor((int) animator.getAnimatedValue());
                     }
                 }
             });
@@ -418,21 +455,18 @@ public class MainActivity extends AppCompatActivity {
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
 
+        suggestions = new SearchRecentSuggestions(MainActivity.this, RecentSuggestionsProvider.AUTHORITY, RecentSuggestionsProvider.MODE);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                } else if (browsers.contains("google")){
-                    webView.loadUrl("https://www.google.com/search?q=" + query);
-                } else if (browsers.contains("yahoo")) {
-                    webView.loadUrl("https://www.yahoo.com/search?p=" + query);
-                } else if (browsers.contains("duckduckgo")) {
-                    webView.loadUrl("https://duckduckgo.com/?q=" + query);
-                } else if (browsers.contains("bing")) {
-                    webView.loadUrl("https://www.bing.com/search?q=" + query);
-                }
+                } else
+                    webView.loadUrl(getSearchPrefix() + query);
+
+                if (!isIncognito) suggestions.saveRecentQuery(query, null);
                 searchView.setVisibility(View.GONE);
                 return false;
             }
@@ -451,6 +485,9 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
         searchView.setVisibility(View.GONE);
@@ -473,7 +510,8 @@ public class MainActivity extends AppCompatActivity {
                 searchView.setIconified(false);
                 break;
             case R.id.action_home:
-                webView.loadUrl("https://www.google.com");
+                webView.clearHistory();
+                webView.loadUrl(getHomepage());
                 break;
             case R.id.action_share:
                 String shareBody = webView.getUrl();
@@ -554,10 +592,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+        }
+    }
 
-            browsers = prefs.getString("pref_browser", "no selection");
-            webView.loadUrl(browsers);
+    public class RecentSearchProvider extends SearchRecentSuggestionsProvider {
+        public final static String AUTHORITY = "com.riccardobusetti.colombo.activities.MainActivity.RecentSearchProvider";
+        public final static int MODE = DATABASE_MODE_QUERIES;
 
+        public RecentSearchProvider() {
+            setupSuggestions(AUTHORITY, MODE);
         }
     }
 }

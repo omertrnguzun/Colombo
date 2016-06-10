@@ -1,4 +1,4 @@
-package com.riccardobusetti.colombo;
+package com.riccardobusetti.colombo.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
