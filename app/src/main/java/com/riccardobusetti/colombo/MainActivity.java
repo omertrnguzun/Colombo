@@ -82,6 +82,7 @@ public class MainActivity extends PlaceholderUiActivity {
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
+    private String browsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,7 @@ public class MainActivity extends PlaceholderUiActivity {
         }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        browsers = prefs.getString("pref_browser", "");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -309,9 +311,13 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         });
 
-        if (savedInstanceState != null) webView.loadUrl(savedInstanceState.getString("url"));
-        else if (getIntent().getAction().matches(Intent.ACTION_VIEW)) webView.loadUrl(getIntent().getData().toString());
-        else webView.loadUrl("https://www.google.com/");
+        if (savedInstanceState != null) {
+            webView.loadUrl(savedInstanceState.getString("url"));
+        } else if ((getIntent().getAction().matches(Intent.ACTION_VIEW))) {
+            webView.loadUrl(getIntent().getData().toString());
+        } else {
+            webView.loadUrl(browsers);
+        }
     }
 
     private void launchPerms() {
@@ -492,12 +498,7 @@ public class MainActivity extends PlaceholderUiActivity {
                 setColor(ContextCompat.getColor(this, R.color.colorPrimary));
                 break;
             case R.id.action_perms:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    launchPerms();
-                } else {
-                    Snackbar snackbar = Snackbar.make(webView, "Permissions are only avaliable for Marshmallow or >", Snackbar.LENGTH_SHORT);
-                }
-
+                launchPerms();
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -557,6 +558,10 @@ public class MainActivity extends PlaceholderUiActivity {
                     }
                 });
             }
+
+            String browsers = prefs.getString("pref_browser", "no selection");
+            webView.loadUrl(browsers);
+
         }
     }
 }

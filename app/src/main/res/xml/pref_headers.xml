@@ -7,8 +7,13 @@
 
     <header
         android:fragment="com.riccardobusetti.colombo.SettingsActivity$WebsitePreferenceFragment"
-        android:icon="@drawable/ic_website"
+        android:icon="@drawable/ic_settings"
         android:title="@string/pref_header_website" />
+
+    <header
+        android:fragment="com.riccardobusetti.colombo.SettingsActivity$BrowserPreferenceFragment"
+        android:icon="@drawable/ic_website"
+        android:title="@string/pref_header_browser" />
 
     <header
         android:icon="@drawable/ic_intro"

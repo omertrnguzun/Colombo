@@ -54,4 +54,19 @@
     <string name="description_storage">Colombo has build in a Download Manager, for downloading stuff on your device Colombo must have access to your memory for write the files! (SKIP THIS IF ALREADY GRANTED)</string>
     <string name="title_gps">Location in Colombo</string>
     <string name="description_gps">Colombo has build in GPS location capabilities. To use webapps that require location Colombo must have access to your GPS. (SKIP THIS IF ALREADY GRANTED)</string>
+    <string name="menu_new">New Page</string>
+    <string name="pref_header_browser">Browser Engine</string>
+
+    <string-array name="Browsers">
+        <item>Google</item>
+        <item>Yahoo</item>
+        <item>DuckDuckGo</item>
+    </string-array>
+
+    <string-array name="Browsers_Values">
+        <item>https://www.google.com</item>
+        <item>https://www.yahoo.com</item>
+        <item>https://duckduckgo.com</item>
+    </string-array>
+
 </resources>
