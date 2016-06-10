@@ -43,6 +43,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.riccardobusetti.colombo.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".MainIntroActivity"
+            android:theme="@style/Theme.Intro"/>
+
     </application>
 
 </manifest>

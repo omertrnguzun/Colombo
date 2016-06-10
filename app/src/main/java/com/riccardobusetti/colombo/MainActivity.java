@@ -28,10 +28,8 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.graphics.Palette;
@@ -56,6 +54,7 @@ import android.widget.Toast;
 import com.amqtech.permissions.helper.objects.Permission;
 import com.amqtech.permissions.helper.objects.Permissions;
 import com.amqtech.permissions.helper.objects.PermissionsActivity;
+import com.riccardobusetti.colombo.util.PreferencesUtil;
 import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
@@ -89,6 +88,14 @@ public class MainActivity extends PlaceholderUiActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (PreferencesUtil.isFirstTime(this)) {
+
+            Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+
+        }
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -120,28 +127,30 @@ public class MainActivity extends PlaceholderUiActivity {
             }).show();
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Without GPS permissions the location won't work!", Toast.LENGTH_SHORT).show();
-        } else {
-            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            locationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Without GPS permissions the location won't work!", Toast.LENGTH_SHORT).show();
+            } else {
+                locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+                locationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                    }
 
-                @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) {
-                }
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
+                    }
 
-                @Override
-                public void onProviderEnabled(String s) {
-                }
+                    @Override
+                    public void onProviderEnabled(String s) {
+                    }
 
-                @Override
-                public void onProviderDisabled(String s) {
-                }
-            };
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+                    @Override
+                    public void onProviderDisabled(String s) {
+                    }
+                };
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+            }
         }
 
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -159,10 +168,10 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setSaveFormData(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
-        //plugins are deprecated, nobody uses Flash anymore :P {webSettings.setPluginState(WebSettings.PluginState.ON);}
 
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
         webSettings.setDisplayZoomControls(false);
+        webSettings.setBuiltInZoomControls(false);
 
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setAllowFileAccess(true);
@@ -203,6 +212,7 @@ public class MainActivity extends PlaceholderUiActivity {
 
                 Snackbar snackbar = Snackbar.make(webView, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
                 View snackBarView = snackbar.getView();
+                snackbar.setActionTextColor(Color.parseColor("#FAFAFA"));
                 snackBarView.setBackgroundColor(Color.parseColor("#4690CD"));
                 snackbar.setAction("DOWNLOAD", new View.OnClickListener() {
                     @Override
@@ -435,9 +445,10 @@ public class MainActivity extends PlaceholderUiActivity {
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
         searchView.setVisibility(View.GONE);
 
-        Drawable search = VectorDrawableCompat.create(getResources(), R.drawable.ic_search, getTheme());
+        //Crash on KITKAT
+        /*Drawable search = VectorDrawableCompat.create(getResources(), R.drawable.ic_search, getTheme());
         DrawableCompat.setTint(search, ContextCompat.getColor(this, R.color.colorIconGrey));
-        toolbar.setNavigationIcon(search);
+        toolbar.setNavigationIcon(search);*/
 
         menu.findItem(R.id.action_perms).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
 

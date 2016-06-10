@@ -10,4 +10,14 @@
         android:icon="@drawable/ic_website"
         android:title="@string/pref_header_website" />
 
+    <header
+        android:icon="@drawable/ic_intro"
+        android:title="@string/pref_header_intro">
+
+        <intent
+            android:targetPackage="com.riccardobusetti.colombo"
+            android:targetClass="com.riccardobusetti.colombo.MainIntroActivity"/>
+
+    </header>
+
 </preference-headers>

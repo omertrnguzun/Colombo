@@ -43,4 +43,15 @@
     <string name="pref_zoom">Enable Zooming</string>
     <string name="pref_zoom_summary">Allows websites to be zoomed in and out using the pinch gesture.</string>
     <string name="menu_dekstop">Request Dekstop Site</string>
+    <string name="title_1">Welcome to Colombo</string>
+    <string name="description_1">Colombo is a lightweight, fast and beautifully designed Browser!</string>
+    <string name="pref_header_intro">Show Tutorial</string>
+    <string name="title_2">How to navigate?</string>
+    <string name="description_2">Press the Search Icon on the SearchBar to find what you want! You can use http/www/normal search</string>
+    <string name="title_3">Incognito Mode</string>
+    <string name="description_3">If you prefer to not save stuff like cache and cookies on your device and you want privacy enable this mode on the menu!</string>
+    <string name="title_storage">Downloads in Colombo</string>
+    <string name="description_storage">Colombo has build in a Download Manager, for downloading stuff on your device Colombo must have access to your memory for write the files! (SKIP THIS IF ALREADY GRANTED)</string>
+    <string name="title_gps">Location in Colombo</string>
+    <string name="description_gps">Colombo has build in GPS location capabilities. To use webapps that require location Colombo must have access to your GPS. (SKIP THIS IF ALREADY GRANTED)</string>
 </resources>
