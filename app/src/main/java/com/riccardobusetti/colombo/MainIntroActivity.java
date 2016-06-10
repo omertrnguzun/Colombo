@@ -22,7 +22,7 @@ public class MainIntroActivity extends IntroActivity {
         addSlide(new SimpleSlide.Builder()
                 .title(R.string.title_1)
                 .description(R.string.description_1)
-                .image(R.drawable.ic_app)
+                .image(R.mipmap.ic_launcher)
                 .background(R.color.colorPrimary)
                 .backgroundDark(R.color.colorPrimaryDark)
                 .build());

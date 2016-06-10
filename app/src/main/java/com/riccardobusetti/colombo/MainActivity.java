@@ -32,6 +32,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -54,14 +55,13 @@ import android.widget.Toast;
 import com.amqtech.permissions.helper.objects.Permission;
 import com.amqtech.permissions.helper.objects.Permissions;
 import com.amqtech.permissions.helper.objects.PermissionsActivity;
-import com.riccardobusetti.colombo.util.PreferencesUtil;
 import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
 
 import static com.riccardobusetti.colombo.R.id.webview;
 
-public class MainActivity extends PlaceholderUiActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_SELECT_FILE = 100;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
@@ -82,23 +82,18 @@ public class MainActivity extends PlaceholderUiActivity {
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
-    private String browsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (PreferencesUtil.isFirstTime(this)) {
-
-            Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-
-        }
-
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        browsers = prefs.getString("pref_browser", "");
+
+        if (prefs.getBoolean("first_time", true)) {
+            startActivity(new Intent(this, MainIntroActivity.class));
+            prefs.edit().putBoolean("first_time", false).apply();
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -311,12 +306,13 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         });
 
+        String action = getIntent().getAction();
         if (savedInstanceState != null) {
             webView.loadUrl(savedInstanceState.getString("url"));
-        } else if ((getIntent().getAction().matches(Intent.ACTION_VIEW))) {
+        } else if (action != null && action.matches(Intent.ACTION_VIEW)) {
             webView.loadUrl(getIntent().getData().toString());
         } else {
-            webView.loadUrl(browsers);
+            webView.loadUrl("https://www.google.com");
         }
     }
 
@@ -473,17 +469,24 @@ public class MainActivity extends PlaceholderUiActivity {
                 break;
             case R.id.action_share:
                 String shareBody = webView.getUrl();
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Website Link");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Website Link");
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share link"));
                 break;
             case R.id.action_refresh:
                 webView.reload();
                 break;
+            case R.id.action_new:
+                Intent newIntent = new Intent(this, MainActivity.class);
+                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(newIntent);
+                break;
             case R.id.action_incognito:
-                isIncognito = !isIncognito;
+                item.setChecked(!item.isChecked());
+
+                isIncognito = item.isChecked();
 
                 WebSettings webSettings = webView.getSettings();
                 CookieManager.getInstance().setAcceptCookie(!isIncognito);
@@ -497,26 +500,16 @@ public class MainActivity extends PlaceholderUiActivity {
 
                 setColor(ContextCompat.getColor(this, R.color.colorPrimary));
                 break;
+            case R.id.action_desktop:
+                item.setChecked(!item.isChecked());
+                webView.getSettings().setUserAgentString(item.isChecked() ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : System.getProperty("http.agent"));
+                webView.reload();
+                break;
             case R.id.action_perms:
                 launchPerms();
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case R.id.action_dekstop:
-                if (item.isChecked()) item.setChecked(false);
-                else item.setChecked(true);
-                if (item.isChecked()) {
-                    webView.getSettings().setUserAgentString("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0");
-                    webView.reload();
-                } else {
-                    Intent intent = getIntent();
-                    overridePendingTransition(0, 0);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    finish();
-                    overridePendingTransition(0, 0);
-                    startActivity(intent);
-                }
                 break;
         }
 

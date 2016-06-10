@@ -1,6 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_search"
@@ -22,15 +21,21 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_incognito"
-        android:title="@string/menu_incognito"
+        android:id="@+id/action_new"
+        android:title="@string/menu_new"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_dekstop"
+        android:id="@+id/action_incognito"
+        android:title="@string/menu_incognito"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_desktop"
         android:title="@string/menu_dekstop"
-        app:showAsAction="never"
-        android:checkable="true" />
+        android:checkable="true"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_share"

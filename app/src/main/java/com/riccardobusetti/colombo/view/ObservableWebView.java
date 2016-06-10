@@ -22,7 +22,7 @@ public class ObservableWebView extends WebView {
 
     private float startX, endX;
 
-    private boolean flag, canScrollVertically;
+    private boolean canScrollVertically;
 
     private CustomWebChromeClient webChromeClient;
 
@@ -53,12 +53,6 @@ public class ObservableWebView extends WebView {
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-
-        if (flag) {
-            flag = false;
-            return;
-        }
-
         getRootView().findViewById(R.id.swipe_layout).setEnabled(getScrollY() == 0 && !canScrollVertically);
     }
 
