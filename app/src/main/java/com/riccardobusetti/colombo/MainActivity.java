@@ -311,13 +311,9 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         });
 
-        if (savedInstanceState != null) {
-            webView.loadUrl(savedInstanceState.getString("url"));
-        } else if ((getIntent().getAction().matches(Intent.ACTION_VIEW))) {
-            webView.loadUrl(getIntent().getData().toString());
-        } else {
-            webView.loadUrl(browsers);
-        }
+        if (savedInstanceState != null) webView.loadUrl(savedInstanceState.getString("url"));
+        else if (getIntent().getAction().matches(Intent.ACTION_VIEW)) webView.loadUrl(getIntent().getData().toString());
+        else webView.loadUrl("https://www.google.com/");
     }
 
     private void launchPerms() {
@@ -558,9 +554,6 @@ public class MainActivity extends PlaceholderUiActivity {
                     }
                 });
             }
-
-            String browsers = prefs.getString("pref_browser", "no selection");
-            webView.loadUrl(browsers);
 
         }
     }
