@@ -264,7 +264,7 @@ public class ObservableWebView extends WebView {
         return mChildHelper.dispatchNestedPreFling(velocityX, velocityY);
     }
 
-    @Override
+    /*@Override
     protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
         super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
 
@@ -283,5 +283,5 @@ public class ObservableWebView extends WebView {
                 }
             }
         }
-    }
+    }*/
 }

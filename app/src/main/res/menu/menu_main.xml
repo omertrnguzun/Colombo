@@ -27,6 +27,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_dekstop"
+        android:title="@string/menu_dekstop"
+        app:showAsAction="never"
+        android:checkable="true" />
+
+    <item
         android:id="@+id/action_share"
         android:title="@string/menu_share"
         android:icon="@drawable/ic_share"

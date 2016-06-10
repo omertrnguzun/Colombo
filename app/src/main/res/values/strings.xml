@@ -35,11 +35,12 @@
     <string name="pref_header_website">Website Settings</string>
 
     <string name="pref_javascript">Enable JavaScript</string>
-    <string name="pref_javascript_summary">Changes whether JavaScript is run when a website is loaded.</string>
+    <string name="pref_javascript_summary">Changes whether JavaScript is run when a website is loaded. With JavaScript disabled you can navigate faster!</string>
 
     <string name="pref_location">Location Services</string>
     <string name="pref_location_summary">Allow websites to access your location.</string>
 
     <string name="pref_zoom">Enable Zooming</string>
     <string name="pref_zoom_summary">Allows websites to be zoomed in and out using the pinch gesture.</string>
+    <string name="menu_dekstop">Request Dekstop Site</string>
 </resources>

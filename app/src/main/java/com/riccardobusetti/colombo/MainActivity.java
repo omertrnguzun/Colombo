@@ -60,6 +60,8 @@ import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
 
+import static com.riccardobusetti.colombo.R.id.webview;
+
 public class MainActivity extends PlaceholderUiActivity {
 
     private static final int REQUEST_SELECT_FILE = 100;
@@ -91,7 +93,7 @@ public class MainActivity extends PlaceholderUiActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
-        webView = (ObservableWebView) findViewById(R.id.webview);
+        webView = (ObservableWebView) findViewById(webview);
 
         View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
 
@@ -159,9 +161,8 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setLoadWithOverviewMode(true);
         //plugins are deprecated, nobody uses Flash anymore :P {webSettings.setPluginState(WebSettings.PluginState.ON);}
 
-        webSettings.setBuiltInZoomControls(prefs.getBoolean("zooming", false));
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
-        webSettings.setDisplayZoomControls(prefs.getBoolean("zooming", false));
+        webSettings.setDisplayZoomControls(false);
 
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setAllowFileAccess(true);
@@ -473,10 +474,31 @@ public class MainActivity extends PlaceholderUiActivity {
                 setColor(ContextCompat.getColor(this, R.color.colorPrimary));
                 break;
             case R.id.action_perms:
-                launchPerms();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    launchPerms();
+                } else {
+                    Snackbar snackbar = Snackbar.make(webView, "Permissions are only avaliable for Marshmallow or >", Snackbar.LENGTH_SHORT);
+                }
+
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.action_dekstop:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                if (item.isChecked()) {
+                    webView.getSettings().setUserAgentString("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0");
+                    webView.reload();
+                } else {
+                    Intent intent = getIntent();
+                    overridePendingTransition(0, 0);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(intent);
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
