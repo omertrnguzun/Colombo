@@ -38,7 +38,16 @@
                 <data android:scheme="http" />
                 <data android:scheme="https" />
             </intent-filter>
+
+            <provider
+                android:name=".util.RecentSuggestionsProvider"
+                android:authorities="com.riccardobusetti.colombo.util.RecentSuggestionsProvider" />
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -47,22 +56,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+
         <activity
             android:name=".activities.MainIntroActivity"
             android:theme="@style/Theme.Intro" />
 
-        <provider
-            android:name=".util.RecentSuggestionsProvider"
-            android:authorities="com.riccardobusetti.colombo.util.RecentSuggestionsProvider" />
-
-        <meta-data
-            android:name="android.app.searchable"
-            android:resource="@xml/searchable" />
-
         <activity
             android:name=".activities.AboutActivity"
-            android:label="@string/title_activity_about"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/pref_header_about"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".activities.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.SettingsActivity" />
+        </activity>
+
     </application>
 
 </manifest>
