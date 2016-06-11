@@ -78,5 +78,7 @@
     <string name="title_gps">Location in Colombo</string>
     <string name="description_gps">Colombo has build in GPS location capabilities. To use webapps that require location Colombo must have access to your GPS. (SKIP THIS IF ALREADY GRANTED)</string>
     <string name="menu_new">New Page</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="pref_header_about">Behind Colombo</string>
 
 </resources>

@@ -30,7 +30,7 @@
 
     <!-- Changes the background color of the title bar -->
     <style name="CustomWindowTitleBackground">
-        <item name="android:background">@color/primary</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <!-- Set the theme for the window title -->
@@ -40,7 +40,7 @@
     </style>
 
     <style name="CustomWindowTitleText">
-    <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:textColor">@android:color/transparent</item>
     </style>
 
     <style name="TextAppearance.MaterialSheetFab.Sheet.Item" parent="">
@@ -63,6 +63,11 @@
         <item name="android:textSize">@dimen/sheet_item_textsize</item>
         <item name="android:textColor">@color/text_white_87</item>
         <item name="android:drawablePadding">@dimen/sheet_item_image_spacing</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>

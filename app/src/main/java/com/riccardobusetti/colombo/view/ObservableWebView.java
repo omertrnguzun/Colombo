@@ -110,6 +110,7 @@ public class ObservableWebView extends WebView {
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
                 break;
             case MotionEvent.ACTION_UP:
+
             case MotionEvent.ACTION_CANCEL:
                 getRootView().findViewById(R.id.next).setPressed(false);
                 getRootView().findViewById(R.id.previous).setPressed(false);

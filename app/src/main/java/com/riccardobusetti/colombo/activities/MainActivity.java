@@ -210,6 +210,13 @@ public class MainActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 swipeRefreshLayout.setRefreshing(false);
                 swipeRefreshLayout.setEnabled(false);
+                toolbar.setTitle(webView.getUrl());
+
+                if(webView.getUrl().startsWith("https")){
+                    toolbar.setNavigationIcon(R.drawable.ic_search_secure);
+                } else {
+                    toolbar.setNavigationIcon(R.drawable.ic_search);
+                }
             }
         });
 
@@ -277,11 +284,11 @@ public class MainActivity extends AppCompatActivity {
                 callback.invoke(origin, true, false);
             }
 
-            @Override
+            /*@Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 toolbar.setTitle(title);
-            }
+            }*/
 
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
