@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -389,33 +390,6 @@ public class MainActivity extends AppCompatActivity {
                 .launch();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (requestCode == REQUEST_SELECT_FILE) {
-                if (uploadMessage == null)
-                    return;
-                uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, intent));
-                uploadMessage = null;
-            }
-        } else if (requestCode == FILE_CHOOSER_RESULT_CODE) {
-            if (uploadMessagePreLollipop == null)
-                return;
-            Uri result = intent == null || resultCode != MainActivity.RESULT_OK ? null : intent.getData();
-            uploadMessagePreLollipop.onReceiveValue(result);
-            uploadMessagePreLollipop = null;
-        } else Snackbar.make(webView, R.string.msg_upload_failed, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     private void setColor(int color) {
         color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
 
@@ -454,6 +428,43 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
     }
 
+    private void onQuery(String query) {
+        if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
+            if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+            webView.loadUrl(query);
+        } else
+            webView.loadUrl(getSearchPrefix() + query);
+
+        if (!isIncognito) suggestions.saveRecentQuery(query, null);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (requestCode == REQUEST_SELECT_FILE) {
+                if (uploadMessage == null)
+                    return;
+                uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, intent));
+                uploadMessage = null;
+            }
+        } else if (requestCode == FILE_CHOOSER_RESULT_CODE) {
+            if (uploadMessagePreLollipop == null)
+                return;
+            Uri result = intent == null || resultCode != MainActivity.RESULT_OK ? null : intent.getData();
+            uploadMessagePreLollipop.onReceiveValue(result);
+            uploadMessagePreLollipop = null;
+        } else Snackbar.make(webView, R.string.msg_upload_failed, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
@@ -471,19 +482,30 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                } else
-                    webView.loadUrl(getSearchPrefix() + query);
-
-                if (!isIncognito) suggestions.saveRecentQuery(query, null);
+                onQuery(query);
                 searchView.setVisibility(View.GONE);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Cursor cursor = searchView.getSuggestionsAdapter().getCursor();
+                cursor.moveToPosition(position);
+
+                onQuery(cursor.getString(2));
+                searchView.setVisibility(View.GONE);
                 return false;
             }
         });
