@@ -41,7 +41,7 @@
                     android:orientation="horizontal"
                     android:padding="12dp">
 
-                    <ImageView
+                    <com.riccardobusetti.colombo.view.SquareImageView
                         android:layout_width="96dp"
                         android:layout_height="96dp"
                         android:layout_gravity="center_vertical"
@@ -114,7 +114,7 @@
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp">
 
-                        <ImageView
+                        <com.riccardobusetti.colombo.view.CircleImageView
                             android:layout_width="64dp"
                             android:layout_height="64dp"
                             android:src="@drawable/ic_me" />
@@ -158,7 +158,7 @@
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp">
 
-                        <ImageView
+                        <com.riccardobusetti.colombo.view.CircleImageView
                             android:layout_width="64dp"
                             android:layout_height="64dp"
                             android:src="@drawable/ic_james" />
@@ -202,7 +202,7 @@
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp">
 
-                        <ImageView
+                        <com.riccardobusetti.colombo.view.CircleImageView
                             android:layout_width="64dp"
                             android:layout_height="64dp"
                             android:src="@drawable/ic_matteo" />
