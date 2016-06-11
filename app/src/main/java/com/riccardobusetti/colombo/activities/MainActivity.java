@@ -132,6 +132,26 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        toolbar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", webView.getUrl());
+                clipboard.setPrimaryClip(clip);
+                Snackbar snackbar = Snackbar.make(webView, "Current URL copied to clipboard!", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                return true;
+            }
+        });
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchView.setVisibility(View.VISIBLE);
+                searchView.setIconified(false);
+            }
+        });
+
         setSupportActionBar(toolbar);
         ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = manager.getActiveNetworkInfo();
@@ -221,8 +241,11 @@ public class MainActivity extends AppCompatActivity {
                     Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
                     DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
                     toolbar.setNavigationIcon(drawable);
-                } else
-                    toolbar.setNavigationIcon(StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search));
+                } else {
+                    Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
+                    DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorIconGrey));
+                    toolbar.setNavigationIcon(drawable);
+                }
             }
 
             @Override
@@ -460,6 +483,13 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+
+        if (searchView.getVisibility() == View.VISIBLE) {
+            searchView.setVisibility(View.GONE);
+            searchView.setIconified(false);
         } else {
             super.onBackPressed();
         }
