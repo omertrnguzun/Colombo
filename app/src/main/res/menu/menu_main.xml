@@ -11,13 +11,11 @@
     <item
         android:id="@+id/action_home"
         android:title="@string/menu_home"
-        android:icon="@drawable/ic_home"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_refresh"
         android:title="@string/menu_refresh"
-        android:icon="@drawable/ic_refresh"
         app:showAsAction="never" />
 
     <item
@@ -35,7 +33,6 @@
     <item
         android:id="@+id/action_share"
         android:title="@string/menu_share"
-        android:icon="@drawable/ic_share"
         app:showAsAction="never" />
 
     <item

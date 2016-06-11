@@ -1,11 +1,14 @@
 package com.riccardobusetti.colombo.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 
 public class StaticUtils {
 
@@ -26,6 +29,14 @@ public class StaticUtils {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    public static Drawable getVectorDrawable(Context context, int resId) {
+        VectorDrawableCompat drawable = VectorDrawableCompat.create(context.getResources(), resId, context.getTheme());
+        if (drawable != null)
+            return drawable.getCurrent();
+        else
+            return new ColorDrawable(Color.TRANSPARENT);
     }
 
     public static int darkColor(int color) {

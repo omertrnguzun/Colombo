@@ -9,7 +9,6 @@ import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SearchRecentSuggestionsProvider;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -33,6 +32,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +53,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.amqtech.permissions.helper.objects.Permission;
@@ -87,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomWebChromeClient webChromeClient;
 
+    private ImageView previous, next;
+
     private boolean isIncognito;
 
     private LocationManager locationManager;
@@ -109,6 +112,12 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         webView = (ObservableWebView) findViewById(webview);
+
+        previous = (ImageView) findViewById(R.id.previous);
+        next = (ImageView) findViewById(R.id.next);
+
+        previous.setImageDrawable(StaticUtils.getVectorDrawable(this, R.drawable.ic_previous));
+        next.setImageDrawable(StaticUtils.getVectorDrawable(this, R.drawable.ic_next));
 
         View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
 
@@ -204,19 +213,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap facIcon) {
                 swipeRefreshLayout.setRefreshing(true);
+
+                toolbar.setTitle(url);
+
+                if (url.startsWith("https")) {
+                    Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
+                    DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+                    toolbar.setNavigationIcon(drawable);
+                } else
+                    toolbar.setNavigationIcon(StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search));
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 swipeRefreshLayout.setRefreshing(false);
                 swipeRefreshLayout.setEnabled(false);
-                toolbar.setTitle(webView.getUrl());
-
-                if (webView.getUrl().startsWith("https")) {
-                    toolbar.setNavigationIcon(R.drawable.ic_search_secure);
-                } else {
-                    toolbar.setNavigationIcon(R.drawable.ic_search);
-                }
             }
         });
 
@@ -283,12 +294,6 @@ public class MainActivity extends AppCompatActivity {
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
                 callback.invoke(origin, true, false);
             }
-
-            /*@Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-                toolbar.setTitle(title);
-            }*/
 
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
@@ -433,9 +438,8 @@ public class MainActivity extends AppCompatActivity {
 
         int colorFrom = ContextCompat.getColor(this, !isIncognito ? R.color.colorPrimaryIncognito : R.color.colorPrimary);
         Drawable backgroundFrom = appbar.getBackground();
-        if (backgroundFrom instanceof ColorDrawable) {
+        if (backgroundFrom instanceof ColorDrawable)
             colorFrom = ((ColorDrawable) backgroundFrom).getColor();
-        }
 
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, color);
         colorAnimation.setDuration(150);
@@ -498,11 +502,6 @@ public class MainActivity extends AppCompatActivity {
 
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
         searchView.setVisibility(View.GONE);
-
-        //Crash on KITKAT
-        /*Drawable search = VectorDrawableCompat.create(getResources(), R.drawable.ic_search, getTheme());
-        DrawableCompat.setTint(search, ContextCompat.getColor(this, R.color.colorIconGrey));
-        toolbar.setNavigationIcon(search);*/
 
         menu.findItem(R.id.action_perms).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
 
@@ -575,10 +574,8 @@ public class MainActivity extends AppCompatActivity {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return;
-        } else {
+        } else if (locationManager != null)
             locationManager.removeUpdates(locationListener);
-        }
     }
 
     @Override
@@ -593,10 +590,8 @@ public class MainActivity extends AppCompatActivity {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return;
-        } else {
+        } else if (locationManager != null)
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
-        }
 
         ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = manager.getActiveNetworkInfo();
@@ -629,15 +624,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        }
-    }
-
-    public class RecentSearchProvider extends SearchRecentSuggestionsProvider {
-        public final static String AUTHORITY = "com.riccardobusetti.colombo.activities.MainActivity.RecentSearchProvider";
-        public final static int MODE = DATABASE_MODE_QUERIES;
-
-        public RecentSearchProvider() {
-            setupSuggestions(AUTHORITY, MODE);
         }
     }
 }

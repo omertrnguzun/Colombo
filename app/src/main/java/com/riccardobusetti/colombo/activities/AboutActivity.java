@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.riccardobusetti.colombo.R;
+import com.riccardobusetti.colombo.util.StaticUtils;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -29,6 +30,8 @@ public class AboutActivity extends AppCompatActivity {
         me = (LinearLayout) findViewById(R.id.layout_me);
         james = (LinearLayout) findViewById(R.id.layout_james);
         matteo = (LinearLayout) findViewById(R.id.layout_matteo);
+
+        fab.setImageDrawable(StaticUtils.getVectorDrawable(this, R.drawable.ic_github));
 
         setUpClick();
 
