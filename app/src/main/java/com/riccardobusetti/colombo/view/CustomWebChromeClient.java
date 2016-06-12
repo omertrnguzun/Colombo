@@ -27,7 +27,6 @@ import com.riccardobusetti.colombo.R;
 
 public class CustomWebChromeClient extends WebChromeClient implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
-    private ObservableWebView webView;
     private Activity activity;
 
     private boolean isVideoFullscreen;
@@ -37,9 +36,8 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
     private AlertDialog customViewDialog;
     private BottomSheetDialog alertDialog;
 
-    public CustomWebChromeClient(Activity activity, ObservableWebView webView) {
+    public CustomWebChromeClient(Activity activity) {
         this.activity = activity;
-        this.webView = webView;
 
         isVideoFullscreen = false;
     }

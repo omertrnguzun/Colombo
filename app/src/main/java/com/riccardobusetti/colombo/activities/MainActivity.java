@@ -64,6 +64,7 @@ import com.amqtech.permissions.helper.objects.Permission;
 import com.amqtech.permissions.helper.objects.Permissions;
 import com.amqtech.permissions.helper.objects.PermissionsActivity;
 import com.riccardobusetti.colombo.R;
+import com.riccardobusetti.colombo.util.IconMenuPopupHelper;
 import com.riccardobusetti.colombo.util.RecentSuggestionsProvider;
 import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
@@ -216,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDisplayZoomControls(false);
         webSettings.setBuiltInZoomControls(false);
 
-        webSettings.setUserAgentString(prefs.getBoolean("desktop", false) ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : System.getProperty("http.agent"));
+        webSettings.setUserAgentString(prefs.getBoolean("desktop", false) ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : WebSettings.getDefaultUserAgent(this));
 
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setAllowFileAccess(true);
@@ -301,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        webChromeClient = new CustomWebChromeClient(this, webView) {
+        webChromeClient = new CustomWebChromeClient(this) {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
 
@@ -609,8 +610,7 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case R.id.action_incognito:
                                 isIncognito = !isIncognito;
-
-                                item.setTitle((isIncognito ? "Exit " : "") + getString(R.string.menu_incognito));
+                                item.setChecked(isIncognito);
 
                                 WebSettings webSettings = webView.getSettings();
                                 CookieManager.getInstance().setAcceptCookie(!isIncognito);
@@ -640,13 +640,17 @@ public class MainActivity extends AppCompatActivity {
                 popupMenu.getMenu().findItem(R.id.action_perms).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
 
                 try {
-                    Field fMenuHelper = PopupMenu.class.getDeclaredField("mPopup");
-                    fMenuHelper.setAccessible(true);
-                    Object menuHelper = fMenuHelper.get(popupMenu);
+                    Field menuField = PopupMenu.class.getDeclaredField("mMenu");
+                    menuField.setAccessible(true);
 
-                    menuHelper.getClass().getDeclaredMethod("setForceShowIcon", new Class[]{boolean.class}).invoke(menuHelper, true);
+                    Field menuAnchor = PopupMenu.class.getDeclaredField("mAnchor");
+                    menuAnchor.setAccessible(true);
 
-                    //TODO: override icon setter to use StaticUtils.getVectorIcon()
+                    IconMenuPopupHelper popupHelper = new IconMenuPopupHelper(this, (MenuBuilder) menuField.get(popupMenu), (View) menuAnchor.get(popupMenu), false, android.support.v7.appcompat.R.attr.popupMenuStyle, 0);
+
+                    Field field = PopupMenu.class.getDeclaredField("mPopup");
+                    field.setAccessible(true);
+                    field.set(popupMenu, popupHelper);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -712,7 +716,7 @@ public class MainActivity extends AppCompatActivity {
             webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
             webSettings.setDisplayZoomControls(prefs.getBoolean("zooming", false));
 
-            webSettings.setUserAgentString(prefs.getBoolean("desktop", false) ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : System.getProperty("http.agent"));
+            webSettings.setUserAgentString(prefs.getBoolean("desktop", false) ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : WebSettings.getDefaultUserAgent(this));
 
             Bitmap favicon = webView.getFavicon();
             if (favicon != null) {

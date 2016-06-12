@@ -18,6 +18,7 @@
         android:id="@+id/action_incognito"
         android:title="@string/menu_incognito"
         android:icon="@drawable/ic_incognito"
+        android:checkable="true"
         app:showAsAction="never" />
 
     <item
