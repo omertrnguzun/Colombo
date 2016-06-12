@@ -68,6 +68,12 @@
     <string name="homepage">Homepage</string>
     <string name="homepage_sumamry">Changes the initial page loaded when the browser is opened. Leave blank to load the default search engine instead.</string>
 
+    <string name="suggestions">Show Suggestions</string>
+    <string name="suggestions_summary">Choose whether to suggest queries in the search bar.</string>
+
+    <string name="clear_history">Clear History</string>
+    <string name="clear_history_summary">Select \'clear app data\' on the next screen to clear all recent queries.</string>
+
     <string name="title_1">Welcome to Colombo</string>
     <string name="description_1">Colombo is a lightweight, fast and beautifully designed Browser!</string>
     <string name="pref_header_intro">Show Tutorial</string>

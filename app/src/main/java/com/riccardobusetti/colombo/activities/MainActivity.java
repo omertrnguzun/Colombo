@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
 
         previous = (ImageView) findViewById(R.id.previous);
         next = (ImageView) findViewById(R.id.next);
-
         previous.setImageDrawable(StaticUtils.getVectorDrawable(this, R.drawable.ic_previous));
         next.setImageDrawable(StaticUtils.getVectorDrawable(this, R.drawable.ic_next));
+        webView.setNavigationViews(previous, next);
 
         View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
 
@@ -573,7 +573,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        if (prefs.getBoolean("suggestions", true))
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
         searchView.setVisibility(View.GONE);
@@ -704,29 +705,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
                 }
             }).show();
-        }
-
-        if (prefs != null && webView != null) {
-            //change preference dependent variables
-            WebSettings webSettings = webView.getSettings();
-            webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
-            webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
-
-            webSettings.setBuiltInZoomControls(prefs.getBoolean("zooming", false));
-            webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
-            webSettings.setDisplayZoomControls(prefs.getBoolean("zooming", false));
-
-            webSettings.setUserAgentString(prefs.getBoolean("desktop", false) ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : WebSettings.getDefaultUserAgent(this));
-
-            Bitmap favicon = webView.getFavicon();
-            if (favicon != null) {
-                Palette.from(webView.getFavicon()).generate(new Palette.PaletteAsyncListener() {
-                    @Override
-                    public void onGenerated(Palette palette) {
-                        setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
-                    }
-                });
-            }
         }
     }
 }

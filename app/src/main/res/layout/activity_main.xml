@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="56dp"
+                    android:layout_width="42dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="start"
                     android:src="@drawable/ic_previous"
@@ -87,7 +87,7 @@
                     android:padding="8dp" />
 
                 <ImageView
-                    android:layout_width="56dp"
+                    android:layout_width="42dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:src="@drawable/ic_next"

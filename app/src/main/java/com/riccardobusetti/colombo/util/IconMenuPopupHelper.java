@@ -1,14 +1,13 @@
 package com.riccardobusetti.colombo.util;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.appcompat.R;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.view.menu.MenuPresenter;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.view.menu.SubMenuBuilder;
 import android.support.v7.widget.ListPopupWindow;
 import android.util.TypedValue;
@@ -35,7 +34,6 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
     private final MenuBuilder builder;
     private final MenuAdapter adapter;
     private final boolean isOverflowOnly;
-    private final int maxWidth;
     private final int styleAttr;
     private final int styleRes;
 
@@ -44,12 +42,8 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
     private ViewTreeObserver viewTreeObserver;
     private Callback presenterCallback;
 
-    private ViewGroup measureParent;
-
     private boolean hasContentWidth;
-
     private int contentWidth;
-
     private int dropDownGravity = Gravity.NO_GRAVITY;
 
     public IconMenuPopupHelper(Context context, MenuBuilder menu) {
@@ -74,10 +68,6 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
         isOverflowOnly = overflowOnly;
         styleAttr = popupStyleAttr;
         styleRes = popupStyleRes;
-
-        final Resources res = context.getResources();
-        maxWidth = Math.max(res.getDisplayMetrics().widthPixels / 2, res.getDimensionPixelSize(R.dimen.abc_config_prefDialogWidth));
-
         this.anchorView = anchorView;
 
         menu.addMenuPresenter(this, context);
@@ -191,15 +181,6 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
     }
 
     @Override
-    public void initForMenu(Context context, MenuBuilder menu) {
-    }
-
-    @Override
-    public MenuView getMenuView(ViewGroup root) {
-        throw new UnsupportedOperationException("MenuPopupHelpers manage their own views");
-    }
-
-    @Override
     public void updateMenuView(boolean cleared) {
         hasContentWidth = false;
         if (adapter != null) adapter.notifyDataSetChanged();
@@ -234,35 +215,6 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
         if (presenterCallback != null) {
             presenterCallback.onCloseMenu(menu, allMenusAreClosing);
         }
-    }
-
-    @Override
-    public boolean flagActionItems() {
-        return false;
-    }
-
-    @Override
-    public boolean expandItemActionView(MenuBuilder menu, MenuItemImpl item) {
-        return false;
-    }
-
-    @Override
-    public boolean collapseItemActionView(MenuBuilder menu, MenuItemImpl item) {
-        return false;
-    }
-
-    @Override
-    public int getId() {
-        return 0;
-    }
-
-    @Override
-    public Parcelable onSaveInstanceState() {
-        return null;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
     }
 
     private class MenuAdapter extends BaseAdapter {
@@ -310,6 +262,9 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
             if (iconRes == -1) imageView.setImageDrawable(menuItem.getIcon());
             else imageView.setImageDrawable(StaticUtils.getVectorDrawable(context, iconRes));
 
+            if (menuItem.isCheckable() && menuItem.isChecked())
+                DrawableCompat.setTint(imageView.getDrawable(), ContextCompat.getColor(context, com.riccardobusetti.colombo.R.color.colorAccent));
+
             TextView textView = (TextView) convertView.findViewById(R.id.title);
             textView.setText(menuItem.getTitle());
 
@@ -321,6 +276,9 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
                     MenuItem item = getItem(position);
 
                     adapterMenu.performItemAction(item, 0);
+
+                    if (item.isCheckable() && item.isChecked())
+                        DrawableCompat.setTint(((ImageView) v.findViewById(R.id.image)).getDrawable(), ContextCompat.getColor(context, com.riccardobusetti.colombo.R.color.colorAccent));
                 }
             });
 

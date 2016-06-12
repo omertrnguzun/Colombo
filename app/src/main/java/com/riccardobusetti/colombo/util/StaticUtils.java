@@ -1,6 +1,9 @@
 package com.riccardobusetti.colombo.util;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -32,7 +35,14 @@ public class StaticUtils {
     }
 
     public static Drawable getVectorDrawable(Context context, int resId) {
-        VectorDrawableCompat drawable = VectorDrawableCompat.create(context.getResources(), resId, context.getTheme());
+        VectorDrawableCompat drawable;
+        try {
+            drawable = VectorDrawableCompat.create(context.getResources(), resId, context.getTheme());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ColorDrawable(Color.TRANSPARENT);
+        }
+
         if (drawable != null)
             return drawable.getCurrent();
         else
@@ -49,5 +59,20 @@ public class StaticUtils {
     public static boolean isColorDark(int color) {
         double darkness = (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
         return darkness < 0.5;
+    }
+
+    public static void restart(Context context) {
+        try {
+            Intent i = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            int mPendingIntentId = 223344;
+            PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId, i, PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+            System.exit(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
     }
 }

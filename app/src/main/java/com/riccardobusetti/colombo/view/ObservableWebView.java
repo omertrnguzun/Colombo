@@ -6,7 +6,9 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
@@ -25,6 +27,7 @@ public class ObservableWebView extends WebView {
     private boolean canScrollVertically;
 
     private CustomWebChromeClient webChromeClient;
+    private View previous, next;
 
     public ObservableWebView(Context context) {
         super(context);
@@ -44,6 +47,11 @@ public class ObservableWebView extends WebView {
     private void init() {
         childHelper = new NestedScrollingChildHelper(this);
         setNestedScrollingEnabled(true);
+    }
+
+    public void setNavigationViews(View previous, View next) {
+        this.previous = previous;
+        this.next = next;
     }
 
     public void setCanScrollVertically(boolean canScrollVertically) {
@@ -100,8 +108,8 @@ public class ObservableWebView extends WebView {
                 if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
                     setX(-scrollX / 5);
 
-                getRootView().findViewById(R.id.next).setPressed(scrollX > 400);
-                getRootView().findViewById(R.id.previous).setPressed(scrollX < -400);
+                if (next != null) next.setPressed(scrollX > getOverscrollDistance());
+                if (previous != null) previous.setPressed(scrollX < -getOverscrollDistance());
 
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -112,20 +120,24 @@ public class ObservableWebView extends WebView {
             case MotionEvent.ACTION_UP:
 
             case MotionEvent.ACTION_CANCEL:
-                getRootView().findViewById(R.id.next).setPressed(false);
-                getRootView().findViewById(R.id.previous).setPressed(false);
+                if (next != null) next.setPressed(false);
+                if (previous != null) previous.setPressed(false);
 
                 endX = event.getX();
                 animate().x(0).setDuration(50).start();
 
-                if (startX - endX > 400 && canGoForward()) goForward();
-                else if (startX - endX < -400 && canGoBack()) goBack();
+                if (startX - endX > getOverscrollDistance() && canGoForward()) goForward();
+                else if (startX - endX < -getOverscrollDistance() && canGoBack()) goBack();
 
                 stopNestedScroll();
                 break;
         }
 
         return super.onTouchEvent(event);
+    }
+
+    private float getOverscrollDistance() {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics());
     }
 
     @Override

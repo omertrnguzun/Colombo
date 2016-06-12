@@ -14,4 +14,15 @@
         android:summary="@string/homepage_sumamry"
         android:defaultValue="" />
 
+    <SwitchPreference
+        android:key="suggestions"
+        android:title="@string/suggestions"
+        android:summary="@string/suggestions_summary"
+        android:defaultValue="true" />
+
+    <Preference
+        android:key="clear_history"
+        android:title="@string/clear_history"
+        android:summary="@string/clear_history_summary" />
+
 </PreferenceScreen>
