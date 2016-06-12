@@ -38,8 +38,11 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,6 +68,8 @@ import com.riccardobusetti.colombo.util.RecentSuggestionsProvider;
 import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
+
+import java.lang.reflect.Field;
 
 import static com.riccardobusetti.colombo.R.id.webview;
 
@@ -211,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDisplayZoomControls(false);
         webSettings.setBuiltInZoomControls(false);
 
+        webSettings.setUserAgentString(prefs.getBoolean("desktop", false) ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : System.getProperty("http.agent"));
+
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setAllowFileAccess(true);
         webSettings.setAppCacheEnabled(true);
@@ -236,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(true);
 
                 toolbar.setTitle(url);
+                if (!isIncognito) suggestions.saveRecentQuery(url, null);
 
                 if (url.startsWith("https")) {
                     Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
@@ -512,7 +520,15 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                onQuery(query);
+                if (query.contains(".") || URLUtil.isValidUrl(query))
+                    webView.loadUrl(query);
+                else if (query.contains("."))
+                    webView.loadUrl(URLUtil.guessUrl(query));
+                else
+                    webView.loadUrl(getSearchPrefix() + query);
+
+                if (!isIncognito) suggestions.saveRecentQuery(query, null);
+
                 searchView.setVisibility(View.GONE);
                 return false;
             }
@@ -533,9 +549,15 @@ public class MainActivity extends AppCompatActivity {
             public boolean onSuggestionClick(int position) {
                 Cursor cursor = searchView.getSuggestionsAdapter().getCursor();
                 cursor.moveToPosition(position);
+                String query = cursor.getString(2);
 
-                onQuery(cursor.getString(2));
-                searchView.setVisibility(View.GONE);
+                searchView.setQuery(query, false);
+
+                if (URLUtil.isValidUrl(query))
+                    webView.loadUrl(query);
+                else
+                    webView.loadUrl(getSearchPrefix() + query);
+
                 return false;
             }
         });
@@ -555,8 +577,6 @@ public class MainActivity extends AppCompatActivity {
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
         searchView.setVisibility(View.GONE);
 
-        menu.findItem(R.id.action_perms).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -567,48 +587,73 @@ public class MainActivity extends AppCompatActivity {
                 searchView.setVisibility(View.VISIBLE);
                 searchView.setIconified(false);
                 break;
-            case R.id.action_home:
-                webView.clearHistory();
-                webView.loadUrl(getHomepage());
-                break;
-            case R.id.action_share:
-                String shareBody = webView.getUrl();
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Website Link");
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingIntent, "Share link"));
-                break;
-            case R.id.action_refresh:
-                webView.reload();
-                break;
-            case R.id.action_incognito:
-                item.setChecked(!item.isChecked());
+            case R.id.action_overflow:
+                PopupMenu popupMenu = new PopupMenu(MainActivity.this, toolbar) {
+                    @Override
+                    public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_home:
+                                webView.clearHistory();
+                                webView.loadUrl(getHomepage());
+                                break;
+                            case R.id.action_share:
+                                String shareBody = webView.getUrl();
+                                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                                sharingIntent.setType("text/plain");
+                                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Website Link");
+                                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                                startActivity(Intent.createChooser(sharingIntent, "Share link"));
+                                break;
+                            case R.id.action_refresh:
+                                webView.reload();
+                                break;
+                            case R.id.action_incognito:
+                                isIncognito = !isIncognito;
 
-                isIncognito = item.isChecked();
+                                item.setTitle((isIncognito ? "Exit " : "") + getString(R.string.menu_incognito));
 
-                WebSettings webSettings = webView.getSettings();
-                CookieManager.getInstance().setAcceptCookie(!isIncognito);
-                webSettings.setAppCacheEnabled(!isIncognito);
-                webView.clearHistory();
-                webView.clearCache(isIncognito);
-                webView.clearFormData();
-                webView.getSettings().setSavePassword(!isIncognito);
-                webView.getSettings().setSaveFormData(!isIncognito);
-                webView.isPrivateBrowsingEnabled();
+                                WebSettings webSettings = webView.getSettings();
+                                CookieManager.getInstance().setAcceptCookie(!isIncognito);
+                                webSettings.setAppCacheEnabled(!isIncognito);
+                                webView.clearHistory();
+                                webView.clearCache(isIncognito);
+                                webView.clearFormData();
+                                webView.getSettings().setSavePassword(!isIncognito);
+                                webView.getSettings().setSaveFormData(!isIncognito);
+                                webView.isPrivateBrowsingEnabled();
 
-                setColor(ContextCompat.getColor(this, R.color.colorPrimary));
-                break;
-            case R.id.action_desktop:
-                item.setChecked(!item.isChecked());
-                webView.getSettings().setUserAgentString(item.isChecked() ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : System.getProperty("http.agent"));
-                webView.reload();
-                break;
-            case R.id.action_perms:
-                launchPerms();
-                break;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                                setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                                break;
+                            case R.id.action_perms:
+                                launchPerms();
+                                break;
+                            case R.id.action_settings:
+                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                                break;
+                        }
+                        return super.onMenuItemSelected(menu, item);
+                    }
+                };
+
+                popupMenu.inflate(R.menu.menu_overflow);
+
+                popupMenu.getMenu().findItem(R.id.action_perms).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
+
+                try {
+                    Field fMenuHelper = PopupMenu.class.getDeclaredField("mPopup");
+                    fMenuHelper.setAccessible(true);
+                    Object menuHelper = fMenuHelper.get(popupMenu);
+
+                    menuHelper.getClass().getDeclaredMethod("setForceShowIcon", new Class[]{boolean.class}).invoke(menuHelper, true);
+
+                    //TODO: override icon setter to use StaticUtils.getVectorIcon()
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                popupMenu.setGravity(Gravity.TOP | Gravity.END);
+                popupMenu.show();
+
                 break;
         }
 
@@ -666,6 +711,8 @@ public class MainActivity extends AppCompatActivity {
             webSettings.setBuiltInZoomControls(prefs.getBoolean("zooming", false));
             webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
             webSettings.setDisplayZoomControls(prefs.getBoolean("zooming", false));
+
+            webSettings.setUserAgentString(prefs.getBoolean("desktop", false) ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : System.getProperty("http.agent"));
 
             Bitmap favicon = webView.getFavicon();
             if (favicon != null) {

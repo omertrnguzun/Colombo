@@ -9,39 +9,9 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_home"
-        android:title="@string/menu_home"
-        app:showAsAction="never" />
+        android:id="@+id/action_overflow"
+        android:title=""
+        android:icon="@drawable/ic_menu_overflow"
+        app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_refresh"
-        android:title="@string/menu_refresh"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_incognito"
-        android:title="@string/menu_incognito"
-        android:checkable="true"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_desktop"
-        android:title="@string/menu_desktop"
-        android:checkable="true"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_share"
-        android:title="@string/menu_share"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_perms"
-        android:title="@string/menu_perms"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/menu_settings"
-        app:showAsAction="never" />
 </menu>
