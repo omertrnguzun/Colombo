@@ -4,11 +4,14 @@ import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -28,8 +31,8 @@ import android.os.Environment;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
-import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private AppBarLayout appbar;
+    private CoordinatorLayout coordinatorLayout;
 
     private SearchView searchView;
     private SearchManager searchManager;
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomWebChromeClient webChromeClient;
+    private NetworkChangeReceiver networkChangeReceiver;
 
     private ImageView previous, next;
 
@@ -118,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         webView = (ObservableWebView) findViewById(webview);
 
         previous = (ImageView) findViewById(R.id.previous);
@@ -138,18 +144,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        toolbar.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", webView.getUrl());
-                clipboard.setPrimaryClip(clip);
-                Snackbar snackbar = Snackbar.make(webView, "Current URL copied to clipboard!", Snackbar.LENGTH_SHORT);
-                snackbar.show();
-                return true;
-            }
-        });
-
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,17 +153,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setSupportActionBar(toolbar);
-        ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = manager.getActiveNetworkInfo();
-
-        if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
-            Snackbar.make(webView, R.string.msg_connection_failed, Snackbar.LENGTH_INDEFINITE).setAction(R.string.action_network_settings, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-                }
-            }).show();
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -244,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(true);
 
                 toolbar.setTitle(url);
-                if (!isIncognito) suggestions.saveRecentQuery(url, null);
+                if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
 
                 if (url.startsWith("https")) {
                     Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
@@ -269,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDownloadStart(final String url, String userAgent, final String contentDisposition, final String mimeType, long contentLength) {
                 final String filename1 = URLUtil.guessFileName(url, contentDisposition, mimeType);
 
-                Snackbar snackbar = Snackbar.make(webView, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
                 View snackBarView = snackbar.getView();
                 snackbar.setActionTextColor(Color.parseColor("#FAFAFA"));
                 snackBarView.setBackgroundColor(Color.parseColor("#4690CD"));
@@ -438,8 +421,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-
             colorAnimation.start();
+
+            setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), color));
         }
 
         int colorFrom = ContextCompat.getColor(this, !isIncognito ? R.color.colorPrimaryIncognito : R.color.colorPrimary);
@@ -460,16 +444,6 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
     }
 
-    private void onQuery(String query) {
-        if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
-            if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-            webView.loadUrl(query);
-        } else
-            webView.loadUrl(getSearchPrefix() + query);
-
-        if (!isIncognito) suggestions.saveRecentQuery(query, null);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -485,7 +459,8 @@ public class MainActivity extends AppCompatActivity {
             Uri result = intent == null || resultCode != MainActivity.RESULT_OK ? null : intent.getData();
             uploadMessagePreLollipop.onReceiveValue(result);
             uploadMessagePreLollipop = null;
-        } else Snackbar.make(webView, R.string.msg_upload_failed, Snackbar.LENGTH_SHORT).show();
+        } else
+            Snackbar.make(coordinatorLayout, R.string.msg_upload_failed, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -678,6 +653,8 @@ public class MainActivity extends AppCompatActivity {
             // for ActivityCompat#requestPermissions for more details.
         } else if (locationManager != null)
             locationManager.removeUpdates(locationListener);
+
+        unregisterReceiver(networkChangeReceiver);
     }
 
     @Override
@@ -695,16 +672,18 @@ public class MainActivity extends AppCompatActivity {
         } else if (locationManager != null)
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
 
-        ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = manager.getActiveNetworkInfo();
+        networkChangeReceiver = new NetworkChangeReceiver();
+        registerReceiver(networkChangeReceiver, new IntentFilter());
+    }
 
-        if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
-            Snackbar.make(webView, R.string.msg_connection_failed, Snackbar.LENGTH_INDEFINITE).setAction(R.string.action_network_settings, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-                }
-            }).show();
+    public static class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NetworkInfo netInfo = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+
+            if (netInfo == null || !netInfo.isConnected())
+                Toast.makeText(context, R.string.msg_connection_failed, Toast.LENGTH_SHORT).show();
         }
     }
 }

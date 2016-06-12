@@ -45,6 +45,12 @@
                 android:resource="@xml/searchable" />
         </activity>
 
+        <receiver android:name=".activities.MainActivity$NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name=".util.RecentSuggestionsProvider"
             android:authorities="com.riccardobusetti.colombo.util.RecentSuggestionsProvider" />
