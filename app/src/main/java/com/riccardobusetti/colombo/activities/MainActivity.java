@@ -211,22 +211,20 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("market://") || url.startsWith("https://www.youtube.com") || url.startsWith("https://play.google.com") || url.startsWith("mailto:") || url.startsWith("intent://")) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(url));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                if (getPackageManager().resolveActivity(intent, 0) != null) {
                     startActivity(intent);
                     return true;
                 }
 
-                view.loadUrl(url);
-                return true;
+                toolbar.setTitle(url);
+                return super.shouldOverrideUrlLoading(view, url);
             }
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap facIcon) {
                 swipeRefreshLayout.setRefreshing(true);
 
-                toolbar.setTitle(url);
                 if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
 
                 if (url.startsWith("https")) {
