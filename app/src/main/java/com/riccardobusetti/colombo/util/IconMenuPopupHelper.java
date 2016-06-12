@@ -11,19 +11,17 @@ import android.support.v7.view.menu.MenuPresenter;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.view.menu.SubMenuBuilder;
 import android.support.v7.widget.ListPopupWindow;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -181,35 +179,7 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
     }
 
     private int measureContentWidth() {
-        int maxWidth = 0;
-        View itemView = null;
-        int itemType = 0;
-
-        final ListAdapter adapter = this.adapter;
-        final int widthMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-        final int heightMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-        final int count = adapter.getCount();
-        for (int i = 0; i < count; i++) {
-            final int positionType = adapter.getItemViewType(i);
-            if (positionType != itemType) {
-                itemType = positionType;
-                itemView = null;
-            }
-
-            if (measureParent == null) measureParent = new FrameLayout(context);
-
-            itemView = adapter.getView(i, itemView, measureParent);
-            itemView.measure(widthMeasureSpec, heightMeasureSpec);
-
-            final int itemWidth = itemView.getMeasuredWidth();
-            if (itemWidth >= maxWidth) {
-                return this.maxWidth;
-            } else if (itemWidth > maxWidth) {
-                maxWidth = itemWidth;
-            }
-        }
-
-        return maxWidth;
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 168, context.getResources().getDisplayMetrics());
     }
 
     @Override
