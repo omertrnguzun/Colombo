@@ -14,7 +14,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -267,20 +266,6 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
 
             TextView textView = (TextView) convertView.findViewById(R.id.title);
             textView.setText(menuItem.getTitle());
-
-            convertView.setTag(position);
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = (int) v.getTag();
-                    MenuItem item = getItem(position);
-
-                    adapterMenu.performItemAction(item, 0);
-
-                    if (item.isCheckable() && item.isChecked())
-                        DrawableCompat.setTint(((ImageView) v.findViewById(R.id.image)).getDrawable(), ContextCompat.getColor(context, com.riccardobusetti.colombo.R.color.colorAccent));
-                }
-            });
 
             return convertView;
         }

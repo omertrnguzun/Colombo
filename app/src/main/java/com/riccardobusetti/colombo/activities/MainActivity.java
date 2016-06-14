@@ -60,7 +60,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.amqtech.permissions.helper.objects.Permission;
@@ -100,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
     private CustomWebChromeClient webChromeClient;
     private NetworkChangeReceiver networkChangeReceiver;
 
-    private ImageView previous, next;
-
     private boolean isIncognito;
 
     private LocationManager locationManager;
@@ -126,11 +123,7 @@ public class MainActivity extends AppCompatActivity {
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         webView = (ObservableWebView) findViewById(webview);
 
-        previous = (ImageView) findViewById(R.id.previous);
-        next = (ImageView) findViewById(R.id.next);
-        previous.setImageDrawable(StaticUtils.getVectorDrawable(this, R.drawable.ic_previous));
-        next.setImageDrawable(StaticUtils.getVectorDrawable(this, R.drawable.ic_next));
-        webView.setNavigationViews(previous, next);
+        webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
 
         View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
 
@@ -211,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                super.shouldOverrideUrlLoading(view, url);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 if (getPackageManager().resolveActivity(intent, 0) != null) {
                     startActivity(intent);
@@ -218,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 toolbar.setTitle(url);
-                return super.shouldOverrideUrlLoading(view, url);
+                return true;
             }
 
             @Override

@@ -6,7 +6,6 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -16,13 +15,12 @@ import com.riccardobusetti.colombo.R;
 
 public class ObservableWebView extends WebView {
 
-    private int lastY;
     private final int[] scrollOffset = new int[2];
     private final int[] scrollConsumed = new int[2];
     private int nestedOffsetY;
     private NestedScrollingChildHelper childHelper;
 
-    private float startX, endX;
+    private float startY, startX, endX;
 
     private boolean canScrollVertically;
 
@@ -84,41 +82,42 @@ public class ObservableWebView extends WebView {
             nestedOffsetY = 0;
         }
 
-        int eventY = (int) event.getY();
+        float eventY = event.getY();
         event.offsetLocation(0, nestedOffsetY);
 
         switch (action) {
             case MotionEvent.ACTION_MOVE:
-                int deltaY = lastY - eventY;
+                float deltaY = startY - eventY;
 
-                if (dispatchNestedPreScroll(0, deltaY, scrollConsumed, scrollOffset)) {
+                if (dispatchNestedPreScroll(0, (int) deltaY, scrollConsumed, scrollOffset)) {
                     deltaY -= scrollConsumed[1];
-                    lastY = eventY - scrollOffset[1];
+                    startY = eventY - scrollOffset[1];
                     event.offsetLocation(0, -scrollOffset[1]);
                     nestedOffsetY += scrollOffset[1];
                 }
 
-                if (dispatchNestedScroll(0, scrollOffset[1], 0, deltaY, scrollOffset)) {
+                if (dispatchNestedScroll(0, scrollOffset[1], 0, (int) deltaY, scrollOffset)) {
                     event.offsetLocation(0, scrollOffset[1]);
                     nestedOffsetY += scrollOffset[1];
-                    lastY -= scrollOffset[1];
+                    startY -= scrollOffset[1];
                 }
 
-                float scrollX = startX - event.getX();
-                if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
-                    setX(-scrollX / 5);
+                if (Math.abs(deltaY) < Math.abs(startX - event.getX())) {
+                    float scrollX = startX - event.getX();
+                    if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
+                        setX(-scrollX / 5);
 
-                if (next != null) next.setPressed(scrollX > getOverscrollDistance());
-                if (previous != null) previous.setPressed(scrollX < -getOverscrollDistance());
+                    if (next != null) next.setPressed(scrollX > getOverscrollDistance());
+                    if (previous != null) previous.setPressed(scrollX < -getOverscrollDistance());
+                }
 
                 break;
             case MotionEvent.ACTION_DOWN:
-                lastY = eventY;
+                startY = eventY;
                 startX = event.getX();
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
                 break;
             case MotionEvent.ACTION_UP:
-
             case MotionEvent.ACTION_CANCEL:
                 if (next != null) next.setPressed(false);
                 if (previous != null) previous.setPressed(false);
@@ -136,8 +135,9 @@ public class ObservableWebView extends WebView {
         return super.onTouchEvent(event);
     }
 
-    private float getOverscrollDistance() {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics());
+    private int getOverscrollDistance() {
+        if (next != null) return next.getWidth();
+        else return 200;
     }
 
     @Override

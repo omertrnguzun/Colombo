@@ -18,10 +18,9 @@ public class StaticUtils {
     @Nullable
     public static Bitmap drawableToBitmap(Drawable drawable) {
         if (drawable == null) return null;
-
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
+        if (drawable instanceof BitmapDrawable) return ((BitmapDrawable) drawable).getBitmap();
+        if (drawable instanceof VectorDrawableCompat)
+            return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
 
         int width = drawable.getBounds().isEmpty() ? drawable.getIntrinsicWidth() : drawable.getBounds().width();
         int height = drawable.getBounds().isEmpty() ? drawable.getIntrinsicHeight() : drawable.getBounds().height();

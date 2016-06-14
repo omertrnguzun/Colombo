@@ -74,11 +74,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="42dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="start"
-                    android:src="@drawable/ic_previous"
+                    app:srcCompat="@drawable/ic_previous"
                     android:tint="@android:color/black"
                     android:id="@+id/previous"
                     android:clickable="true"
@@ -86,11 +86,11 @@
                     android:scaleType="fitCenter"
                     android:padding="8dp" />
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="42dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
-                    android:src="@drawable/ic_next"
+                    app:srcCompat="@drawable/ic_next"
                     android:tint="@android:color/black"
                     android:id="@+id/next"
                     android:clickable="true"
