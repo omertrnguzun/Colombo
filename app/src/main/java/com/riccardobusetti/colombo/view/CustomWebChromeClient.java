@@ -59,12 +59,7 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
 
             if (customViewDialog != null && customViewDialog.isShowing()) customViewDialog.dismiss();
 
-            customViewDialog = new AlertDialog.Builder(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen).setView(videoViewContainer).setPositiveButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+            customViewDialog = new AlertDialog.Builder(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen).setView(videoViewContainer).setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
                     WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();

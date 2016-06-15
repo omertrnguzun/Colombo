@@ -1,8 +1,8 @@
 package com.riccardobusetti.colombo.util;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.appcompat.R;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuItemImpl;
@@ -262,7 +262,9 @@ public class IconMenuPopupHelper extends MenuPopupHelper implements AdapterView.
             else imageView.setImageDrawable(StaticUtils.getVectorDrawable(context, iconRes));
 
             if (menuItem.isCheckable() && menuItem.isChecked())
-                DrawableCompat.setTint(imageView.getDrawable(), ContextCompat.getColor(context, com.riccardobusetti.colombo.R.color.colorAccent));
+                convertView.setBackgroundColor(ContextCompat.getColor(context, com.riccardobusetti.colombo.R.color.colorAccent));
+            else
+                convertView.setBackgroundColor(Color.TRANSPARENT);
 
             TextView textView = (TextView) convertView.findViewById(R.id.title);
             textView.setText(menuItem.getTitle());

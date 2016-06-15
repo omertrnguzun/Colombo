@@ -204,14 +204,11 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                super.shouldOverrideUrlLoading(view, url);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                if (getPackageManager().resolveActivity(intent, 0) != null) {
-                    startActivity(intent);
-                    return true;
-                }
+                if (getPackageManager().resolveActivity(intent, 0) != null) startActivity(intent);
 
                 toolbar.setTitle(url);
+                webView.loadUrl(url);
                 return true;
             }
 
