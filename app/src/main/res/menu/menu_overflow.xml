@@ -15,6 +15,13 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_dekstop"
+        android:title="@string/menu_dekstop"
+        android:icon="@drawable/ic_desktop"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_incognito"
         android:title="@string/menu_incognito"
         android:icon="@drawable/ic_incognito"

@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     private NetworkChangeReceiver networkChangeReceiver;
 
     private boolean isIncognito;
+    private boolean isDekstop;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -193,8 +194,6 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDisplayZoomControls(false);
         webSettings.setBuiltInZoomControls(false);
 
-        webSettings.setUserAgentString(prefs.getBoolean("desktop", false) ? "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0" : WebSettings.getDefaultUserAgent(this));
-
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setAllowFileAccess(true);
         webSettings.setAppCacheEnabled(true);
@@ -204,11 +203,14 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                if (getPackageManager().resolveActivity(intent, 0) != null) startActivity(intent);
+                if (url.startsWith("market://") || url.startsWith("https://www.youtube.com") || url.startsWith("https://play.google.com") || url.startsWith("mailto:") || url.startsWith("intent://")) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(url));
+                    startActivity(intent);
+                    return true;
+                }
 
-                toolbar.setTitle(url);
-                webView.loadUrl(url);
+                view.loadUrl(url);
                 return true;
             }
 
@@ -311,6 +313,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
+                toolbar.setTitle(webView.getUrl());
             }
         };
 
@@ -388,9 +391,9 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "You won't be able to download files!", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setBackgroundColor(Color.parseColor("#4690CD"))
-                .setBarColor(Color.parseColor("#236FB0"))
-                .setStatusBarColor(Color.parseColor("#236FB0"))
+                .setBackgroundColor(Color.parseColor("#8DC6F4"))
+                .setBarColor(Color.parseColor("#8DC6F4"))
+                .setStatusBarColor(Color.parseColor("#2196F3"))
                 .launch();
     }
 
@@ -456,11 +459,10 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
-
-        if (searchView.getVisibility() == View.VISIBLE) {
+        } else if (searchView.getVisibility() == View.VISIBLE){
+            searchView.setVisibility(View.GONE);
+            searchView.setIconified(false);
+        } else if (webView.canGoBack() && searchView.getVisibility() == View.VISIBLE) {
             searchView.setVisibility(View.GONE);
             searchView.setIconified(false);
         } else {
@@ -485,11 +487,10 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query.contains(".") || URLUtil.isValidUrl(query))
+                if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                else if (query.contains("."))
-                    webView.loadUrl(URLUtil.guessUrl(query));
-                else
+                } else
                     webView.loadUrl(getSearchPrefix() + query);
 
                 if (!isIncognito) suggestions.saveRecentQuery(query, null);
@@ -573,6 +574,19 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.action_refresh:
                                 webView.reload();
                                 break;
+                            case R.id.action_dekstop:
+                                isDekstop = !isDekstop;
+                                item.setChecked(isDekstop);
+
+                                if (isDekstop) {
+                                    webView.getSettings().setUserAgentString("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0");
+                                    webView.loadUrl(webView.getUrl());
+                                } else if (!isDekstop) {
+                                    String userAgent = System.getProperty("http.agent");
+                                    webView.getSettings().setUserAgentString(userAgent);
+                                    webView.loadUrl(webView.getUrl());
+                                }
+                                break;
                             case R.id.action_incognito:
                                 isIncognito = !isIncognito;
                                 item.setChecked(isIncognito);
@@ -627,6 +641,33 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //This method isnt used but must remain here for future stuff
+    public static String getDefaultUserAgent() {
+        StringBuilder result = new StringBuilder(64);
+        result.append("Dalvik/");
+        result.append(System.getProperty("java.vm.version")); // such as 1.1.0
+        result.append(" (Linux; U; Android ");
+
+        String version = Build.VERSION.RELEASE; // "1.0" or "3.4b5"
+        result.append(version.length() > 0 ? version : "1.0");
+
+        // add the model for the release build
+        if ("REL".equals(Build.VERSION.CODENAME)) {
+            String model = Build.MODEL;
+            if (model.length() > 0) {
+                result.append("; ");
+                result.append(model);
+            }
+        }
+        String id = Build.ID; // "MASTER" or "M4-rc20"
+        if (id.length() > 0) {
+            result.append(" Build/");
+            result.append(id);
+        }
+        result.append(")");
+        return result.toString();
     }
 
     @Override
