@@ -130,6 +130,16 @@ public class MainActivity extends PlaceholderUiActivity {
 
         webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
 
+        /** Webview url loading MUST BE HERE BEFORE ALL DECLARATIONS */
+        String action = getIntent().getAction();
+        if (savedInstanceState != null)
+            webView.loadUrl(savedInstanceState.getString("url"));
+        else if (action != null && action.matches(Intent.ACTION_VIEW))
+            webView.loadUrl(getIntent().getDataString());
+        else
+            webView.loadUrl(getHomepage());
+
+        /** Objects animations */
         final View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -160,6 +170,7 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         }
 
+        /** Toolbar and ActionBar */
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,6 +181,7 @@ public class MainActivity extends PlaceholderUiActivity {
 
         setSupportActionBar(toolbar);
 
+        /** Webview setup */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Without GPS permissions the location won't work!", Toast.LENGTH_SHORT).show();
@@ -252,6 +264,8 @@ public class MainActivity extends PlaceholderUiActivity {
                     DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorIconGrey));
                     toolbar.setNavigationIcon(drawable);
                 }
+
+                toolbar.setTitle(webView.getUrl());
             }
 
             @Override
@@ -336,8 +350,6 @@ public class MainActivity extends PlaceholderUiActivity {
                         }
                     });
                 }
-
-                toolbar.setTitle(webView.getUrl());
             }
         };
 
@@ -359,14 +371,6 @@ public class MainActivity extends PlaceholderUiActivity {
                 webView.reload();
             }
         });
-
-        String action = getIntent().getAction();
-        if (savedInstanceState != null)
-            webView.loadUrl(savedInstanceState.getString("url"));
-        else if (action != null && action.matches(Intent.ACTION_VIEW))
-            webView.loadUrl(getIntent().getDataString());
-        else
-            webView.loadUrl(getHomepage());
     }
 
     @Override
