@@ -12,4 +12,10 @@
         android:title="@string/navbar_tint"
         android:summary="@string/navbar_tint_summary"/>
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="dark"
+        android:title="@string/pref_dark"
+        android:summary="@string/pref_dark_summary"/>
+
 </PreferenceScreen>

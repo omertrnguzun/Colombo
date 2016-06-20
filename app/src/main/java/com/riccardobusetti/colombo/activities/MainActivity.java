@@ -17,7 +17,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -44,6 +43,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -78,6 +78,7 @@ import com.riccardobusetti.colombo.view.ObservableWebView;
 
 import java.lang.reflect.Field;
 
+import static com.riccardobusetti.colombo.R.id.card;
 import static com.riccardobusetti.colombo.R.id.webview;
 
 public class MainActivity extends PlaceholderUiActivity {
@@ -111,6 +112,9 @@ public class MainActivity extends PlaceholderUiActivity {
 
     private SharedPreferences prefs;
 
+    private View cardView, search, backround;
+    private CardView card_search;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +131,19 @@ public class MainActivity extends PlaceholderUiActivity {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         webView = (ObservableWebView) findViewById(webview);
+        backround = findViewById(R.id.backround);
+        card_search = (CardView) findViewById(R.id.card_search);
+        cardView = findViewById(R.id.card);
+        search = findViewById(R.id.search);
+
+        boolean dark = prefs.getBoolean("dark", false);
+
+        if(dark) {
+            card_search.setBackgroundColor(Color.parseColor("#424242"));
+            backround.setBackgroundColor(Color.parseColor("#424242"));
+            toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
+            webView.setBackgroundColor(Color.parseColor("#424242"));
+        }
 
         webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
 
@@ -140,8 +157,6 @@ public class MainActivity extends PlaceholderUiActivity {
             webView.loadUrl(getHomepage());
 
         /** Objects animations */
-        final View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             if (cardView != null) {
@@ -495,7 +510,7 @@ public class MainActivity extends PlaceholderUiActivity {
                 searchView.setIconified(false);
                 break;
             case R.id.action_overflow:
-                PopupMenu popupMenu = new PopupMenu(MainActivity.this, toolbar) {
+                final PopupMenu popupMenu = new PopupMenu(MainActivity.this, toolbar) {
                     @Override
                     public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                         switch (item.getItemId()) {
@@ -728,33 +743,15 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
-    }
 
-    /** Get user agent method from Android AOSP code */
-    public static String getDefaultUserAgent() {
-        StringBuilder result = new StringBuilder(64);
-        result.append("Dalvik/");
-        result.append(System.getProperty("java.vm.version")); // such as 1.1.0
-        result.append(" (Linux; U; Android ");
+        boolean dark = prefs.getBoolean("dark", false);
 
-        String version = Build.VERSION.RELEASE; // "1.0" or "3.4b5"
-        result.append(version.length() > 0 ? version : "1.0");
-
-        // add the model for the release build
-        if ("REL".equals(Build.VERSION.CODENAME)) {
-            String model = Build.MODEL;
-            if (model.length() > 0) {
-                result.append("; ");
-                result.append(model);
-            }
+        if(dark) {
+            card_search.setBackgroundColor(Color.parseColor("#424242"));
+            backround.setBackgroundColor(Color.parseColor("#424242"));
+            toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
+            webView.setBackgroundColor(Color.parseColor("#424242"));
         }
-        String id = Build.ID; // "MASTER" or "M4-rc20"
-        if (id.length() > 0) {
-            result.append(" Build/");
-            result.append(id);
-        }
-        result.append(")");
-        return result.toString();
     }
 
     /** Method to create shortcuts to home */
