@@ -192,7 +192,8 @@ public class MainActivity extends AppCompatActivity {
 
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
         webSettings.setDisplayZoomControls(false);
-        webSettings.setBuiltInZoomControls(false);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.supportZoom();
 
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setAllowFileAccess(true);

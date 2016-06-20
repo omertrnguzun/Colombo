@@ -107,8 +107,8 @@ public class ObservableWebView extends WebView {
                     if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
                         setX(-scrollX / 5);
 
-                    if (next != null) next.setPressed(scrollX > getOverscrollDistance());
-                    if (previous != null) previous.setPressed(scrollX < -getOverscrollDistance());
+                    getRootView().findViewById(R.id.next).setPressed(false);
+                    getRootView().findViewById(R.id.previous).setPressed(false);
                 }
 
                 break;
@@ -125,8 +125,8 @@ public class ObservableWebView extends WebView {
                 endX = event.getX();
                 animate().x(0).setDuration(50).start();
 
-                if (startX - endX > getOverscrollDistance() && canGoForward()) goForward();
-                else if (startX - endX < -getOverscrollDistance() && canGoBack()) goBack();
+                if (startX - endX > 500 && canGoForward()) goForward();
+                else if (startX - endX < -500 && canGoBack()) goBack();
 
                 stopNestedScroll();
                 break;
@@ -135,10 +135,10 @@ public class ObservableWebView extends WebView {
         return super.onTouchEvent(event);
     }
 
-    private int getOverscrollDistance() {
+    /*private int getOverscrollDistance() {
         if (next != null) return next.getWidth();
         else return 200;
-    }
+    }*/
 
     @Override
     public void setNestedScrollingEnabled(boolean enabled) {
