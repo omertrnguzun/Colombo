@@ -29,6 +29,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_add"
+        android:title="@string/menu_add"
+        android:icon="@drawable/ic_add"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_share"
         android:title="@string/menu_share"
         android:icon="@drawable/ic_share"

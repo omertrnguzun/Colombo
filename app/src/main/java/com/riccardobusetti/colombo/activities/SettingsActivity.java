@@ -11,10 +11,13 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.riccardobusetti.colombo.R;
+import com.riccardobusetti.colombo.util.StaticUtils;
 
 import java.util.List;
 
@@ -93,6 +96,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", getActivity().getApplicationContext().getPackageName(), null));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
+                    return false;
+                }
+            });
+
+            findPreference("gestures").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Snackbar snackbar = Snackbar
+                            .make(getView(), "For apply this change you must restart Colombo!", Snackbar.LENGTH_LONG)
+                            .setAction("RESTART", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    StaticUtils.restart(getActivity().getApplicationContext());
+                                }
+                            });
+
+                    snackbar.show();
                     return false;
                 }
             });

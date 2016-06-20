@@ -88,5 +88,8 @@
     <string name="menu_new">New Tab</string>
     <string name="pref_header_about">About Colombo</string>
     <string name="menu_dekstop">Dekstop Site</string>
+    <string name="menu_add">Add to home</string>
+    <string name="gestures">Gestures</string>
+    <string name="gestures_description">Disable or Enable Gestures, like swiping from left to right...</string>
 
 </resources>

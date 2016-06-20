@@ -2,6 +2,8 @@ package com.riccardobusetti.colombo.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
@@ -26,6 +28,8 @@ public class ObservableWebView extends WebView {
 
     private CustomWebChromeClient webChromeClient;
     private View previous, next;
+
+    private SharedPreferences prefs;
 
     public ObservableWebView(Context context) {
         super(context);
@@ -82,6 +86,8 @@ public class ObservableWebView extends WebView {
             nestedOffsetY = 0;
         }
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         float eventY = event.getY();
         event.offsetLocation(0, nestedOffsetY);
 
@@ -102,15 +108,16 @@ public class ObservableWebView extends WebView {
                     startY -= scrollOffset[1];
                 }
 
-                if (Math.abs(deltaY) < Math.abs(startX - event.getX())) {
-                    float scrollX = startX - event.getX();
-                    if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
-                        setX(-scrollX / 5);
+                if (prefs.getBoolean("gestures", true)) {
+                    if (Math.abs(deltaY) < Math.abs(startX - event.getX())) {
+                        float scrollX = startX - event.getX();
+                        if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
+                            setX(-scrollX / 5);
 
-                    getRootView().findViewById(R.id.next).setPressed(false);
-                    getRootView().findViewById(R.id.previous).setPressed(false);
+                        getRootView().findViewById(R.id.next).setPressed(false);
+                        getRootView().findViewById(R.id.previous).setPressed(false);
+                    }
                 }
-
                 break;
             case MotionEvent.ACTION_DOWN:
                 startY = eventY;
@@ -125,8 +132,10 @@ public class ObservableWebView extends WebView {
                 endX = event.getX();
                 animate().x(0).setDuration(50).start();
 
-                if (startX - endX > 500 && canGoForward()) goForward();
-                else if (startX - endX < -500 && canGoBack()) goBack();
+                if (prefs.getBoolean("gestures", true)) {
+                    if (startX - endX > 500 && canGoForward()) goForward();
+                    else if (startX - endX < -500 && canGoBack()) goBack();
+                }
 
                 stopNestedScroll();
                 break;

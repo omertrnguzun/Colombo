@@ -1,6 +1,7 @@
 package com.riccardobusetti.colombo.activities;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -16,6 +17,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -28,6 +30,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
@@ -39,7 +42,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.PopupMenu;
@@ -49,6 +51,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
@@ -76,7 +80,7 @@ import java.lang.reflect.Field;
 
 import static com.riccardobusetti.colombo.R.id.webview;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends PlaceholderUiActivity {
 
     private static final int REQUEST_SELECT_FILE = 100;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
@@ -126,11 +130,29 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
 
-        View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
+        final View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            if (cardView != null && cardView.getVisibility() == View.VISIBLE) {
-                cardView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up_in));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            if (cardView != null) {
+                cardView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                            cardView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        } else {
+                            cardView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                        int a = (cardView.getLeft() + cardView.getRight()) / 2;
+                        int b = (cardView.getTop() + cardView.getBottom()) / 2;
+
+                        int radius = cardView.getWidth();
+
+                        Animator anim = ViewAnimationUtils.createCircularReveal(cardView, a, b, 0, radius);
+                        anim.setDuration(500);
+                        anim.start();
+                    }
+                });
             }
 
             if (search != null && search.getVisibility() == View.VISIBLE) {
@@ -279,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
 
         webChromeClient = new CustomWebChromeClient(this) {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
 
                 if (uploadMessage != null) {
                     uploadMessage.onReceiveValue(null);
@@ -314,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
+
                 toolbar.setTitle(webView.getUrl());
             }
         };
@@ -341,100 +364,9 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null)
             webView.loadUrl(savedInstanceState.getString("url"));
         else if (action != null && action.matches(Intent.ACTION_VIEW))
-            webView.loadUrl(getIntent().getData().toString());
+            webView.loadUrl(getIntent().getDataString());
         else
             webView.loadUrl(getHomepage());
-    }
-
-    private String getHomepage() {
-        String homepage = prefs.getString("homepage", "");
-        if (homepage.length() > 0) {
-            return homepage;
-        } else {
-            switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
-                case SEARCH_YAHOO:
-                    return "https://www.yahoo.com/";
-                case SEARCH_DUCKDUCKGO:
-                    return "https://duckduckgo.com/";
-                case SEARCH_BING:
-                    return "https://www.bing.com/";
-                default:
-                    return "https://www.google.com/";
-            }
-        }
-    }
-
-    private String getSearchPrefix() {
-        switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
-            case SEARCH_YAHOO:
-                return "https://www.yahoo.com/search?p=";
-            case SEARCH_DUCKDUCKGO:
-                return "https://duckduckgo.com/?q=";
-            case SEARCH_BING:
-                return "https://www.bing.com/search?q=";
-            default:
-                return "https://www.google.com/search?q=";
-        }
-    }
-
-    private void launchPerms() {
-        new PermissionsActivity(getBaseContext())
-                .withAppName(getResources().getString(R.string.app_name))
-                .withPermissions(new Permission(Permissions.WRITE_EXTERNAL_STORAGE, "To download files, Colombo must have access to your storage!"), new Permission(Permissions.ACCESS_FINE_LOCATION, "If you want to use WebApps with geolocation Colombo must have access to your position!"))
-                .withPermissionFlowCallback(new PermissionsActivity.PermissionFlowCallback() {
-                    @Override
-                    public void onPermissionGranted(Permission permission) {
-                        Toast.makeText(MainActivity.this, "The permissions are set!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onPermissionDenied(Permission permission) {
-                        Toast.makeText(MainActivity.this, "You won't be able to download files!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setBackgroundColor(Color.parseColor("#8DC6F4"))
-                .setBarColor(Color.parseColor("#8DC6F4"))
-                .setStatusBarColor(Color.parseColor("#2196F3"))
-                .launch();
-    }
-
-    private void setColor(int color) {
-        color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), StaticUtils.darkColor(color));
-            colorAnimation.setDuration(150);
-            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animator) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getWindow().setStatusBarColor((int) animator.getAnimatedValue());
-                        if (prefs.getBoolean("navbar_tint", false))
-                            getWindow().setNavigationBarColor((int) animator.getAnimatedValue());
-                    }
-                }
-            });
-            colorAnimation.start();
-
-            setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), color));
-        }
-
-        int colorFrom = ContextCompat.getColor(this, !isIncognito ? R.color.colorPrimaryIncognito : R.color.colorPrimary);
-        Drawable backgroundFrom = appbar.getBackground();
-        if (backgroundFrom instanceof ColorDrawable)
-            colorFrom = ((ColorDrawable) backgroundFrom).getColor();
-
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, color);
-        colorAnimation.setDuration(150);
-        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                appbar.setBackgroundColor((int) animator.getAnimatedValue());
-            }
-        });
-        colorAnimation.start();
-
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
     }
 
     @Override
@@ -525,6 +457,9 @@ public class MainActivity extends AppCompatActivity {
                 else
                     webView.loadUrl(getSearchPrefix() + query);
 
+                searchView.setIconified(false);
+                searchView.setVisibility(View.GONE);
+
                 return false;
             }
         });
@@ -604,6 +539,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
                                 break;
+                            case R.id.action_add:
+                                createShortCut();
+                                Toast.makeText(MainActivity.this, "Shortcut added to home!", Toast.LENGTH_SHORT).show();
+                                break;
                             case R.id.action_perms:
                                 launchPerms();
                                 break;
@@ -644,33 +583,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //This method isnt used but must remain here for future stuff
-    public static String getDefaultUserAgent() {
-        StringBuilder result = new StringBuilder(64);
-        result.append("Dalvik/");
-        result.append(System.getProperty("java.vm.version")); // such as 1.1.0
-        result.append(" (Linux; U; Android ");
-
-        String version = Build.VERSION.RELEASE; // "1.0" or "3.4b5"
-        result.append(version.length() > 0 ? version : "1.0");
-
-        // add the model for the release build
-        if ("REL".equals(Build.VERSION.CODENAME)) {
-            String model = Build.MODEL;
-            if (model.length() > 0) {
-                result.append("; ");
-                result.append(model);
-            }
-        }
-        String id = Build.ID; // "MASTER" or "M4-rc20"
-        if (id.length() > 0) {
-            result.append(" Build/");
-            result.append(id);
-        }
-        result.append(")");
-        return result.toString();
-    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -705,6 +617,154 @@ public class MainActivity extends AppCompatActivity {
 
         networkChangeReceiver = new NetworkChangeReceiver();
         registerReceiver(networkChangeReceiver, new IntentFilter());
+
+        if (prefs != null) {
+            setPrefs();
+        }
+    }
+
+    /** Method to get homepage from prefs */
+    private String getHomepage() {
+        String homepage = prefs.getString("homepage", "");
+        if (homepage.length() > 0) {
+            return homepage;
+        } else {
+            switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
+                case SEARCH_YAHOO:
+                    return "https://www.yahoo.com/";
+                case SEARCH_DUCKDUCKGO:
+                    return "https://duckduckgo.com/";
+                case SEARCH_BING:
+                    return "https://www.bing.com/";
+                default:
+                    return "https://www.google.com/";
+            }
+        }
+    }
+
+    /** Method to get prefix for search engine */
+    private String getSearchPrefix() {
+        switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
+            case SEARCH_YAHOO:
+                return "https://www.yahoo.com/search?p=";
+            case SEARCH_DUCKDUCKGO:
+                return "https://duckduckgo.com/?q=";
+            case SEARCH_BING:
+                return "https://www.bing.com/search?q=";
+            default:
+                return "https://www.google.com/search?q=";
+        }
+    }
+
+    /** Perms activity for set them if not in the first time */
+    private void launchPerms() {
+        new PermissionsActivity(getBaseContext())
+                .withAppName(getResources().getString(R.string.app_name))
+                .withPermissions(new Permission(Permissions.WRITE_EXTERNAL_STORAGE, "To download files, Colombo must have access to your storage!"), new Permission(Permissions.ACCESS_FINE_LOCATION, "If you want to use WebApps with geolocation Colombo must have access to your position!"))
+                .withPermissionFlowCallback(new PermissionsActivity.PermissionFlowCallback() {
+                    @Override
+                    public void onPermissionGranted(Permission permission) {
+                        Toast.makeText(MainActivity.this, "The permissions are set!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(Permission permission) {
+                        Toast.makeText(MainActivity.this, "You won't be able to download files!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setBackgroundColor(Color.parseColor("#03A9F4"))
+                .setBarColor(Color.parseColor("#0288D1"))
+                .setStatusBarColor(Color.parseColor("#0288D1"))
+                .launch();
+    }
+
+    /** Set color class to change dinamically color of UI */
+    private void setColor(int color) {
+        color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), StaticUtils.darkColor(color));
+            colorAnimation.setDuration(150);
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setStatusBarColor((int) animator.getAnimatedValue());
+                        if (prefs.getBoolean("navbar_tint", false))
+                            getWindow().setNavigationBarColor((int) animator.getAnimatedValue());
+                    }
+                }
+            });
+            colorAnimation.start();
+
+            setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), color));
+        }
+
+        int colorFrom = ContextCompat.getColor(this, !isIncognito ? R.color.colorPrimaryIncognito : R.color.colorPrimary);
+        Drawable backgroundFrom = appbar.getBackground();
+        if (backgroundFrom instanceof ColorDrawable)
+            colorFrom = ((ColorDrawable) backgroundFrom).getColor();
+
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, color);
+        colorAnimation.setDuration(150);
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                appbar.setBackgroundColor((int) animator.getAnimatedValue());
+            }
+        });
+        colorAnimation.start();
+
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
+    }
+
+    /** Method to set stuff when returning from settings */
+    private void setPrefs() {
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
+        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
+        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+    }
+
+    /** Get user agent method from Android AOSP code */
+    public static String getDefaultUserAgent() {
+        StringBuilder result = new StringBuilder(64);
+        result.append("Dalvik/");
+        result.append(System.getProperty("java.vm.version")); // such as 1.1.0
+        result.append(" (Linux; U; Android ");
+
+        String version = Build.VERSION.RELEASE; // "1.0" or "3.4b5"
+        result.append(version.length() > 0 ? version : "1.0");
+
+        // add the model for the release build
+        if ("REL".equals(Build.VERSION.CODENAME)) {
+            String model = Build.MODEL;
+            if (model.length() > 0) {
+                result.append("; ");
+                result.append(model);
+            }
+        }
+        String id = Build.ID; // "MASTER" or "M4-rc20"
+        if (id.length() > 0) {
+            result.append(" Build/");
+            result.append(id);
+        }
+        result.append(")");
+        return result.toString();
+    }
+
+    /** Method to create shortcuts to home */
+    private void createShortCut(){
+        Intent shortcutintent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        Intent data = new Intent(getApplicationContext(), MainActivity.class);
+        data.setData(Uri.parse(webView.getUrl()));
+        shortcutintent.putExtra("duplicate", false);
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, webView.getTitle());
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_shortcut);
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
+        sendBroadcast(shortcutintent);
+        finish();
     }
 
     public static class NetworkChangeReceiver extends BroadcastReceiver {
