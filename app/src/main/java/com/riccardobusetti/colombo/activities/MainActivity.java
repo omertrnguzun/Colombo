@@ -78,6 +78,7 @@ import com.riccardobusetti.colombo.view.ObservableWebView;
 
 import java.lang.reflect.Field;
 
+import static android.R.attr.action;
 import static com.riccardobusetti.colombo.R.id.card;
 import static com.riccardobusetti.colombo.R.id.webview;
 
@@ -136,14 +137,7 @@ public class MainActivity extends PlaceholderUiActivity {
         cardView = findViewById(R.id.card);
         search = findViewById(R.id.search);
 
-        boolean dark = prefs.getBoolean("dark", false);
-
-        if(dark) {
-            card_search.setBackgroundColor(Color.parseColor("#424242"));
-            backround.setBackgroundColor(Color.parseColor("#424242"));
-            toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
-            webView.setBackgroundColor(Color.parseColor("#424242"));
-        }
+        darkTheme();
 
         webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
 
@@ -155,6 +149,8 @@ public class MainActivity extends PlaceholderUiActivity {
             webView.loadUrl(getIntent().getDataString());
         else
             webView.loadUrl(getHomepage());
+
+        detectWebViewBug();
 
         /** Objects animations */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -279,14 +275,14 @@ public class MainActivity extends PlaceholderUiActivity {
                     DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorIconGrey));
                     toolbar.setNavigationIcon(drawable);
                 }
-
-                toolbar.setTitle(webView.getUrl());
+                toolbar.setTitle(R.string.app_name);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 swipeRefreshLayout.setRefreshing(false);
                 swipeRefreshLayout.setEnabled(false);
+                toolbar.setTitle(webView.getUrl());
             }
         });
 
@@ -617,11 +613,15 @@ public class MainActivity extends PlaceholderUiActivity {
             locationManager.removeUpdates(locationListener);
 
         unregisterReceiver(networkChangeReceiver);
+
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        detectWebViewBug();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -743,14 +743,22 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+        darkTheme();
+    }
 
+    private void darkTheme() {
         boolean dark = prefs.getBoolean("dark", false);
 
         if(dark) {
-            card_search.setBackgroundColor(Color.parseColor("#424242"));
+            card_search.setCardBackgroundColor(Color.parseColor("#424242"));
             backround.setBackgroundColor(Color.parseColor("#424242"));
             toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
             webView.setBackgroundColor(Color.parseColor("#424242"));
+        } else {
+            card_search.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
+            backround.setBackgroundColor(Color.parseColor("#FAFAFA"));
+            toolbar.setTitleTextColor(Color.parseColor("#424242"));
+            webView.setBackgroundColor(Color.parseColor("#FAFAFA"));
         }
     }
 
@@ -766,6 +774,12 @@ public class MainActivity extends PlaceholderUiActivity {
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
         sendBroadcast(shortcutintent);
         finish();
+    }
+
+    private void detectWebViewBug(){
+        if (webView.getUrl().isEmpty()) {
+            webView.loadUrl(getHomepage());
+        }
     }
 
     public static class NetworkChangeReceiver extends BroadcastReceiver {
