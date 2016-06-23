@@ -15,6 +15,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_search_words"
+        android:title="@string/menu_search_words"
+        android:icon="@drawable/ic_find_in_page"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_dekstop"
         android:title="@string/menu_dekstop"
         android:icon="@drawable/ic_desktop"

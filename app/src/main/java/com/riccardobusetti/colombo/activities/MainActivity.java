@@ -143,14 +143,10 @@ public class MainActivity extends PlaceholderUiActivity {
 
         /** Webview url loading MUST BE HERE BEFORE ALL DECLARATIONS */
         String action = getIntent().getAction();
-        if (savedInstanceState != null)
-            webView.loadUrl(savedInstanceState.getString("url"));
-        else if (action != null && action.matches(Intent.ACTION_VIEW))
+        if (action != null && action.matches(Intent.ACTION_VIEW))
             webView.loadUrl(getIntent().getDataString());
         else
             webView.loadUrl(getHomepage());
-
-        detectWebViewBug();
 
         /** Objects animations */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -525,6 +521,9 @@ public class MainActivity extends PlaceholderUiActivity {
                             case R.id.action_refresh:
                                 webView.reload();
                                 break;
+                            case R.id.action_search_words:
+                                webView.showFindDialog(null, true);
+                                break;
                             case R.id.action_dekstop:
                                 isDekstop = !isDekstop;
                                 item.setChecked(isDekstop);
@@ -599,6 +598,11 @@ public class MainActivity extends PlaceholderUiActivity {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -613,15 +617,11 @@ public class MainActivity extends PlaceholderUiActivity {
             locationManager.removeUpdates(locationListener);
 
         unregisterReceiver(networkChangeReceiver);
-
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        detectWebViewBug();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -774,12 +774,6 @@ public class MainActivity extends PlaceholderUiActivity {
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
         sendBroadcast(shortcutintent);
         finish();
-    }
-
-    private void detectWebViewBug(){
-        if (webView.getUrl().isEmpty()) {
-            webView.loadUrl(getHomepage());
-        }
     }
 
     public static class NetworkChangeReceiver extends BroadcastReceiver {
