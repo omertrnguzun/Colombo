@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:configChanges="screenSize|orientation"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:hardwareAccelerated="true"
             android:theme="@style/PlaceTheme"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustResize">
@@ -59,6 +60,8 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:hardwareAccelerated="true"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -67,11 +70,15 @@
 
         <activity
             android:name=".activities.MainIntroActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:hardwareAccelerated="true"
             android:theme="@style/Theme.Intro" />
 
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/pref_header_about"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".activities.SettingsActivity">
             <meta-data
