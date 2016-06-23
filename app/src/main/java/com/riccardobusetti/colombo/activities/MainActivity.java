@@ -558,7 +558,7 @@ public class MainActivity extends PlaceholderUiActivity {
                                 launchPerms();
                                 break;
                             case R.id.action_settings:
-                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                                startActivity(new Intent(MainActivity.this, BookmarksActivity.class));
                                 break;
                         }
                         return super.onMenuItemSelected(menu, item);

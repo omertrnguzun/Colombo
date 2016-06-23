@@ -1,9 +1,8 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-        <item name="android:windowTitleSize">128dp</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -22,6 +21,7 @@
         <item name="android:windowTitleStyle">@style/CustomWindowTitle</item>
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
         <item name="android:windowNoTitle">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="ToolbarSearchView" parent="Base.ThemeOverlay.AppCompat.ActionBar">
@@ -75,5 +75,9 @@
     <style name="CustomWindowTitleText">
         <item name="android:textColor">@android:color/transparent</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
