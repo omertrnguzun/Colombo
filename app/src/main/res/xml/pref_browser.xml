@@ -6,6 +6,7 @@
         android:title="@string/search_engines"
         android:summary="@string/search_engines_summary"
         android:entries="@array/search_engines_titles"
+        android:defaultValue="0"
         android:entryValues="@array/search_engines_values" />
 
     <EditTextPreference

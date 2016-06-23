@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -43,7 +44,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -78,8 +78,6 @@ import com.riccardobusetti.colombo.view.ObservableWebView;
 
 import java.lang.reflect.Field;
 
-import static android.R.attr.action;
-import static com.riccardobusetti.colombo.R.id.card;
 import static com.riccardobusetti.colombo.R.id.webview;
 
 public class MainActivity extends PlaceholderUiActivity {
@@ -87,7 +85,7 @@ public class MainActivity extends PlaceholderUiActivity {
     private static final int REQUEST_SELECT_FILE = 100;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
 
-    public static final int SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
+    public static final int SEARCH_GOOGLE = 0, SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
 
     private ValueCallback<Uri[]> uploadMessage;
     private ValueCallback<Uri> uploadMessagePreLollipop;
@@ -99,7 +97,7 @@ public class MainActivity extends PlaceholderUiActivity {
     private SearchView searchView;
     private SearchManager searchManager;
     private SearchRecentSuggestions suggestions;
-
+    boolean desktop = true;
     private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomWebChromeClient webChromeClient;
@@ -112,9 +110,6 @@ public class MainActivity extends PlaceholderUiActivity {
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
-
-    private View cardView, search, backround;
-    private CardView card_search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,23 +127,39 @@ public class MainActivity extends PlaceholderUiActivity {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         webView = (ObservableWebView) findViewById(webview);
-        backround = findViewById(R.id.backround);
-        card_search = (CardView) findViewById(R.id.card_search);
-        cardView = findViewById(R.id.card);
-        search = findViewById(R.id.search);
-
-        darkTheme();
-
-        webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
-
-        /** Webview url loading MUST BE HERE BEFORE ALL DECLARATIONS */
         String action = getIntent().getAction();
         if (action != null && action.matches(Intent.ACTION_VIEW))
             webView.loadUrl(getIntent().getDataString());
         else
             webView.loadUrl(getHomepage());
+        webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
+        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 
-        /** Objects animations */
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webSettings.setSaveFormData(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+
+        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+        webSettings.setDisplayZoomControls(false);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.supportZoom();
+
+        webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        final View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             if (cardView != null) {
@@ -171,13 +182,11 @@ public class MainActivity extends PlaceholderUiActivity {
                     }
                 });
             }
-
             if (search != null && search.getVisibility() == View.VISIBLE) {
                 search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down_in));
             }
         }
 
-        /** Toolbar and ActionBar */
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,7 +197,6 @@ public class MainActivity extends PlaceholderUiActivity {
 
         setSupportActionBar(toolbar);
 
-        /** Webview setup */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Without GPS permissions the location won't work!", Toast.LENGTH_SHORT).show();
@@ -215,46 +223,7 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         }
 
-        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
-        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setDatabaseEnabled(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        webSettings.setSaveFormData(true);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setLoadWithOverviewMode(true);
-
-        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
-        webSettings.setDisplayZoomControls(false);
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.supportZoom();
-
-        webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        webSettings.setAllowFileAccess(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
         webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("market://") || url.startsWith("https://www.youtube.com") || url.startsWith("https://play.google.com") || url.startsWith("mailto:") || url.startsWith("intent://")) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(url));
-                    startActivity(intent);
-                    return true;
-                }
-
-                view.loadUrl(url);
-                return true;
-            }
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap facIcon) {
@@ -266,19 +235,21 @@ public class MainActivity extends PlaceholderUiActivity {
                     Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
                     DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
                     toolbar.setNavigationIcon(drawable);
+                } if (url.startsWith("http")) {
+                    Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
+                    DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+                    toolbar.setNavigationIcon(drawable);
                 } else {
                     Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
                     DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorIconGrey));
                     toolbar.setNavigationIcon(drawable);
                 }
-                toolbar.setTitle(R.string.app_name);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 swipeRefreshLayout.setRefreshing(false);
                 swipeRefreshLayout.setEnabled(false);
-                toolbar.setTitle(webView.getUrl());
             }
         });
 
@@ -357,6 +328,8 @@ public class MainActivity extends PlaceholderUiActivity {
                         }
                     });
                 }
+
+                toolbar.setTitle(webView.getUrl());
             }
         };
 
@@ -379,6 +352,8 @@ public class MainActivity extends PlaceholderUiActivity {
             }
         });
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -434,6 +409,25 @@ public class MainActivity extends PlaceholderUiActivity {
                 if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
+                } if (query.endsWith(".com") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                } if (query.endsWith(".gov") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                } if (query.endsWith(".net") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                } if (query.endsWith(".org") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                } if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                } if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+
                 } else
                     webView.loadUrl(getSearchPrefix() + query);
 
@@ -502,7 +496,7 @@ public class MainActivity extends PlaceholderUiActivity {
                 searchView.setIconified(false);
                 break;
             case R.id.action_overflow:
-                final PopupMenu popupMenu = new PopupMenu(MainActivity.this, toolbar) {
+                PopupMenu popupMenu = new PopupMenu(MainActivity.this, toolbar) {
                     @Override
                     public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                         switch (item.getItemId()) {
@@ -525,16 +519,19 @@ public class MainActivity extends PlaceholderUiActivity {
                                 webView.showFindDialog(null, true);
                                 break;
                             case R.id.action_dekstop:
-                                isDekstop = !isDekstop;
-                                item.setChecked(isDekstop);
-
-                                if (isDekstop) {
-                                    webView.getSettings().setUserAgentString("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0");
-                                    webView.loadUrl(webView.getUrl());
-                                } else if (!isDekstop) {
-                                    String userAgent = System.getProperty("http.agent");
-                                    webView.getSettings().setUserAgentString(userAgent);
-                                    webView.loadUrl(webView.getUrl());
+                                if(item.isChecked()){
+                                    item.setChecked(false);
+                                }else{
+                                    item.setChecked(true);
+                                }
+                                if(desktop){
+                                    webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.41 Safari/537.36");
+                                    webView.reload();
+                                    desktop=false;
+                                }else {
+                                    webView.getSettings().setUserAgentString("");
+                                    webView.reload();
+                                    desktop = true;
                                 }
                                 break;
                             case R.id.action_incognito:
@@ -598,11 +595,6 @@ public class MainActivity extends PlaceholderUiActivity {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -642,6 +634,14 @@ public class MainActivity extends PlaceholderUiActivity {
         }
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        final WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
+        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
+        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+    }
+
     /** Method to get homepage from prefs */
     private String getHomepage() {
         String homepage = prefs.getString("homepage", "");
@@ -649,6 +649,8 @@ public class MainActivity extends PlaceholderUiActivity {
             return homepage;
         } else {
             switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
+                case SEARCH_GOOGLE:
+                    return "https://google.com";
                 case SEARCH_YAHOO:
                     return "https://www.yahoo.com/";
                 case SEARCH_DUCKDUCKGO:
@@ -664,8 +666,10 @@ public class MainActivity extends PlaceholderUiActivity {
     /** Method to get prefix for search engine */
     private String getSearchPrefix() {
         switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
+            case SEARCH_GOOGLE:
+                return "https://www.google.com/search?q=";
             case SEARCH_YAHOO:
-                return "https://www.yahoo.com/search?p=";
+                return "https://search.yahoo.com/search?p=";
             case SEARCH_DUCKDUCKGO:
                 return "https://duckduckgo.com/?q=";
             case SEARCH_BING:
@@ -730,6 +734,7 @@ public class MainActivity extends PlaceholderUiActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animator) {
                 appbar.setBackgroundColor((int) animator.getAnimatedValue());
+                swipeRefreshLayout.setColorSchemeColors((int) animator.getAnimatedValue());
             }
         });
         colorAnimation.start();
@@ -743,23 +748,33 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
-        darkTheme();
     }
 
-    private void darkTheme() {
-        boolean dark = prefs.getBoolean("dark", false);
+    /** Get user agent method from Android AOSP code */
+    public static String getDefaultUserAgent() {
+        StringBuilder result = new StringBuilder(64);
+        result.append("Dalvik/");
+        result.append(System.getProperty("java.vm.version")); // such as 1.1.0
+        result.append(" (Linux; U; Android ");
 
-        if(dark) {
-            card_search.setCardBackgroundColor(Color.parseColor("#424242"));
-            backround.setBackgroundColor(Color.parseColor("#424242"));
-            toolbar.setTitleTextColor(Color.parseColor("#FAFAFA"));
-            webView.setBackgroundColor(Color.parseColor("#424242"));
-        } else {
-            card_search.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
-            backround.setBackgroundColor(Color.parseColor("#FAFAFA"));
-            toolbar.setTitleTextColor(Color.parseColor("#424242"));
-            webView.setBackgroundColor(Color.parseColor("#FAFAFA"));
+        String version = Build.VERSION.RELEASE; // "1.0" or "3.4b5"
+        result.append(version.length() > 0 ? version : "1.0");
+
+        // add the model for the release build
+        if ("REL".equals(Build.VERSION.CODENAME)) {
+            String model = Build.MODEL;
+            if (model.length() > 0) {
+                result.append("; ");
+                result.append(model);
+            }
         }
+        String id = Build.ID; // "MASTER" or "M4-rc20"
+        if (id.length() > 0) {
+            result.append(" Build/");
+            result.append(id);
+        }
+        result.append(")");
+        return result.toString();
     }
 
     /** Method to create shortcuts to home */
@@ -769,7 +784,7 @@ public class MainActivity extends PlaceholderUiActivity {
         data.setData(Uri.parse(webView.getUrl()));
         shortcutintent.putExtra("duplicate", false);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, webView.getTitle());
-        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_shortcut);
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
         sendBroadcast(shortcutintent);
