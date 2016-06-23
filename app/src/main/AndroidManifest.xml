@@ -17,10 +17,11 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:configChanges="screenSize|orientation"
             android:launchMode="singleInstance"
             android:theme="@style/PlaceTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:hardwareAccelerated="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 
@@ -59,7 +60,9 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".activities.MainActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:hardwareAccelerated="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
@@ -71,7 +74,9 @@
             android:name=".activities.AboutActivity"
             android:label="@string/pref_header_about"
             android:parentActivityName=".activities.SettingsActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:hardwareAccelerated="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SettingsActivity" />
@@ -79,7 +84,9 @@
         <activity
             android:name=".activities.BookmarksActivity"
             android:label="@string/title_activity_bookmarks"
-            android:theme="@style/PlaceTheme">
+            android:theme="@style/PlaceTheme"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:hardwareAccelerated="true">
 
         </activity>
     </application>
