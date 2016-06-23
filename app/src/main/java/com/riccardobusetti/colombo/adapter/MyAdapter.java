@@ -47,6 +47,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyHolder>{
     @Override
     public void onBindViewHolder(final MyHolder holder, int position) {
 
+        holder.name.setText(cardData.get(position).getName());
+
+        holder.code.setText(cardData.get(position).getCode());
+
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {

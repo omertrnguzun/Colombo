@@ -95,5 +95,6 @@
     <string name="pref_dark_summary">Use dark theme instaed of white.</string>
     <string name="menu_search_words">Find in page</string>
     <string name="title_activity_bookmarks">BookmarksActivity</string>
+    <string name="menu_bookmark">Bookmarks</string>
 
 </resources>

@@ -17,7 +17,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -70,6 +69,8 @@ import com.amqtech.permissions.helper.objects.Permission;
 import com.amqtech.permissions.helper.objects.Permissions;
 import com.amqtech.permissions.helper.objects.PermissionsActivity;
 import com.riccardobusetti.colombo.R;
+import com.riccardobusetti.colombo.data.CardData;
+import com.riccardobusetti.colombo.database.DBAdapter;
 import com.riccardobusetti.colombo.util.IconMenuPopupHelper;
 import com.riccardobusetti.colombo.util.RecentSuggestionsProvider;
 import com.riccardobusetti.colombo.util.StaticUtils;
@@ -77,6 +78,7 @@ import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import static com.riccardobusetti.colombo.R.id.webview;
 
@@ -110,6 +112,8 @@ public class MainActivity extends PlaceholderUiActivity {
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
+
+    ArrayList<CardData> cardDatas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +196,14 @@ public class MainActivity extends PlaceholderUiActivity {
             public void onClick(View view) {
                 searchView.setVisibility(View.VISIBLE);
                 searchView.setIconified(false);
+            }
+        });
+
+        toolbar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                save(webView.getTitle(), webView.getUrl());
+                return true;
             }
         });
 
@@ -512,6 +524,9 @@ public class MainActivity extends PlaceholderUiActivity {
                                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                                 startActivity(Intent.createChooser(sharingIntent, "Share link"));
                                 break;
+                            case R.id.action_bookmark:
+                                startActivity(new Intent(MainActivity.this, BookmarksActivity.class));
+                                break;
                             case R.id.action_refresh:
                                 webView.reload();
                                 break;
@@ -558,7 +573,7 @@ public class MainActivity extends PlaceholderUiActivity {
                                 launchPerms();
                                 break;
                             case R.id.action_settings:
-                                startActivity(new Intent(MainActivity.this, BookmarksActivity.class));
+                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                                 break;
                         }
                         return super.onMenuItemSelected(menu, item);
@@ -640,6 +655,39 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+    }
+
+    //Salvare dati da DB
+    private void save(String name, String code) {
+
+        DBAdapter db = new DBAdapter(this);
+
+        //Aprire DataBase
+        db.openDB();
+
+        //Dichiarare cambiamenti
+        long result = db.add(name, code);
+
+        if(result>0) {
+
+            Snackbar snackbar = Snackbar.make(coordinatorLayout,"Bookmark saved!", Snackbar.LENGTH_SHORT);
+            snackbar.setAction("SHOW", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(MainActivity.this, BookmarksActivity.class));
+                }
+            });
+            snackbar.show();
+
+        } else {
+
+            Snackbar snackbar = Snackbar.make(coordinatorLayout,"Impossible to save Bookmark :_(", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+
+        }
+
+        db.closeDB();
+
     }
 
     /** Method to get homepage from prefs */

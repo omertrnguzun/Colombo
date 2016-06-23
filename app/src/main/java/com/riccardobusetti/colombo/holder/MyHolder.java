@@ -13,7 +13,7 @@ import com.riccardobusetti.colombo.util.ItemClickListener;
 
 public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    private TextView name,code;
+    public TextView name,code;
     private ItemClickListener itemClickListener;
 
     public MyHolder(View itemView) {

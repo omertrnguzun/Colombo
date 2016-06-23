@@ -8,13 +8,11 @@ public class CardData {
 
     private int id;
     private String name,code;
-    private int image;
 
-    public CardData(int id, String name, String code, int image) {
+    public CardData(int id, String name, String code) {
         this.id = id;
         this.name = name;
         this.code = code;
-        this.image = image;
     }
 
     public int getId() {
@@ -39,13 +37,5 @@ public class CardData {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
     }
 }
