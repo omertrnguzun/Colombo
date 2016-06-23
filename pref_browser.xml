@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="search_engine"
+        android:title="@string/search_engines"
+        android:summary="@string/search_engines_summary"
+        android:entries="@array/search_engines_titles"
+        android:defaultValue="0"
+        android:entryValues="@array/search_engines_values" />
+
+    <EditTextPreference
+        android:key="homepage"
+        android:title="@string/homepage"
+        android:summary="@string/homepage_sumamry"
+        android:defaultValue="" />
+
+    <SwitchPreference
+        android:key="suggestions"
+        android:title="@string/suggestions"
+        android:summary="@string/suggestions_summary"
+        android:defaultValue="true" />
+
+    <Preference
+        android:key="clear_history"
+        android:title="@string/clear_history"
+        android:summary="@string/clear_history_summary" />
+
+    <SwitchPreference
+        android:key="gestures"
+        android:title="@string/gestures"
+        android:summary="@string/gestures_description"
+        android:defaultValue="true"/>
+
+</PreferenceScreen>
