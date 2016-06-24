@@ -16,7 +16,9 @@ public class MainIntroActivity extends IntroActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         /**
          * Standard slide (like Google's intros)
          */
@@ -62,5 +64,11 @@ public class MainIntroActivity extends IntroActivity {
                 .permission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .build());
     }
+    
+        public void onBackPressed() {
+        super.onBackPressed();
+        MainIntroActivity.this.finish(); Intent intent1 = new Intent(MainIntroActivity.this,MainActivity.class); intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    }
+
 
 }
