@@ -15,7 +15,7 @@
 
     <color name="text_black_87">#262626</color>
     <color name="text_white_87">#FAFAFA</color>
-    <color name="colorTextBlack">#20373B</color>
+    <color name="colorDarkBlue">#233B3F</color>
 
     <color name="colorIconGrey">#757575</color>
 </resources>

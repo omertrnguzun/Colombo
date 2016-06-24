@@ -41,6 +41,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -65,6 +66,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,7 +113,7 @@ public class MainActivity extends PlaceholderUiActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomWebChromeClient webChromeClient;
     private NetworkChangeReceiver networkChangeReceiver;
-    private ImageView bookmarks;
+    private ImageView settings;
 
     private boolean isIncognito;
 
@@ -127,6 +129,10 @@ public class MainActivity extends PlaceholderUiActivity {
     private GridLayoutManager gridLayoutManager;
 
     private ArrayList<CardData> cardDatas = new ArrayList<>();
+
+    private FrameLayout titleFrame;
+    private View search;
+    private CardView cardSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,24 +171,30 @@ public class MainActivity extends PlaceholderUiActivity {
         toolbar.setTitle("");
         title = (TextView) findViewById(R.id.toolbar_title);
         appTitle = (TextView) findViewById(R.id.app_title);
+        titleFrame = (FrameLayout) findViewById(R.id.big_title);
+        cardSearch = (CardView) findViewById(R.id.card_search);
 
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (prefs.getBoolean("light_icons", true)) {
                 if (coordinatorLayout != null) {
                     coordinatorLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 }
+                appTitle.setTextColor(Color.parseColor("#233B3F"));
+            } else {
+                setTheme(R.style.ThemeLightIcons);
+                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            }
+        } else {
+            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
         }
 
-        bookmarks = (ImageView) findViewById(R.id.bookmarks);
-        bookmarks.setOnClickListener(new View.OnClickListener() {
+        settings = (ImageView) findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(webView.getVisibility() == View.VISIBLE) {
-                    webView.setVisibility(View.GONE);
-                } else if (webView.getVisibility() == View.GONE) {
-                    webView.setVisibility(View.VISIBLE);
-                }
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
 
@@ -212,12 +224,12 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setAppCacheEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        final View search = findViewById(R.id.search);
 
+        search = findViewById(R.id.search);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             if (search != null && search.getVisibility() == View.VISIBLE) {
-                search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down_in));
+                search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_in));
             }
         }
 
@@ -351,12 +363,30 @@ public class MainActivity extends PlaceholderUiActivity {
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
                 if (prefs.getBoolean("dynamic_colors", true)) {
-                    Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
-                        @Override
-                        public void onGenerated(Palette palette) {
-                            setColor(palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (prefs.getBoolean("light_icons", true)) {
+                            Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
+                                @Override
+                                public void onGenerated(Palette palette) {
+                                    setColor(palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                                }
+                            });
+                        } else {
+                            Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
+                                @Override
+                                public void onGenerated(Palette palette) {
+                                    setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                                }
+                            });
                         }
-                    });
+                    } else {
+                        Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                            }
+                        });
+                    }
                 }
             }
         };
@@ -382,7 +412,6 @@ public class MainActivity extends PlaceholderUiActivity {
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -406,7 +435,7 @@ public class MainActivity extends PlaceholderUiActivity {
     public void onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack();
-        } else if (searchView.getVisibility() == View.VISIBLE){
+        } else if (searchView.getVisibility() == View.VISIBLE) {
             searchView.setVisibility(View.GONE);
             searchView.setIconified(false);
         } else if (webView.canGoBack() && searchView.getVisibility() == View.VISIBLE) {
@@ -440,25 +469,35 @@ public class MainActivity extends PlaceholderUiActivity {
                     webView.setVisibility(View.VISIBLE);
                 }
 
+                if (titleFrame.getVisibility() == View.VISIBLE) {
+                    titleFrame.setVisibility(View.GONE);
+                }
+
                 if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                } if (query.endsWith(".com") || URLUtil.isValidUrl(query)) {
+                }
+                if (query.endsWith(".com") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                } if (query.endsWith(".gov") || URLUtil.isValidUrl(query)) {
+                }
+                if (query.endsWith(".gov") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                } if (query.endsWith(".net") || URLUtil.isValidUrl(query)) {
+                }
+                if (query.endsWith(".net") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                } if (query.endsWith(".org") || URLUtil.isValidUrl(query)) {
+                }
+                if (query.endsWith(".org") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                } if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
+                }
+                if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                } if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
+                }
+                if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
 
@@ -493,6 +532,10 @@ public class MainActivity extends PlaceholderUiActivity {
 
                 if (webView.getVisibility() == View.GONE) {
                     webView.setVisibility(View.VISIBLE);
+                }
+
+                if (titleFrame.getVisibility() == View.VISIBLE) {
+                    titleFrame.setVisibility(View.GONE);
                 }
 
                 if (URLUtil.isValidUrl(query))
@@ -553,20 +596,29 @@ public class MainActivity extends PlaceholderUiActivity {
                             case R.id.action_refresh:
                                 webView.reload();
                                 break;
+                            case R.id.action_bookmark:
+                                if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
+                                    webView.setVisibility(View.GONE);
+                                    titleFrame.setVisibility(View.VISIBLE);
+                                } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                                    webView.setVisibility(View.VISIBLE);
+                                    titleFrame.setVisibility(View.GONE);
+                                }
+                                break;
                             case R.id.action_search_words:
                                 webView.showFindDialog(null, true);
                                 break;
                             case R.id.action_dekstop:
-                                if(item.isChecked()){
+                                if (item.isChecked()) {
                                     item.setChecked(false);
-                                }else{
+                                } else {
                                     item.setChecked(true);
                                 }
-                                if(desktop){
+                                if (desktop) {
                                     webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.41 Safari/537.36");
                                     webView.reload();
-                                    desktop=false;
-                                }else {
+                                    desktop = false;
+                                } else {
                                     webView.getSettings().setUserAgentString("");
                                     webView.reload();
                                     desktop = true;
@@ -587,11 +639,15 @@ public class MainActivity extends PlaceholderUiActivity {
                                 webView.isPrivateBrowsingEnabled();
 
                                 if (!isIncognito) {
-                                    //Quando esce da incognito
+                                    //When exit from incognito
                                     appTitle.setText(R.string.app_name);
+                                    cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
+                                    title.setTextColor(Color.parseColor("#696969"));
                                 } else {
-                                   //Quando entra in incognito
+                                    //When enter in incognito
                                     appTitle.setText(R.string.app_name_incognito);
+                                    cardSearch.setCardBackgroundColor(Color.parseColor("#233B3F"));
+                                    title.setTextColor(Color.parseColor("#FAFAFA"));
                                 }
                                 break;
                             case R.id.action_add:
@@ -642,13 +698,6 @@ public class MainActivity extends PlaceholderUiActivity {
     public void onPause() {
         super.onPause();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
         } else if (locationManager != null)
             locationManager.removeUpdates(locationListener);
 
@@ -660,13 +709,7 @@ public class MainActivity extends PlaceholderUiActivity {
         super.onResume();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
         } else if (locationManager != null)
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
 
@@ -686,24 +729,26 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
     }
 
-    /** Delete data from DB */
-    private void delete(int id)
-    {
-        DBAdapter db=new DBAdapter(this);
+    /**
+     * Delete data from DB
+     */
+    private void delete(int id) {
+        DBAdapter db = new DBAdapter(this);
         db.openDB();
-        long result=db.Delete(id);
-        if(result>0)
-        {
-            retrieve();
 
-        }else
-        {
-            Snackbar.make(coordinatorLayout,"Unable to Delete",Snackbar.LENGTH_SHORT).show();
+        long result = db.Delete(id);
+        if (result > 0) {
+            retrieve();
+        } else {
+            Snackbar.make(coordinatorLayout, "Unable to Delete", Snackbar.LENGTH_SHORT).show();
         }
+
         db.closeDB();
     }
 
-    /** Get data from DB */
+    /**
+     * Get data from DB
+     */
     private void retrieve() {
 
         DBAdapter db = new DBAdapter(this);
@@ -716,7 +761,6 @@ public class MainActivity extends PlaceholderUiActivity {
 
         //Guardare nei dati e aggiungere ad ArrayList
         while (c.moveToNext()) {
-
             int id = c.getInt(0);
             String name = c.getString(1);
             String code = c.getString(2);
@@ -725,21 +769,20 @@ public class MainActivity extends PlaceholderUiActivity {
 
             //Aggiungere ad arraylist
             cardDatas.add(cardData);
-
         }
 
         //Controllo se ArrayList non è vuota
-        if(!(cardDatas.size()<1)) {
-
+        if (!(cardDatas.size() < 1)) {
             rv.setAdapter(adapter);
-
         }
 
         db.closeDB();
 
     }
 
-    /** Save data in DB */
+    /**
+     * Save data in DB
+     */
     private void save(String name, String code) {
 
         DBAdapter db = new DBAdapter(this);
@@ -750,14 +793,14 @@ public class MainActivity extends PlaceholderUiActivity {
         //Dichiarare cambiamenti
         long result = db.add(name, code);
 
-        if(result>0) {
+        if (result > 0) {
 
-            Snackbar snackbar = Snackbar.make(coordinatorLayout,"Bookmark saved!", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark saved!", Snackbar.LENGTH_SHORT);
             snackbar.show();
 
         } else {
 
-            Snackbar snackbar = Snackbar.make(coordinatorLayout,"Impossible to save Bookmark :_(", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Impossible to save Bookmark :_(", Snackbar.LENGTH_SHORT);
             snackbar.show();
 
         }
@@ -767,8 +810,10 @@ public class MainActivity extends PlaceholderUiActivity {
         retrieve();
     }
 
-    /** Adapter recyclerviewer */
-    public class MyAdapter extends RecyclerView.Adapter<MyHolder>{
+    /**
+     * Adapter recyclerviewer
+     */
+    public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
 
         Context c;
         ArrayList<CardData> cardData;
@@ -803,6 +848,7 @@ public class MainActivity extends PlaceholderUiActivity {
                     webView.loadUrl(cardData.get(pos).getCode());
                     if (webView.getVisibility() == View.GONE) {
                         webView.setVisibility(View.VISIBLE);
+                        titleFrame.setVisibility(View.GONE);
                     }
                 }
             });
@@ -844,7 +890,9 @@ public class MainActivity extends PlaceholderUiActivity {
 
     }
 
-    /** Method to get homepage from prefs */
+    /**
+     * Method to get homepage from prefs
+     */
     private String getHomepage() {
         String homepage = prefs.getString("homepage", "");
         if (homepage.length() > 0) {
@@ -865,7 +913,9 @@ public class MainActivity extends PlaceholderUiActivity {
         }
     }
 
-    /** Method to get prefix for search engine */
+    /**
+     * Method to get prefix for search engine
+     */
     private String getSearchPrefix() {
         switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
             case SEARCH_GOOGLE:
@@ -881,10 +931,10 @@ public class MainActivity extends PlaceholderUiActivity {
         }
     }
 
-    /** Set color class to change dinamically color of UI */
+    /**
+     * Set color class to change dinamically color of UI
+     */
     private void setColor(int color) {
-        color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), StaticUtils.darkColor(color));
             colorAnimation.setDuration(150);
@@ -903,7 +953,7 @@ public class MainActivity extends PlaceholderUiActivity {
             setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), color));
         }
 
-        int colorFrom = ContextCompat.getColor(this, !isIncognito ? R.color.colorPrimaryIncognito : R.color.colorPrimary);
+        int colorFrom = ContextCompat.getColor(this, R.color.colorPrimary);
         Drawable backgroundFrom = appbar.getBackground();
         if (backgroundFrom instanceof ColorDrawable)
             colorFrom = ((ColorDrawable) backgroundFrom).getColor();
@@ -922,7 +972,9 @@ public class MainActivity extends PlaceholderUiActivity {
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
     }
 
-    /** Method to set stuff when returning from settings */
+    /**
+     * Method to set stuff when returning from settings
+     */
     private void setPrefs() {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
@@ -930,35 +982,10 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
     }
 
-    /** Get user agent method from Android AOSP code */
-    public static String getDefaultUserAgent() {
-        StringBuilder result = new StringBuilder(64);
-        result.append("Dalvik/");
-        result.append(System.getProperty("java.vm.version")); // such as 1.1.0
-        result.append(" (Linux; U; Android ");
-
-        String version = Build.VERSION.RELEASE; // "1.0" or "3.4b5"
-        result.append(version.length() > 0 ? version : "1.0");
-
-        // add the model for the release build
-        if ("REL".equals(Build.VERSION.CODENAME)) {
-            String model = Build.MODEL;
-            if (model.length() > 0) {
-                result.append("; ");
-                result.append(model);
-            }
-        }
-        String id = Build.ID; // "MASTER" or "M4-rc20"
-        if (id.length() > 0) {
-            result.append(" Build/");
-            result.append(id);
-        }
-        result.append(")");
-        return result.toString();
-    }
-
-    /** Method to create shortcuts to home */
-    private void createShortCut(){
+    /**
+     * Method to create shortcuts to home
+     */
+    private void createShortCut() {
         Intent shortcutintent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
         Intent data = new Intent(getApplicationContext(), MainActivity.class);
         data.setData(Uri.parse(webView.getUrl()));
@@ -968,7 +995,7 @@ public class MainActivity extends PlaceholderUiActivity {
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
         sendBroadcast(shortcutintent);
-        finish();
+        Toast.makeText(this, "Shortcut added", Toast.LENGTH_SHORT).show();
     }
 
     public static class NetworkChangeReceiver extends BroadcastReceiver {

@@ -13,6 +13,7 @@ import android.preference.PreferenceFragment;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.riccardobusetti.colombo.R;
 
@@ -41,6 +42,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onIsMultiPane() {
         return isXLargeTablet(this);
     }
@@ -62,6 +68,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_appearance);
+
+            findPreference("light_icons").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Restart Colombo for changes!", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
         }
     }
 

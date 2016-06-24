@@ -29,6 +29,7 @@
 
                 <FrameLayout
                     android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/big_title"
@@ -46,15 +47,15 @@
                             android:layout_height="wrap_content"
                             android:textSize="35dp"
                             android:text="@string/app_name"
-                            android:textColor="@color/colorTextBlack"
+                            android:textColor="@color/colorDarkBlue"
                             style="@style/TextViewCustomFont"
                             android:id="@+id/app_title" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/ic_bookmark"
-                            android:id="@+id/bookmarks"
+                            app:srcCompat="@drawable/ic_settings_title"
+                            android:id="@+id/settings"
                             android:clickable="true"
                             android:layout_alignParentEnd="true"
                             android:layout_marginRight="16dp"
@@ -65,7 +66,6 @@
                 </FrameLayout>
 
                 <FrameLayout
-                    android:layout_marginTop="24dp"
                     android:layout_below="@+id/big_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -97,8 +97,7 @@
                             android:layout_height="wrap_content"
                             android:text="Search"
                             android:id="@+id/toolbar_title"
-                            style="@style/TextViewCustomFont"
-                            android:textSize="16dp"
+                            style="@style/TextViewCustomFontBold"
                             android:textColor="#696969"
                             android:maxLines="1" />
 
@@ -137,10 +136,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Bookmarks"
-                    android:textColor="@color/text_black_87"
-                    android:textSize="18dp"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="16dp"
                     android:layout_margin="16dp"
-                    style="@style/TextViewCustomFont" />
+                    style="@style/TextViewCustomFontBold" />
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_below="@+id/backround_bookmarks"
