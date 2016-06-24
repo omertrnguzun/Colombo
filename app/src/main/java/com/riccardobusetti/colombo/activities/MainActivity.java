@@ -138,7 +138,9 @@ public class MainActivity extends PlaceholderUiActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (prefs.getBoolean("first_time", true)) {
