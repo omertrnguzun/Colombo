@@ -28,6 +28,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
     }
