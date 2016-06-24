@@ -96,5 +96,6 @@
     <string name="menu_search_words">Find in page</string>
     <string name="title_activity_bookmarks">BookmarksActivity</string>
     <string name="menu_bookmark">Bookmarks</string>
+    <string name="app_name_incognito">Colombo Incognito</string>
 
 </resources>

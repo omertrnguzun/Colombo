@@ -114,8 +114,8 @@ public class ObservableWebView extends WebView {
                         if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
                             setX(-scrollX / 5);
 
-                        getRootView().findViewById(R.id.next).setPressed(false);
-                        getRootView().findViewById(R.id.previous).setPressed(false);
+                        //getRootView().findViewById(R.id.next).setPressed(false);
+                        //getRootView().findViewById(R.id.previous).setPressed(false);
                     }
                 }
                 break;

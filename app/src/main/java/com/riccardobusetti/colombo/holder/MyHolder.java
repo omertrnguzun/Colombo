@@ -6,23 +6,26 @@ import android.widget.TextView;
 
 import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.util.ItemClickListener;
+import com.riccardobusetti.colombo.util.ItemLongClickListener;
 
 /**
  * Created by riccardobusetti on 23/06/16.
  */
 
-public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-    public TextView name,code;
+    public TextView name;
     private ItemClickListener itemClickListener;
+    private ItemLongClickListener itemLongClickListener;
 
     public MyHolder(View itemView) {
         super(itemView);
 
         name = (TextView) itemView.findViewById(R.id.name);
-        code = (TextView) itemView.findViewById(R.id.code);
 
         itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+
     }
 
     @Override
@@ -32,9 +35,23 @@ public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickLis
 
     }
 
+    @Override
+    public boolean onLongClick(View view) {
+
+        this.itemLongClickListener.onItemLongClick(view,getLayoutPosition());
+
+        return true;
+    }
+
     public void setItemClickListener(ItemClickListener ic) {
 
         this.itemClickListener = ic;
+
+    }
+
+    public void setItemLongClickListener(ItemLongClickListener ilc) {
+
+        this.itemLongClickListener = ilc;
 
     }
 }

@@ -35,15 +35,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        //TODO: StaticUtils.restart(this);
-    }
-
-    @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
         return super.onMenuItemSelected(featureId, item);

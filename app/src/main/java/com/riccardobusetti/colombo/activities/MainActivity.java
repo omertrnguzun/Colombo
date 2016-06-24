@@ -1,7 +1,6 @@
 package com.riccardobusetti.colombo.activities;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -38,22 +37,25 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewTreeObserver;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
@@ -63,6 +65,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amqtech.permissions.helper.objects.Permission;
@@ -71,7 +75,10 @@ import com.amqtech.permissions.helper.objects.PermissionsActivity;
 import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
 import com.riccardobusetti.colombo.database.DBAdapter;
+import com.riccardobusetti.colombo.holder.MyHolder;
 import com.riccardobusetti.colombo.util.IconMenuPopupHelper;
+import com.riccardobusetti.colombo.util.ItemClickListener;
+import com.riccardobusetti.colombo.util.ItemLongClickListener;
 import com.riccardobusetti.colombo.util.RecentSuggestionsProvider;
 import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
@@ -79,6 +86,9 @@ import com.riccardobusetti.colombo.view.ObservableWebView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Random;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.riccardobusetti.colombo.R.id.webview;
 
@@ -100,20 +110,26 @@ public class MainActivity extends PlaceholderUiActivity {
     private SearchManager searchManager;
     private SearchRecentSuggestions suggestions;
     boolean desktop = true;
-    private ObservableWebView webView;
+    public ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomWebChromeClient webChromeClient;
     private NetworkChangeReceiver networkChangeReceiver;
+    private ImageView bookmarks;
 
     private boolean isIncognito;
-    private boolean isDekstop;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
 
-    ArrayList<CardData> cardDatas = new ArrayList<>();
+    private TextView title, appTitle;
+
+    private RecyclerView rv;
+    private MyAdapter adapter;
+    private GridLayoutManager gridLayoutManager;
+
+    private ArrayList<CardData> cardDatas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,16 +143,53 @@ public class MainActivity extends PlaceholderUiActivity {
             prefs.edit().putBoolean("first_time", false).apply();
         }
 
+        /** Webview first stuff */
+        webView = (ObservableWebView) findViewById(webview);
+        webView.setVisibility(View.GONE);
+        String action = getIntent().getAction();
+        if (action != null && action.matches(Intent.ACTION_VIEW)) {
+            webView.loadUrl(getIntent().getDataString());
+            webView.setVisibility(View.VISIBLE);
+        } else {
+            webView.loadUrl(getHomepage());
+        }
+
+        /** Recyclerviewer stuff*/
+        gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
+        rv = (RecyclerView) findViewById(R.id.recyclerViewer);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(gridLayoutManager);
+        adapter = new MyAdapter(this, cardDatas);
+        rv.setAdapter(adapter);
+        retrieve();
+
+        /** UI stuff */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        title = (TextView) findViewById(R.id.toolbar_title);
+        appTitle = (TextView) findViewById(R.id.app_title);
+
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        webView = (ObservableWebView) findViewById(webview);
-        String action = getIntent().getAction();
-        if (action != null && action.matches(Intent.ACTION_VIEW))
-            webView.loadUrl(getIntent().getDataString());
-        else
-            webView.loadUrl(getHomepage());
-        webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (coordinatorLayout != null) {
+                    coordinatorLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                }
+        }
+
+        bookmarks = (ImageView) findViewById(R.id.bookmarks);
+        bookmarks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(webView.getVisibility() == View.VISIBLE) {
+                    webView.setVisibility(View.GONE);
+                } else if (webView.getVisibility() == View.GONE) {
+                    webView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        //webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         WebSettings webSettings = webView.getSettings();
@@ -162,30 +215,10 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setAppCacheEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        final View cardView = findViewById(R.id.card), search = findViewById(R.id.search);
+        final View search = findViewById(R.id.search);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            if (cardView != null) {
-                cardView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                            cardView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        } else {
-                            cardView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        }
-                        int a = (cardView.getLeft() + cardView.getRight()) / 2;
-                        int b = (cardView.getTop() + cardView.getBottom()) / 2;
-
-                        int radius = cardView.getWidth();
-
-                        Animator anim = ViewAnimationUtils.createCircularReveal(cardView, a, b, 0, radius);
-                        anim.setDuration(500);
-                        anim.start();
-                    }
-                });
-            }
             if (search != null && search.getVisibility() == View.VISIBLE) {
                 search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down_in));
             }
@@ -242,26 +275,14 @@ public class MainActivity extends PlaceholderUiActivity {
                 swipeRefreshLayout.setRefreshing(true);
 
                 if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
-
-                if (url.startsWith("https")) {
-                    Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
-                    DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                    toolbar.setNavigationIcon(drawable);
-                } if (url.startsWith("http")) {
-                    Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
-                    DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                    toolbar.setNavigationIcon(drawable);
-                } else {
-                    Drawable drawable = StaticUtils.getVectorDrawable(MainActivity.this, R.drawable.ic_search);
-                    DrawableCompat.setTint(drawable, ContextCompat.getColor(MainActivity.this, R.color.colorIconGrey));
-                    toolbar.setNavigationIcon(drawable);
-                }
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 swipeRefreshLayout.setRefreshing(false);
                 swipeRefreshLayout.setEnabled(false);
+
+                title.setText(webView.getUrl());
             }
         });
 
@@ -336,12 +357,10 @@ public class MainActivity extends PlaceholderUiActivity {
                     Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
                         @Override
                         public void onGenerated(Palette palette) {
-                            setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                            setColor(palette.getLightVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                         }
                     });
                 }
-
-                toolbar.setTitle(webView.getUrl());
             }
         };
 
@@ -412,12 +431,18 @@ public class MainActivity extends PlaceholderUiActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        searchView.setQueryHint("");
 
         suggestions = new SearchRecentSuggestions(MainActivity.this, RecentSuggestionsProvider.AUTHORITY, RecentSuggestionsProvider.MODE);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                if (webView.getVisibility() == View.GONE) {
+                    webView.setVisibility(View.VISIBLE);
+                }
+
                 if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
@@ -524,9 +549,6 @@ public class MainActivity extends PlaceholderUiActivity {
                                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                                 startActivity(Intent.createChooser(sharingIntent, "Share link"));
                                 break;
-                            case R.id.action_bookmark:
-                                startActivity(new Intent(MainActivity.this, BookmarksActivity.class));
-                                break;
                             case R.id.action_refresh:
                                 webView.reload();
                                 break;
@@ -563,7 +585,13 @@ public class MainActivity extends PlaceholderUiActivity {
                                 webView.getSettings().setSaveFormData(!isIncognito);
                                 webView.isPrivateBrowsingEnabled();
 
-                                setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                                if (!isIncognito) {
+                                    //Quando esce da incognito
+                                    appTitle.setText(R.string.app_name);
+                                } else {
+                                   //Quando entra in incognito
+                                    appTitle.setText(R.string.app_name_incognito);
+                                }
                                 break;
                             case R.id.action_add:
                                 createShortCut();
@@ -607,6 +635,11 @@ public class MainActivity extends PlaceholderUiActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
@@ -657,7 +690,60 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
     }
 
-    //Salvare dati da DB
+    /** Delete data from DB */
+    private void delete(int id)
+    {
+        DBAdapter db=new DBAdapter(this);
+        db.openDB();
+        long result=db.Delete(id);
+        if(result>0)
+        {
+            retrieve();
+
+        }else
+        {
+            Snackbar.make(coordinatorLayout,"Unable to Delete",Snackbar.LENGTH_SHORT).show();
+        }
+        db.closeDB();
+    }
+
+    /** Get data from DB */
+    private void retrieve() {
+
+        DBAdapter db = new DBAdapter(this);
+        db.openDB();
+
+        cardDatas.clear();
+
+        //Prendere dati
+        Cursor c = db.getAllData();
+
+        //Guardare nei dati e aggiungere ad ArrayList
+        while (c.moveToNext()) {
+
+            int id = c.getInt(0);
+            String name = c.getString(1);
+            String code = c.getString(2);
+
+            CardData cardData = new CardData(id, name, code);
+
+            //Aggiungere ad arraylist
+            cardDatas.add(cardData);
+
+        }
+
+        //Controllo se ArrayList non è vuota
+        if(!(cardDatas.size()<1)) {
+
+            rv.setAdapter(adapter);
+
+        }
+
+        db.closeDB();
+
+    }
+
+    /** Save data in DB */
     private void save(String name, String code) {
 
         DBAdapter db = new DBAdapter(this);
@@ -671,12 +757,6 @@ public class MainActivity extends PlaceholderUiActivity {
         if(result>0) {
 
             Snackbar snackbar = Snackbar.make(coordinatorLayout,"Bookmark saved!", Snackbar.LENGTH_SHORT);
-            snackbar.setAction("SHOW", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(MainActivity.this, BookmarksActivity.class));
-                }
-            });
             snackbar.show();
 
         } else {
@@ -687,6 +767,84 @@ public class MainActivity extends PlaceholderUiActivity {
         }
 
         db.closeDB();
+
+        retrieve();
+    }
+
+    /** Adapter recyclerviewer */
+    public class MyAdapter extends RecyclerView.Adapter<MyHolder>{
+
+        Context c;
+        ArrayList<CardData> cardData;
+        private int lastPosition = -1;
+
+        public MyAdapter(Context c, ArrayList<CardData> cardData) {
+            this.c = c;
+            this.cardData = cardData;
+        }
+
+        //Inzializzazione ViewHolder
+        @Override
+        public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            //Creazione View Object
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_layout, parent, false);
+
+            //Creazione Holder
+            MyHolder holder = new MyHolder(v);
+
+            return holder;
+        }
+
+        //Inizialiazzione Bind
+        @Override
+        public void onBindViewHolder(final MyHolder holder, int position) {
+
+            holder.name.setText(cardData.get(position).getName());
+
+            holder.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onItemClick(View v, int pos) {
+                    webView.loadUrl(cardData.get(pos).getCode());
+                    if (webView.getVisibility() == View.GONE) {
+                        webView.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            holder.setItemLongClickListener(new ItemLongClickListener() {
+                @Override
+                public void onItemLongClick(View v, final int pos) {
+                    Snackbar snackbar = Snackbar
+                            .make(coordinatorLayout, "Delete " + cardData.get(pos).getName() + " ?", Snackbar.LENGTH_LONG)
+                            .setAction("DELETE", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    delete(cardData.get(pos).getId());
+                                }
+                            });
+
+                    snackbar.show();
+                }
+            });
+
+            setAnimation(holder.itemView, position);
+
+        }
+
+        private void setAnimation(View viewToAnimate, int position) {
+            // If the bound view wasn't previously displayed on screen, it's animated
+            if (position > lastPosition) {
+                ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                anim.setDuration(new Random().nextInt(501));//to make duration random number between [0,501)
+                viewToAnimate.startAnimation(anim);
+                lastPosition = position;
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return cardData.size();
+        }
 
     }
 

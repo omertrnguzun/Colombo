@@ -21,7 +21,10 @@
         <item name="android:windowTitleStyle">@style/CustomWindowTitle</item>
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
         <item name="android:windowNoTitle">false</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    </style>
+
+    <style name="TextViewCustomFont">
+        <item name="fontPath">fonts/SpaceMono-Regular.ttf</item>
     </style>
 
     <style name="ToolbarSearchView" parent="Base.ThemeOverlay.AppCompat.ActionBar">

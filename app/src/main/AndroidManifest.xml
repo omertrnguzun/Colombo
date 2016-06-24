@@ -81,14 +81,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SettingsActivity" />
         </activity>
-        <activity
-            android:name=".activities.BookmarksActivity"
-            android:label="@string/title_activity_bookmarks"
-            android:theme="@style/PlaceTheme"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:hardwareAccelerated="true">
-
-        </activity>
     </application>
 
 </manifest>
