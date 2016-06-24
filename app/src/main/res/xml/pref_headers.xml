@@ -35,4 +35,14 @@
 
     </header>
 
+    <header
+        android:icon="@drawable/ic_permissions"
+        android:title="@string/pref_header_permissions">
+
+        <intent
+            android:targetPackage="com.riccardobusetti.colombo"
+            android:targetClass="com.riccardobusetti.colombo.activities.PermsActivity" />
+
+    </header>
+
 </preference-headers>

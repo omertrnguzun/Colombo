@@ -69,9 +69,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amqtech.permissions.helper.objects.Permission;
-import com.amqtech.permissions.helper.objects.Permissions;
-import com.amqtech.permissions.helper.objects.PermissionsActivity;
 import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
 import com.riccardobusetti.colombo.database.DBAdapter;
@@ -300,7 +297,7 @@ public class MainActivity extends PlaceholderUiActivity {
                     public void onClick(View view) {
 
                         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            launchPerms();
+                            startActivity(new Intent(MainActivity.this, PermsActivity.class));
                         } else {
                             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
@@ -357,7 +354,7 @@ public class MainActivity extends PlaceholderUiActivity {
                     Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
                         @Override
                         public void onGenerated(Palette palette) {
-                            setColor(palette.getLightVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                            setColor(palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                         }
                     });
                 }
@@ -494,6 +491,10 @@ public class MainActivity extends PlaceholderUiActivity {
 
                 searchView.setQuery(query, false);
 
+                if (webView.getVisibility() == View.GONE) {
+                    webView.setVisibility(View.VISIBLE);
+                }
+
                 if (URLUtil.isValidUrl(query))
                     webView.loadUrl(query);
                 else
@@ -597,9 +598,6 @@ public class MainActivity extends PlaceholderUiActivity {
                                 createShortCut();
                                 Toast.makeText(MainActivity.this, "Shortcut added to home!", Toast.LENGTH_SHORT).show();
                                 break;
-                            case R.id.action_perms:
-                                launchPerms();
-                                break;
                             case R.id.action_settings:
                                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                                 break;
@@ -609,8 +607,6 @@ public class MainActivity extends PlaceholderUiActivity {
                 };
 
                 popupMenu.inflate(R.menu.menu_overflow);
-
-                popupMenu.getMenu().findItem(R.id.action_perms).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
 
                 try {
                     Field menuField = PopupMenu.class.getDeclaredField("mMenu");
@@ -883,28 +879,6 @@ public class MainActivity extends PlaceholderUiActivity {
             default:
                 return "https://www.google.com/search?q=";
         }
-    }
-
-    /** Perms activity for set them if not in the first time */
-    private void launchPerms() {
-        new PermissionsActivity(getBaseContext())
-                .withAppName(getResources().getString(R.string.app_name))
-                .withPermissions(new Permission(Permissions.WRITE_EXTERNAL_STORAGE, "To download files, Colombo must have access to your storage!"), new Permission(Permissions.ACCESS_FINE_LOCATION, "If you want to use WebApps with geolocation Colombo must have access to your position!"))
-                .withPermissionFlowCallback(new PermissionsActivity.PermissionFlowCallback() {
-                    @Override
-                    public void onPermissionGranted(Permission permission) {
-                        Toast.makeText(MainActivity.this, "The permissions are set!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onPermissionDenied(Permission permission) {
-                        Toast.makeText(MainActivity.this, "You won't be able to download files!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setBackgroundColor(Color.parseColor("#03A9F4"))
-                .setBarColor(Color.parseColor("#0288D1"))
-                .setStatusBarColor(Color.parseColor("#0288D1"))
-                .launch();
     }
 
     /** Set color class to change dinamically color of UI */

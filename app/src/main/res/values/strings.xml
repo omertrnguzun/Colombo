@@ -97,5 +97,6 @@
     <string name="title_activity_bookmarks">BookmarksActivity</string>
     <string name="menu_bookmark">Bookmarks</string>
     <string name="app_name_incognito">Colombo Incognito</string>
+    <string name="pref_header_permissions">Check Permissions</string>
 
 </resources>

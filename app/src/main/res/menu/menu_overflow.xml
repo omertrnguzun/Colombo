@@ -47,12 +47,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_perms"
-        android:title="@string/menu_perms"
-        android:icon="@drawable/ic_permissions"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_settings"
         android:title="@string/menu_settings"
         android:icon="@drawable/ic_settings"
