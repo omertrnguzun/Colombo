@@ -54,14 +54,14 @@ public class SplashActivity extends Activity {
                                 .scaleY(1)
                                 .alpha(1f)
                                 .translationY(-100)
-                                .setDuration(600)
+                                .setDuration(400)
                                 .setListener(new AnimatorListenerAdapter() {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
                                         super.onAnimationEnd(animation);
                                         text.animate()
                                                 .alpha(1f)
-                                                .setDuration(300);
+                                                .setDuration(200);
                                     }
                                 });
                     }
