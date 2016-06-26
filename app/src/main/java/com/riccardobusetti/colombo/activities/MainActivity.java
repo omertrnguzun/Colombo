@@ -8,10 +8,8 @@ import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -22,8 +20,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -113,7 +109,6 @@ import static com.riccardobusetti.colombo.R.id.webview;
     public ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomWebChromeClient webChromeClient;
-    private NetworkChangeReceiver networkChangeReceiver;
     private ImageView settings;
 
     private boolean isIncognito;
@@ -720,8 +715,6 @@ import static com.riccardobusetti.colombo.R.id.webview;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null)
             locationManager.removeUpdates(locationListener);
-
-        unregisterReceiver(networkChangeReceiver);
     }
 
     @Override
@@ -733,9 +726,6 @@ import static com.riccardobusetti.colombo.R.id.webview;
         } else if (locationManager != null)
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
 
-        networkChangeReceiver = new NetworkChangeReceiver();
-        registerReceiver(networkChangeReceiver, new IntentFilter());
-
         if (prefs != null) {
             setPrefs();
         }
@@ -743,10 +733,7 @@ import static com.riccardobusetti.colombo.R.id.webview;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        final WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
-        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
-        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+        setPrefs();
     }
 
     /** Method for hide icons on click of searchview */
@@ -1039,16 +1026,5 @@ import static com.riccardobusetti.colombo.R.id.webview;
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
         sendBroadcast(shortcutintent);
         Toast.makeText(this, "Shortcut added", Toast.LENGTH_SHORT).show();
-    }
-
-    public static class NetworkChangeReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            NetworkInfo netInfo = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-
-            if (netInfo == null || !netInfo.isConnected())
-                Toast.makeText(context, R.string.msg_connection_failed, Toast.LENGTH_SHORT).show();
-        }
     }
 }
