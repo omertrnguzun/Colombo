@@ -24,6 +24,7 @@ public class PermsActivity extends Activity{
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         launchPerms();
+        finish();
     }
 
     /** Perms activity for set them if not in the first time */
@@ -52,5 +53,9 @@ public class PermsActivity extends Activity{
                 .setIconColor(Color.parseColor("#262626"))
                 .setStatusBarLight(true)
                 .launch();
+    }
+        @Override
+    public void onBackPressed() {
+        finish();
     }
 }
