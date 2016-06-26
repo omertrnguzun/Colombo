@@ -13,6 +13,7 @@ import android.preference.PreferenceFragment;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.riccardobusetti.colombo.R;

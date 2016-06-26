@@ -9,9 +9,15 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_bookmarks_add"
+        android:title=""
+        android:icon="@drawable/ic_bookmark_add"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
         android:id="@+id/action_overflow"
         android:title=""
         android:icon="@drawable/ic_menu_overflow"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 </menu>

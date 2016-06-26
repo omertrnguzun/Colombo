@@ -3,6 +3,7 @@ package com.riccardobusetti.colombo.activities;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.amqtech.permissions.helper.objects.Permission;

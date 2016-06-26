@@ -151,13 +151,6 @@ public class MainActivity extends PlaceholderUiActivity {
         /** Webview first stuff */
         webView = (ObservableWebView) findViewById(webview);
         webView.setVisibility(View.GONE);
-        String action = getIntent().getAction();
-        if (action != null && action.matches(Intent.ACTION_VIEW)) {
-            webView.loadUrl(getIntent().getDataString());
-            webView.setVisibility(View.VISIBLE);
-        } else {
-            webView.loadUrl(getHomepage());
-        }
 
         /** Recyclerviewer stuff*/
         gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
@@ -175,6 +168,17 @@ public class MainActivity extends PlaceholderUiActivity {
         appTitle = (TextView) findViewById(R.id.app_title);
         titleFrame = (FrameLayout) findViewById(R.id.big_title);
         cardSearch = (CardView) findViewById(R.id.card_search);
+
+        /** Load url of webview */
+        String action = getIntent().getAction();
+        if (action != null && action.matches(Intent.ACTION_VIEW)) {
+            webView.loadUrl(getIntent().getDataString());
+            if (webView.getVisibility() == View.GONE || titleFrame.getVisibility() == View.VISIBLE)
+                webView.setVisibility(View.VISIBLE);
+            titleFrame.setVisibility(View.GONE);
+        } else {
+            webView.loadUrl(getHomepage());
+        }
 
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
@@ -455,11 +459,14 @@ public class MainActivity extends PlaceholderUiActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        final MenuItem bookmarksAdd = (MenuItem) findViewById(R.id.action_bookmarks_add);
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setQueryHint("");
+        searchView.setMaxWidth(Integer.MAX_VALUE);
 
         suggestions = new SearchRecentSuggestions(MainActivity.this, RecentSuggestionsProvider.AUTHORITY, RecentSuggestionsProvider.MODE);
 
@@ -549,6 +556,13 @@ public class MainActivity extends PlaceholderUiActivity {
                 searchView.setVisibility(View.GONE);
 
                 return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
@@ -662,6 +676,7 @@ public class MainActivity extends PlaceholderUiActivity {
                         }
                         return super.onMenuItemSelected(menu, item);
                     }
+
                 };
 
                 popupMenu.inflate(R.menu.menu_overflow);
@@ -685,6 +700,9 @@ public class MainActivity extends PlaceholderUiActivity {
                 popupMenu.setGravity(Gravity.TOP | Gravity.END);
                 popupMenu.show();
 
+                break;
+            case R.id.action_bookmarks_add:
+                save(webView.getTitle(), webView.getUrl());
                 break;
         }
 
@@ -729,6 +747,14 @@ public class MainActivity extends PlaceholderUiActivity {
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+    }
+
+    /** Method for hide icons on click of searchview */
+    private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
+        for (int i=0; i<menu.size(); ++i) {
+            MenuItem item = menu.getItem(i);
+            if (item != exception) item.setVisible(visible);
+        }
     }
 
     /**
@@ -797,7 +823,7 @@ public class MainActivity extends PlaceholderUiActivity {
 
         if (result > 0) {
 
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark saved!", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark " + webView.getTitle() + " added!", Snackbar.LENGTH_SHORT);
             snackbar.show();
 
         } else {

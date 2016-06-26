@@ -1,7 +1,9 @@
 package com.riccardobusetti.colombo.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
