@@ -694,10 +694,6 @@ import static com.riccardobusetti.colombo.R.id.webview;
 
                 popupMenu.setGravity(Gravity.TOP | Gravity.END);
                 popupMenu.show();
-
-                break;
-            case R.id.action_bookmarks_add:
-                save(webView.getTitle(), webView.getUrl());
                 break;
         }
 
@@ -726,9 +722,7 @@ import static com.riccardobusetti.colombo.R.id.webview;
         } else if (locationManager != null)
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
 
-        if (prefs != null) {
-            setPrefs();
-        }
+        setPrefs();
     }
 
     @Override
