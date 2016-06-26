@@ -39,6 +39,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.CardView;
@@ -91,7 +92,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.riccardobusetti.colombo.R.id.webview;
 
-public class MainActivity extends PlaceholderUiActivity {
+    public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_SELECT_FILE = 100;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;

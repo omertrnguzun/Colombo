@@ -16,11 +16,16 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="colorButtonNormal">@android:color/white</item>
+    </style>
 
-        <item name="android:windowTitleSize">128dp</item>
-        <item name="android:windowTitleStyle">@style/CustomWindowTitle</item>
-        <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
-        <item name="android:windowNoTitle">false</item>
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimarySplash</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkSplash</item>
+        <item name="colorAccent">@color/colorAccentSplash</item>
+
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <style name="ThemeLightIcons" parent="Theme.AppCompat.Light.NoActionBar">
@@ -30,11 +35,6 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="colorButtonNormal">@android:color/white</item>
-
-        <item name="android:windowTitleSize">128dp</item>
-        <item name="android:windowTitleStyle">@style/CustomWindowTitle</item>
-        <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
-        <item name="android:windowNoTitle">false</item>
     </style>
 
     <style name="TextViewCustomFont">
@@ -77,28 +77,8 @@
         <item name="android:drawablePadding">@dimen/sheet_item_image_spacing</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <!-- Changes the background color of the title bar -->
-    <style name="CustomWindowTitleBackground">
-        <item name="android:background">@color/colorPrimary</item>
-    </style>
-
-    <!-- Set the theme for the window title -->
-    <style name="CustomWindowTitle">
-        <item name="android:singleLine">true</item>
-        <item name="android:textAppearance">@style/CustomWindowTitleText</item>
-    </style>
-
     <style name="CustomWindowTitleText">
         <item name="android:textColor">@android:color/transparent</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

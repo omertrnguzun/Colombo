@@ -10,6 +10,10 @@
     <color name="colorPrimaryDarkIncognito">#212121</color>
     <color name="colorAccentIncognito">#9E9E9E</color>
 
+    <color name="colorPrimarySplash">#F5F5F5</color>
+    <color name="colorPrimaryDarkSplash">#E0E0E0</color>
+    <color name="colorAccentSplash">#64FFDA</color>
+
     <color name="swipeRefresh">#757575</color>
     <color name="swipeRefreshIncognito">#424242</color>
 
