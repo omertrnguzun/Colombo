@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
+    <!-- App Primary Theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -8,8 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- Base application theme. -->
-    <style name="PlaceTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- App Primart Dark Icons Theme -->
+    <style name="DarkIconsAppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    </style>
+
+    <!-- Base app Theme -->
+    <style name="DarkIconsTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -18,6 +28,17 @@
         <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
+    <!-- Base app Theme with white icons -->
+    <style name="WhiteIconsTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorButtonNormal">@android:color/white</item>
+    </style>
+
+    <!-- SplashScreen Theme -->
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimarySplash</item>
@@ -25,15 +46,6 @@
         <item name="colorAccent">@color/colorAccentSplash</item>
 
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="colorButtonNormal">@android:color/white</item>
-    </style>
-
-    <style name="ThemeLightIcons" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
         <item name="colorButtonNormal">@android:color/white</item>
     </style>
 

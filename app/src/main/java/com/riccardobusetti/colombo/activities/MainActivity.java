@@ -190,10 +190,11 @@ import static com.riccardobusetti.colombo.R.id.webview;
                 }
                 appTitle.setTextColor(Color.parseColor("#233B3F"));
             } else {
-                setTheme(R.style.ThemeLightIcons);
+                setTheme(R.style.WhiteIconsTheme);
                 appTitle.setTextColor(Color.parseColor("#FAFAFA"));
             }
         } else {
+            setTheme(R.style.WhiteIconsTheme);
             appTitle.setTextColor(Color.parseColor("#FAFAFA"));
         }
 
@@ -462,8 +463,6 @@ import static com.riccardobusetti.colombo.R.id.webview;
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        final MenuItem bookmarksAdd = (MenuItem) findViewById(R.id.action_bookmarks_add);
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setQueryHint("");
@@ -1009,6 +1008,21 @@ import static com.riccardobusetti.colombo.R.id.webview;
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (prefs.getBoolean("light_icons", true)) {
+                if (coordinatorLayout != null) {
+                    coordinatorLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                }
+                appTitle.setTextColor(Color.parseColor("#233B3F"));
+            } else {
+                setTheme(R.style.WhiteIconsTheme);
+                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            }
+        } else {
+            setTheme(R.style.WhiteIconsTheme);
+            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+        }
     }
 
     /**
