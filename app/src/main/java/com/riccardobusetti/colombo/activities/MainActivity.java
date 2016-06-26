@@ -169,12 +169,26 @@ import static com.riccardobusetti.colombo.R.id.webview;
         String action = getIntent().getAction();
         if (action != null && action.matches(Intent.ACTION_VIEW)) {
             webView.loadUrl(getIntent().getDataString());
-            if (webView.getVisibility() == View.GONE || titleFrame.getVisibility() == View.VISIBLE)
+            if (webView.getVisibility() == View.GONE || titleFrame.getVisibility() == View.VISIBLE) {
                 webView.setVisibility(View.VISIBLE);
-            titleFrame.setVisibility(View.GONE);
+                titleFrame.setVisibility(View.GONE);
+            }
         } else {
             webView.loadUrl(getHomepage());
         }
+
+        /*Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            if(intent.getData() != null){
+                webView.loadUrl(getIntent().getDataString());
+                if (webView.getVisibility() == View.GONE || titleFrame.getVisibility() == View.VISIBLE) {
+                    webView.setVisibility(View.VISIBLE);
+                    titleFrame.setVisibility(View.GONE);
+                }
+            }
+        } else {
+            webView.loadUrl(getHomepage());
+        }*/
 
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
@@ -283,18 +297,32 @@ import static com.riccardobusetti.colombo.R.id.webview;
         webView.setWebViewClient(new WebViewClient() {
 
             @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("market://") || url.startsWith("https://www.youtube.com") || url.startsWith("https://play.google.com")
+                        || url.startsWith("magnet:") || url.startsWith("mailto:")
+                        || url.startsWith("intent://")) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(url));
+                    startActivity(intent);
+                    return true;
+                }
+                view.loadUrl(url);
+                return true;
+            }
+
+            @Override
             public void onPageStarted(WebView view, String url, Bitmap facIcon) {
                 swipeRefreshLayout.setRefreshing(true);
 
                 if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
+
+                title.setText(webView.getUrl());
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 swipeRefreshLayout.setRefreshing(false);
                 swipeRefreshLayout.setEnabled(false);
-
-                title.setText(webView.getUrl());
             }
         });
 
@@ -304,9 +332,7 @@ import static com.riccardobusetti.colombo.R.id.webview;
                 final String filename1 = URLUtil.guessFileName(url, contentDisposition, mimeType);
 
                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
-                View snackBarView = snackbar.getView();
-                snackbar.setActionTextColor(Color.parseColor("#FAFAFA"));
-                snackBarView.setBackgroundColor(Color.parseColor("#4690CD"));
+                snackbar.setActionTextColor(Color.parseColor("#1DE9B6"));
                 snackbar.setAction("DOWNLOAD", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

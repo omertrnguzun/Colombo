@@ -13,19 +13,21 @@
         android:background="#F5F5F5">
 
         <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_splash" />
-
-        <ImageView
+            android:scaleType="centerCrop"
             android:id="@+id/imageView4"
-            android:layout_width="150dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
-            android:layout_margin="48dp"
-            android:src="@drawable/ic_text" />
+            android:src="@drawable/ic_text"
+            android:layout_margin="56dp"/>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_splash"
+            android:layout_marginBottom="56dp"/>
 
     </FrameLayout>
 
