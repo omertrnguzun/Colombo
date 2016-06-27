@@ -72,6 +72,7 @@ import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
 import com.riccardobusetti.colombo.database.DBAdapter;
 import com.riccardobusetti.colombo.holder.MyHolder;
+import com.riccardobusetti.colombo.util.AppStatus;
 import com.riccardobusetti.colombo.util.IconMenuPopupHelper;
 import com.riccardobusetti.colombo.util.ItemClickListener;
 import com.riccardobusetti.colombo.util.ItemLongClickListener;
@@ -85,8 +86,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
-import static com.riccardobusetti.colombo.R.id.webview;
 
     public class MainActivity extends AppCompatActivity {
 
@@ -137,15 +136,18 @@ import static com.riccardobusetti.colombo.R.id.webview;
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (prefs.getBoolean("first_time", true)) {
-            startActivity(new Intent(this, MainIntroActivity.class));
-            prefs.edit().putBoolean("first_time", false).apply();
+        if (AppStatus.getInstance(this).isOnline()) {
+
+        } else {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
+            snackbar.show();
         }
 
         /** Webview first stuff */
-        webView = (ObservableWebView) findViewById(webview);
+        webView = (ObservableWebView) findViewById(R.id.webview);
         webView.setVisibility(View.GONE);
 
         /** Recyclerviewer stuff*/
@@ -191,7 +193,6 @@ import static com.riccardobusetti.colombo.R.id.webview;
         }*/
 
         appbar = (AppBarLayout) findViewById(R.id.appbar);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (prefs.getBoolean("light_icons", true)) {
                 if (coordinatorLayout != null) {
@@ -749,6 +750,13 @@ import static com.riccardobusetti.colombo.R.id.webview;
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
 
         setPrefs();
+
+        if (AppStatus.getInstance(this).isOnline()) {
+
+        } else {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
     }
 
     @Override
@@ -773,6 +781,7 @@ import static com.riccardobusetti.colombo.R.id.webview;
 
         long result = db.Delete(id);
         if (result > 0) {
+            Snackbar.make(coordinatorLayout, "Bookmark deleted", Snackbar.LENGTH_SHORT).show();
             retrieve();
         } else {
             Snackbar.make(coordinatorLayout, "Unable to Delete", Snackbar.LENGTH_SHORT).show();

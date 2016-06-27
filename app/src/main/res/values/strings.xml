@@ -100,5 +100,6 @@
     <string name="pref_header_permissions">Check Permissions</string>
     <string name="pref_light_icons">Light or Dark status icons?</string>
     <string name="pref_light_icons_summary">Default dark, set as light if you prefer old color theming and have white icons on status bar.</string>
+    <string name="no_connection">No connection :_(</string>
 
 </resources>
