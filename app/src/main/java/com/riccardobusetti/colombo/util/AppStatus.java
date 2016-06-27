@@ -11,8 +11,8 @@ import android.util.Log;
 
 public class AppStatus {
 
-    private static AppStatus instance = new AppStatus();
     static Context context;
+    private static AppStatus instance = new AppStatus();
     ConnectivityManager connectivityManager;
     NetworkInfo wifiInfo, mobileInfo;
     boolean connected = false;

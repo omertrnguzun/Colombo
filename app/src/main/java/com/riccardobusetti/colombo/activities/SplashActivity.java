@@ -28,6 +28,17 @@ public class SplashActivity extends Activity {
     private CoordinatorLayout coordi;
     private SharedPreferences prefs;
 
+    public static void setLocked(ImageView v) {
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+        ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
+        v.setColorFilter(cf);
+    }
+
+    public static void setUnlocked(ImageView v) {
+        v.setColorFilter(null);
+    }
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -48,7 +59,7 @@ public class SplashActivity extends Activity {
                         startActivity(new Intent(SplashActivity.this, MainIntroActivity.class));
                         prefs.edit().putBoolean("first_time", false).apply();
                     }
-                }  else {
+                } else {
                     Snackbar snackbar = Snackbar.make(coordi, R.string.no_connection, Snackbar.LENGTH_INDEFINITE);
                     snackbar.setAction("PROCEED", new View.OnClickListener() {
                         @Override
@@ -85,16 +96,5 @@ public class SplashActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    public static void  setLocked(ImageView v) {
-        ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
-        ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
-        v.setColorFilter(cf);
-    }
-
-    public static void  setUnlocked(ImageView v) {
-        v.setColorFilter(null);
     }
 }

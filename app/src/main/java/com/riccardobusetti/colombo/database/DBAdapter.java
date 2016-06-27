@@ -59,8 +59,8 @@ public class DBAdapter {
         try {
 
             ContentValues cv = new ContentValues();
-            cv.put(Contants.NAME,name);
-            cv.put(Contants.CODE,code);
+            cv.put(Contants.NAME, name);
+            cv.put(Contants.CODE, code);
 
             return db.insert(Contants.TB_NAME, Contants.ROW_ID, cv);
 
@@ -82,29 +82,23 @@ public class DBAdapter {
     }
 
     //Aggiornare DB
-    public long UPDATE(int id,String name,String code)
-    {
-        try
-        {
-            ContentValues cv=new ContentValues();
-            cv.put(Contants.NAME,name);
+    public long UPDATE(int id, String name, String code) {
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put(Contants.NAME, name);
             cv.put(Contants.CODE, code);
-            return db.update(Contants.TB_NAME,cv,Contants.ROW_ID+" =?",new String[]{String.valueOf(id)});
-        }catch (SQLException e)
-        {
+            return db.update(Contants.TB_NAME, cv, Contants.ROW_ID + " =?", new String[]{String.valueOf(id)});
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
     }
 
     //Eliminare ID
-    public long Delete(int id)
-    {
-        try
-        {
-            return db.delete(Contants.TB_NAME,Contants.ROW_ID+" =?",new String[]{String.valueOf(id)});
-        }catch (SQLException e)
-        {
+    public long Delete(int id) {
+        try {
+            return db.delete(Contants.TB_NAME, Contants.ROW_ID + " =?", new String[]{String.valueOf(id)});
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;

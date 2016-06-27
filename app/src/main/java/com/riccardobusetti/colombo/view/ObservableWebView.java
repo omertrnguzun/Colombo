@@ -71,7 +71,8 @@ public class ObservableWebView extends WebView {
         return webChromeClient != null && webChromeClient.isVideoFullscreen();
     }
 
-    @Override @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    @SuppressLint("SetJavaScriptEnabled")
     public void setWebChromeClient(WebChromeClient client) {
         if (client instanceof CustomWebChromeClient)
             this.webChromeClient = (CustomWebChromeClient) client;
@@ -150,13 +151,13 @@ public class ObservableWebView extends WebView {
     }*/
 
     @Override
-    public void setNestedScrollingEnabled(boolean enabled) {
-        childHelper.setNestedScrollingEnabled(enabled);
+    public boolean isNestedScrollingEnabled() {
+        return childHelper.isNestedScrollingEnabled();
     }
 
     @Override
-    public boolean isNestedScrollingEnabled() {
-        return childHelper.isNestedScrollingEnabled();
+    public void setNestedScrollingEnabled(boolean enabled) {
+        childHelper.setNestedScrollingEnabled(enabled);
     }
 
     @Override

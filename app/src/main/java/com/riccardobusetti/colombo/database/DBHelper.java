@@ -23,7 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.execSQL(Contants.CREATE_TB);
 
-        }catch (Exception ex) {
+        } catch (Exception ex) {
 
             ex.printStackTrace();
 

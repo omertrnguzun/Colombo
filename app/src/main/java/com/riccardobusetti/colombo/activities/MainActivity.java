@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         /** Location */
         handleLocation();
 
-        /** Recyclerviewer stuff*/
+        /** Recyclerviewer stuff */
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
         rv = (RecyclerView) findViewById(R.id.recyclerViewer);
         rv.setHasFixedSize(true);

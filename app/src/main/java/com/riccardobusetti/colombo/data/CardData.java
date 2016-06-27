@@ -7,7 +7,7 @@ package com.riccardobusetti.colombo.data;
 public class CardData {
 
     private int id;
-    private String name,code;
+    private String name, code;
 
     public CardData(int id, String name, String code) {
         this.id = id;

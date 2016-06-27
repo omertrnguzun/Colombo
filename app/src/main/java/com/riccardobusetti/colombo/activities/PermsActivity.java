@@ -15,7 +15,7 @@ import com.riccardobusetti.colombo.R;
  * Created by riccardobusetti on 24/06/16.
  */
 
-public class PermsActivity extends Activity{
+public class PermsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,9 @@ public class PermsActivity extends Activity{
         finish();
     }
 
-    /** Perms activity for set them if not in the first time */
+    /**
+     * Perms activity for set them if not in the first time
+     */
     private void launchPerms() {
         new PermissionsActivity(getBaseContext())
                 .withAppName(getResources().getString(R.string.app_name))
@@ -55,7 +57,8 @@ public class PermsActivity extends Activity{
                 .setStatusBarLight(true)
                 .launch();
     }
-        @Override
+
+    @Override
     public void onBackPressed() {
         finish();
     }

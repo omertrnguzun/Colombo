@@ -31,14 +31,14 @@ public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickLis
     @Override
     public void onClick(View v) {
 
-        this.itemClickListener.onItemClick(v,getLayoutPosition());
+        this.itemClickListener.onItemClick(v, getLayoutPosition());
 
     }
 
     @Override
     public boolean onLongClick(View view) {
 
-        this.itemLongClickListener.onItemLongClick(view,getLayoutPosition());
+        this.itemLongClickListener.onItemLongClick(view, getLayoutPosition());
 
         return true;
     }
