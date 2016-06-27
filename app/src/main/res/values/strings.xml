@@ -90,7 +90,7 @@
     <string name="menu_dekstop">Dekstop Site</string>
     <string name="menu_add">Add to home</string>
     <string name="gestures">Gestures</string>
-    <string name="gestures_description">Disable or Enable Gestures, like swiping from left to right...</string>
+    <string name="gestures_description">Disable or Enable Gestures, like swiping from left to right</string>
     <string name="pref_dark">Dark Mode</string>
     <string name="pref_dark_summary">Use dark theme instaed of white.</string>
     <string name="menu_search_words">Find in page</string>

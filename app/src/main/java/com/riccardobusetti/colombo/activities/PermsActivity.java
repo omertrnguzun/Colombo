@@ -46,11 +46,12 @@ public class PermsActivity extends Activity{
                     }
                 })
                 .setBackgroundColor(Color.parseColor("#80DEEA"))
-                .setBarColor(Color.parseColor("#26C6DA"))
-                .setStatusBarColor(Color.parseColor("#26C6DA"))
-                .setMainTextColor(Color.parseColor("#262626"))
-                .setMainTextColorSecondary(Color.parseColor("#262626"))
-                .setIconColor(Color.parseColor("#262626"))
+                .setBarColor(Color.parseColor("#233B3F"))
+                .setStatusBarColor(Color.parseColor("#233B3F"))
+                .setMainTextColor(Color.parseColor("#233B3F"))
+                .setMainTextColorSecondary(Color.parseColor("#233B3F"))
+                .setIconColor(Color.parseColor("#233B3F"))
+                .setBarTextColor(Color.parseColor("#233B3F"))
                 .setStatusBarLight(true)
                 .launch();
     }

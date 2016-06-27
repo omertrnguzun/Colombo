@@ -25,7 +25,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
@@ -38,16 +37,15 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,13 +67,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
 import com.riccardobusetti.colombo.database.DBAdapter;
 import com.riccardobusetti.colombo.holder.MyHolder;
 import com.riccardobusetti.colombo.util.AppStatus;
-import com.riccardobusetti.colombo.util.IconMenuPopupHelper;
 import com.riccardobusetti.colombo.util.ItemClickListener;
 import com.riccardobusetti.colombo.util.ItemLongClickListener;
 import com.riccardobusetti.colombo.util.RecentSuggestionsProvider;
@@ -83,7 +81,6 @@ import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -96,23 +93,19 @@ public class MainActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_CODE = 1234;
     private static final int STORAGE_PERMISSION_CODE = 5678;
 
-    public static final int SEARCH_GOOGLE = 0, SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
+    private static final int SEARCH_GOOGLE = 0, SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
 
     private ValueCallback<Uri[]> uploadMessage;
     private ValueCallback<Uri> uploadMessagePreLollipop;
 
-    private Toolbar toolbar;
     private AppBarLayout appbar;
     private CoordinatorLayout coordinatorLayout;
 
     private SearchView searchView;
-    private SearchManager searchManager;
     private SearchRecentSuggestions suggestions;
-    boolean desktop = true;
-    public ObservableWebView webView;
+    private boolean desktop = true;
+    private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CustomWebChromeClient webChromeClient;
-    private ImageView settings;
 
     private boolean isIncognito;
 
@@ -125,29 +118,42 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private MyAdapter adapter;
-    private GridLayoutManager gridLayoutManager;
 
     private ArrayList<CardData> cardDatas = new ArrayList<>();
 
     private FrameLayout titleFrame;
-    private View search;
     private CardView cardSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /** Hardware acceleration */
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+
+        /** Initialization of prefs */
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        /** Checking internet connection */
         if (AppStatus.getInstance(this).isOnline()) {
-
         } else {
             Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
             snackbar.show();
         }
+
+        /** UI stuff */
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        appbar = (AppBarLayout) findViewById(R.id.appbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        title = (TextView) findViewById(R.id.toolbar_title);
+        appTitle = (TextView) findViewById(R.id.app_title);
+        titleFrame = (FrameLayout) findViewById(R.id.big_title);
+        cardSearch = (CardView) findViewById(R.id.card_search);
+        View search = findViewById(R.id.search);
 
         /** Webview first stuff */
         webView = (ObservableWebView) findViewById(R.id.webview);
@@ -157,24 +163,13 @@ public class MainActivity extends AppCompatActivity {
         handleLocation();
 
         /** Recyclerviewer stuff*/
-        gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
         rv = (RecyclerView) findViewById(R.id.recyclerViewer);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(gridLayoutManager);
         adapter = new MyAdapter(this, cardDatas);
         rv.setAdapter(adapter);
         retrieve();
-
-        /** UI stuff */
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        title = (TextView) findViewById(R.id.toolbar_title);
-        appTitle = (TextView) findViewById(R.id.app_title);
-        titleFrame = (FrameLayout) findViewById(R.id.big_title);
-        cardSearch = (CardView) findViewById(R.id.card_search);
-        appbar = (AppBarLayout) findViewById(R.id.appbar);
-        search = findViewById(R.id.search);
 
         /** Load url of webview */
         String action = getIntent().getAction();
@@ -200,7 +195,17 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                save(webView.getTitle(), webView.getUrl());
+                new MaterialDialog.Builder(MainActivity.this)
+                        .title("Add Bookmark?")
+                        .content("Give to your bookmark a name!")
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                save(webView.getTitle(), webView.getUrl());
+                                dialog.dismiss();
+                            }
+                        }).show();
                 return true;
             }
         });
@@ -230,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /** Settings Button on Toolbar */
-        settings = (ImageView) findViewById(R.id.settings);
+        ImageView settings = (ImageView) findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,7 +269,6 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
         webView.setWebViewClient(new WebViewClient() {
-
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, final String url) {
                 if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
@@ -276,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
                             .setTitle("You are leaving Colombo!")
                             .setContent("Are you sure to open this link in the specific app?")
                             .setPositiveText("OPEN")
-                            .setNegativeText("CONTINUE")
+                            .setNegativeText("CONTINUE IN COLOMBO")
                             .onNegative(new BottomDialog.ButtonCallback() {
                                 @Override
                                 public void onClick(@NonNull BottomDialog bottomDialog) {
@@ -370,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        webChromeClient = new CustomWebChromeClient(this) {
+        CustomWebChromeClient webChromeClient = new CustomWebChromeClient(this) {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
 
@@ -484,14 +488,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putString("url", webView.getUrl());
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setQueryHint("");
@@ -607,7 +606,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         if (prefs.getBoolean("suggestions", true))
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
@@ -620,122 +619,87 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                searchView.setVisibility(View.VISIBLE);
-                searchView.setIconified(false);
-                break;
-            case R.id.action_overflow:
-                PopupMenu popupMenu = new PopupMenu(MainActivity.this, toolbar) {
-                    @Override
-                    public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_home:
-                                webView.clearHistory();
-                                webView.loadUrl(getHomepage());
-                                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                                    webView.setVisibility(View.VISIBLE);
-                                    titleFrame.setVisibility(View.GONE);
-                                }
-                                break;
-                            case R.id.action_share:
-                                String shareBody = webView.getUrl();
-                                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                                sharingIntent.setType("text/plain");
-                                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Website Link");
-                                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                                startActivity(Intent.createChooser(sharingIntent, "Share link"));
-                                break;
-                            case R.id.action_refresh:
-                                webView.reload();
-                                break;
-                            case R.id.action_bookmark:
-                                if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
-                                    webView.setVisibility(View.GONE);
-                                    titleFrame.setVisibility(View.VISIBLE);
-                                } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                                    webView.setVisibility(View.VISIBLE);
-                                    titleFrame.setVisibility(View.GONE);
-                                }
-                                break;
-                            case R.id.action_search_words:
-                                webView.showFindDialog(null, true);
-                                break;
-                            case R.id.action_dekstop:
-                                if (item.isChecked()) {
-                                    item.setChecked(false);
-                                } else {
-                                    item.setChecked(true);
-                                }
-                                if (desktop) {
-                                    webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.41 Safari/537.36");
-                                    webView.reload();
-                                    desktop = false;
-                                } else {
-                                    webView.getSettings().setUserAgentString("");
-                                    webView.reload();
-                                    desktop = true;
-                                }
-                                break;
-                            case R.id.action_incognito:
-                                isIncognito = !isIncognito;
-                                item.setChecked(isIncognito);
-
-                                WebSettings webSettings = webView.getSettings();
-                                CookieManager.getInstance().setAcceptCookie(!isIncognito);
-                                webSettings.setAppCacheEnabled(!isIncognito);
-                                webView.clearHistory();
-                                webView.clearCache(isIncognito);
-                                webView.clearFormData();
-                                webView.getSettings().setSavePassword(!isIncognito);
-                                webView.getSettings().setSaveFormData(!isIncognito);
-                                webView.isPrivateBrowsingEnabled();
-
-                                if (!isIncognito) {
-                                    //When exit from incognito
-                                    appTitle.setText(R.string.app_name);
-                                    cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
-                                    title.setTextColor(Color.parseColor("#696969"));
-                                } else {
-                                    //When enter in incognito
-                                    appTitle.setText(R.string.app_name_incognito);
-                                    cardSearch.setCardBackgroundColor(Color.parseColor("#233B3F"));
-                                    title.setTextColor(Color.parseColor("#FAFAFA"));
-                                }
-                                break;
-                            case R.id.action_add:
-                                createShortCut();
-                                Toast.makeText(MainActivity.this, "Shortcut added to home!", Toast.LENGTH_SHORT).show();
-                                break;
-                            case R.id.action_settings:
-                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                                break;
-                        }
-                        return super.onMenuItemSelected(menu, item);
-                    }
-
-                };
-
-                popupMenu.inflate(R.menu.menu_overflow);
-
-                try {
-                    Field menuField = PopupMenu.class.getDeclaredField("mMenu");
-                    menuField.setAccessible(true);
-
-                    Field menuAnchor = PopupMenu.class.getDeclaredField("mAnchor");
-                    menuAnchor.setAccessible(true);
-
-                    IconMenuPopupHelper popupHelper = new IconMenuPopupHelper(this, (MenuBuilder) menuField.get(popupMenu), (View) menuAnchor.get(popupMenu), false, android.support.v7.appcompat.R.attr.popupMenuStyle, 0);
-
-                    Field field = PopupMenu.class.getDeclaredField("mPopup");
-                    field.setAccessible(true);
-                    field.set(popupMenu, popupHelper);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            case R.id.action_home:
+                webView.clearHistory();
+                webView.loadUrl(getHomepage());
+                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                    webView.setVisibility(View.VISIBLE);
+                    titleFrame.setVisibility(View.GONE);
                 }
-
-                popupMenu.setGravity(Gravity.TOP | Gravity.END);
-                popupMenu.show();
                 break;
+            case R.id.action_share:
+                String shareBody = webView.getUrl();
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Website Link");
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share link"));
+                break;
+            case R.id.action_refresh:
+                webView.reload();
+                break;
+            case R.id.action_bookmark:
+                if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
+                    webView.setVisibility(View.GONE);
+                    titleFrame.setVisibility(View.VISIBLE);
+                } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                    webView.setVisibility(View.VISIBLE);
+                    titleFrame.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.action_search_words:
+                webView.showFindDialog(null, true);
+                break;
+            case R.id.action_dekstop:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                }
+                if (desktop) {
+                    webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.41 Safari/537.36");
+                    webView.reload();
+                    desktop = false;
+                } else {
+                    webView.getSettings().setUserAgentString("");
+                    webView.reload();
+                    desktop = true;
+                }
+                break;
+            case R.id.action_incognito:
+                isIncognito = !isIncognito;
+                item.setChecked(isIncognito);
+
+                WebSettings webSettings = webView.getSettings();
+                CookieManager.getInstance().setAcceptCookie(!isIncognito);
+                webSettings.setAppCacheEnabled(!isIncognito);
+                webView.clearHistory();
+                webView.clearCache(isIncognito);
+                webView.clearFormData();
+                webView.getSettings().setSavePassword(!isIncognito);
+                webView.getSettings().setSaveFormData(!isIncognito);
+                webView.isPrivateBrowsingEnabled();
+
+                if (!isIncognito) {
+                    //When exit from incognito
+                    appTitle.setText(R.string.app_name);
+                    cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
+                    title.setTextColor(Color.parseColor("#696969"));
+                } else {
+                    //When enter in incognito
+                    appTitle.setText(R.string.app_name_incognito);
+                    cardSearch.setCardBackgroundColor(Color.parseColor("#233B3F"));
+                    title.setTextColor(Color.parseColor("#FAFAFA"));
+                }
+                break;
+            case R.id.action_add:
+                createShortCut();
+                break;
+            case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
         return super.onOptionsItemSelected(item);
@@ -916,7 +880,28 @@ public class MainActivity extends AppCompatActivity {
                             });
 
                     snackbar.show();*/
-
+                    new BottomDialog.Builder(MainActivity.this)
+                            .setTitle("Share or Delete bookmark?")
+                            .setPositiveText("DELETE")
+                            .onPositive(new BottomDialog.ButtonCallback() {
+                                @Override
+                                public void onClick(BottomDialog dialog) {
+                                    delete(cardData.get(pos).getId());
+                                }
+                            })
+                            .setNegativeText("SHARE")
+                            .onNegative(new BottomDialog.ButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull BottomDialog bottomDialog) {
+                                    String shareBody = cardData.get(pos).getCode();
+                                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                                    sharingIntent.setType("text/plain");
+                                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, cardData.get(pos).getName());
+                                    sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                                    startActivity(Intent.createChooser(sharingIntent, "Share bookmark"));
+                                }
+                            })
+                            .show();
                 }
             });
 
@@ -1092,6 +1077,6 @@ public class MainActivity extends AppCompatActivity {
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
         sendBroadcast(shortcutintent);
-        Toast.makeText(this, "Shortcut added", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Shortcut added to your home!", Toast.LENGTH_SHORT).show();
     }
 }

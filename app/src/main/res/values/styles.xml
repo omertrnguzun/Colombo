@@ -24,8 +24,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <!-- Base app Theme with white icons -->
@@ -34,8 +32,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <!-- SplashScreen Theme -->
@@ -46,7 +42,6 @@
         <item name="colorAccent">@color/colorAccentSplash</item>
 
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <style name="TextViewCustomFont">
@@ -65,32 +60,6 @@
         <item name="searchIcon">@null</item>
         <item name="queryBackground">@null</item>
         <item name="searchHintIcon">@null</item>
-    </style>
-
-    <style name="TextAppearance.MaterialSheetFab.Sheet.Item" parent="">
-        <item name="android:layout_width">@dimen/sheet_width</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/sheet_item_spacing</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:clickable">true</item>
-        <item name="android:textSize">@dimen/sheet_item_textsize</item>
-        <item name="android:textColor">@color/text_black_87</item>
-        <item name="android:drawablePadding">@dimen/sheet_item_image_spacing</item>
-    </style>
-
-    <style name="TextAppearance.MaterialSheetFab.Sheet.Item.Light" parent="">
-        <item name="android:layout_width">@dimen/sheet_width</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/sheet_item_spacing</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:clickable">true</item>
-        <item name="android:textSize">@dimen/sheet_item_textsize</item>
-        <item name="android:textColor">@color/text_white_87</item>
-        <item name="android:drawablePadding">@dimen/sheet_item_image_spacing</item>
-    </style>
-
-    <style name="CustomWindowTitleText">
-        <item name="android:textColor">@android:color/transparent</item>
     </style>
 
 </resources>
