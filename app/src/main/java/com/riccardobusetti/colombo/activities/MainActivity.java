@@ -142,13 +142,6 @@ public class MainActivity extends AppCompatActivity {
         /** Initialization of prefs */
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        /** Checking internet connection */
-        if (AppStatus.getInstance(this).isOnline()) {
-        } else {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
-
         /** UI stuff */
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -161,6 +154,13 @@ public class MainActivity extends AppCompatActivity {
         cardSearch = (CardView) findViewById(R.id.card_search);
         View search = findViewById(R.id.search);
         setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
+
+        /** Checking internet connection */
+        if (AppStatus.getInstance(this).isOnline()) {
+        } else {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
 
         /** Webview first stuff */
         webView = (ObservableWebView) findViewById(R.id.webview);
