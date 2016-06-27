@@ -33,6 +33,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -92,35 +93,31 @@ public class MainActivity extends AppCompatActivity {
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
     private static final int LOCATION_PERMISSION_CODE = 1234;
     private static final int STORAGE_PERMISSION_CODE = 5678;
-
     private static final int SEARCH_GOOGLE = 0, SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
 
     private ValueCallback<Uri[]> uploadMessage;
     private ValueCallback<Uri> uploadMessagePreLollipop;
 
-    private AppBarLayout appbar;
-    private CoordinatorLayout coordinatorLayout;
-
-    private SearchView searchView;
-    private SearchRecentSuggestions suggestions;
-    private boolean desktop = true;
-    private ObservableWebView webView;
-    private SwipeRefreshLayout swipeRefreshLayout;
-
     private boolean isIncognito;
+    private boolean desktop = true;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
 
-    private TextView title, appTitle;
-
     private RecyclerView rv;
     private MyAdapter adapter;
-
     private ArrayList<CardData> cardDatas = new ArrayList<>();
 
+    private AppBarLayout appbar;
+    private CoordinatorLayout coordinatorLayout;
+    private SearchView searchView;
+    private SearchRecentSuggestions suggestions;
+    private ObservableWebView webView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private Toolbar toolbar;
+    private TextView title, appTitle;
     private FrameLayout titleFrame;
     private CardView cardSearch;
 
@@ -146,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         /** UI stuff */
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         title = (TextView) findViewById(R.id.toolbar_title);
@@ -154,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         titleFrame = (FrameLayout) findViewById(R.id.big_title);
         cardSearch = (CardView) findViewById(R.id.card_search);
         View search = findViewById(R.id.search);
+        setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
 
         /** Webview first stuff */
         webView = (ObservableWebView) findViewById(R.id.webview);
@@ -685,11 +683,13 @@ public class MainActivity extends AppCompatActivity {
                     appTitle.setText(R.string.app_name);
                     cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
                     title.setTextColor(Color.parseColor("#696969"));
+                    setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
                 } else {
                     //When enter in incognito
                     appTitle.setText(R.string.app_name_incognito);
                     cardSearch.setCardBackgroundColor(Color.parseColor("#233B3F"));
                     title.setTextColor(Color.parseColor("#FAFAFA"));
+                    setOverflowButtonColor(toolbar, Color.parseColor("#FAFAFA"));
                 }
                 break;
             case R.id.action_add:
@@ -740,6 +740,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         setPrefs();
+    }
+
+    private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
+        Drawable drawable = toolbar.getOverflowIcon();
+        if(drawable != null) {
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable.mutate(), color);
+            toolbar.setOverflowIcon(drawable);
+        }
     }
 
     /**
