@@ -121,6 +121,15 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout titleFrame;
     private CardView cardSearch;
 
+    private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
+        Drawable drawable = toolbar.getOverflowIcon();
+        if (drawable != null) {
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable.mutate(), color);
+            toolbar.setOverflowIcon(drawable);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -450,7 +459,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -742,15 +750,6 @@ public class MainActivity extends AppCompatActivity {
         setPrefs();
     }
 
-    private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
-        Drawable drawable = toolbar.getOverflowIcon();
-        if(drawable != null) {
-            drawable = DrawableCompat.wrap(drawable);
-            DrawableCompat.setTint(drawable.mutate(), color);
-            toolbar.setOverflowIcon(drawable);
-        }
-    }
-
     /**
      * Delete data from DB
      */
@@ -831,108 +830,6 @@ public class MainActivity extends AppCompatActivity {
         db.closeDB();
 
         retrieve();
-    }
-
-    /**
-     * Adapter recyclerviewer
-     */
-    public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
-
-        Context c;
-        ArrayList<CardData> cardData;
-        private int lastPosition = -1;
-
-        public MyAdapter(Context c, ArrayList<CardData> cardData) {
-            this.c = c;
-            this.cardData = cardData;
-        }
-
-        //Inzializzazione ViewHolder
-        @Override
-        public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            //Creazione View Object
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_layout, parent, false);
-
-            //Creazione Holder
-            MyHolder holder = new MyHolder(v);
-
-            return holder;
-        }
-
-        //Inizialiazzione Bind
-        @Override
-        public void onBindViewHolder(final MyHolder holder, int position) {
-
-            holder.name.setText(cardData.get(position).getName());
-
-            holder.setItemClickListener(new ItemClickListener() {
-                @Override
-                public void onItemClick(View v, int pos) {
-                    webView.loadUrl(cardData.get(pos).getCode());
-                    if (webView.getVisibility() == View.GONE) {
-                        webView.setVisibility(View.VISIBLE);
-                        titleFrame.setVisibility(View.GONE);
-                    }
-                }
-            });
-
-            holder.setItemLongClickListener(new ItemLongClickListener() {
-                @Override
-                public void onItemLongClick(View v, final int pos) {
-                    /*Snackbar snackbar = Snackbar
-                            .make(coordinatorLayout, "Delete " + cardData.get(pos).getName() + " ?", Snackbar.LENGTH_LONG)
-                            .setAction("DELETE", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    delete(cardData.get(pos).getId());
-                                }
-                            });
-
-                    snackbar.show();*/
-                    new BottomDialog.Builder(MainActivity.this)
-                            .setTitle("Share or Delete bookmark?")
-                            .setPositiveText("DELETE")
-                            .onPositive(new BottomDialog.ButtonCallback() {
-                                @Override
-                                public void onClick(BottomDialog dialog) {
-                                    delete(cardData.get(pos).getId());
-                                }
-                            })
-                            .setNegativeText("SHARE")
-                            .onNegative(new BottomDialog.ButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull BottomDialog bottomDialog) {
-                                    String shareBody = cardData.get(pos).getCode();
-                                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                                    sharingIntent.setType("text/plain");
-                                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, cardData.get(pos).getName());
-                                    sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                                    startActivity(Intent.createChooser(sharingIntent, "Share bookmark"));
-                                }
-                            })
-                            .show();
-                }
-            });
-
-            setAnimation(holder.itemView, position);
-
-        }
-
-        private void setAnimation(View viewToAnimate, int position) {
-            // If the bound view wasn't previously displayed on screen, it's animated
-            if (position > lastPosition) {
-                ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                anim.setDuration(new Random().nextInt(501));//to make duration random number between [0,501)
-                viewToAnimate.startAnimation(anim);
-                lastPosition = position;
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return cardData.size();
-        }
-
     }
 
     /**
@@ -1087,5 +984,107 @@ public class MainActivity extends AppCompatActivity {
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
         sendBroadcast(shortcutintent);
         Toast.makeText(this, "Shortcut added to your home!", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Adapter recyclerviewer
+     */
+    public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
+
+        Context c;
+        ArrayList<CardData> cardData;
+        private int lastPosition = -1;
+
+        public MyAdapter(Context c, ArrayList<CardData> cardData) {
+            this.c = c;
+            this.cardData = cardData;
+        }
+
+        //Inzializzazione ViewHolder
+        @Override
+        public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            //Creazione View Object
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_layout, parent, false);
+
+            //Creazione Holder
+            MyHolder holder = new MyHolder(v);
+
+            return holder;
+        }
+
+        //Inizialiazzione Bind
+        @Override
+        public void onBindViewHolder(final MyHolder holder, int position) {
+
+            holder.name.setText(cardData.get(position).getName());
+
+            holder.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onItemClick(View v, int pos) {
+                    webView.loadUrl(cardData.get(pos).getCode());
+                    if (webView.getVisibility() == View.GONE) {
+                        webView.setVisibility(View.VISIBLE);
+                        titleFrame.setVisibility(View.GONE);
+                    }
+                }
+            });
+
+            holder.setItemLongClickListener(new ItemLongClickListener() {
+                @Override
+                public void onItemLongClick(View v, final int pos) {
+                    /*Snackbar snackbar = Snackbar
+                            .make(coordinatorLayout, "Delete " + cardData.get(pos).getName() + " ?", Snackbar.LENGTH_LONG)
+                            .setAction("DELETE", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    delete(cardData.get(pos).getId());
+                                }
+                            });
+
+                    snackbar.show();*/
+                    new BottomDialog.Builder(MainActivity.this)
+                            .setTitle("Share or Delete bookmark?")
+                            .setPositiveText("DELETE")
+                            .onPositive(new BottomDialog.ButtonCallback() {
+                                @Override
+                                public void onClick(BottomDialog dialog) {
+                                    delete(cardData.get(pos).getId());
+                                }
+                            })
+                            .setNegativeText("SHARE")
+                            .onNegative(new BottomDialog.ButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull BottomDialog bottomDialog) {
+                                    String shareBody = cardData.get(pos).getCode();
+                                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                                    sharingIntent.setType("text/plain");
+                                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, cardData.get(pos).getName());
+                                    sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                                    startActivity(Intent.createChooser(sharingIntent, "Share bookmark"));
+                                }
+                            })
+                            .show();
+                }
+            });
+
+            setAnimation(holder.itemView, position);
+
+        }
+
+        private void setAnimation(View viewToAnimate, int position) {
+            // If the bound view wasn't previously displayed on screen, it's animated
+            if (position > lastPosition) {
+                ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                anim.setDuration(new Random().nextInt(501));//to make duration random number between [0,501)
+                viewToAnimate.startAnimation(anim);
+                lastPosition = position;
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return cardData.size();
+        }
+
     }
 }
