@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView title, appTitle;
     private FrameLayout titleFrame;
+    private String url = null;
     private CardView cardSearch;
 
     private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        url = getIntent().getDataString();
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         title = (TextView) findViewById(R.id.toolbar_title);
@@ -177,18 +179,8 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MyAdapter(this, cardDatas);
         rv.setAdapter(adapter);
         retrieve();
-
-        /** Load url of webview */
-        String action = getIntent().getAction();
-        if (action != null && action.matches(Intent.ACTION_VIEW)) {
-            webView.loadUrl(getIntent().getDataString());
-            if (webView.getVisibility() == View.GONE || titleFrame.getVisibility() == View.VISIBLE) {
-                webView.setVisibility(View.VISIBLE);
-                titleFrame.setVisibility(View.GONE);
-            }
-        } else {
-            webView.loadUrl(getHomepage());
-        }
+        webView.loadUrl(getHomepage());
+        webView.loadUrl(url);
 
         /** Add toolbar clicklistener */
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -269,64 +261,13 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDisplayZoomControls(false);
         webSettings.setBuiltInZoomControls(true);
         webSettings.supportZoom();
+        webView.requestFocus();
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setAllowFileAccess(true);
         webSettings.setAppCacheEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, final String url) {
-                if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
-                        || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
-                        || url.startsWith("mailto:") || url.startsWith("intent://")
-                        || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
-
-                    new BottomDialog.Builder(MainActivity.this)
-                            .setTitle("You are leaving Colombo!")
-                            .setContent("Are you sure to open this link in the specific app?")
-                            .setPositiveText("OPEN")
-                            .setNegativeText("CONTINUE IN COLOMBO")
-                            .onNegative(new BottomDialog.ButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull BottomDialog bottomDialog) {
-                                    bottomDialog.dismiss();
-                                    webView.loadUrl(url);
-                                }
-                            })
-                            .setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_splash))
-                            .setCancelable(true)
-                            .onPositive(new BottomDialog.ButtonCallback() {
-                                @Override
-                                public void onClick(BottomDialog dialog) {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                                    intent.setData(Uri.parse(url));
-                                    startActivity(intent);
-                                }
-                            }).show();
-                    return true;
-                }
-                view.loadUrl(url);
-                return true;
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap facIcon) {
-                swipeRefreshLayout.setRefreshing(true);
-
-                if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                swipeRefreshLayout.setRefreshing(false);
-                swipeRefreshLayout.setEnabled(false);
-
-                title.setText(webView.getTitle());
-            }
-        });
-
+        webView.setWebViewClient(new WebClient());
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(final String url, String userAgent, final String contentDisposition, final String mimeType, long contentLength) {
@@ -380,7 +321,12 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.show();
             }
         });
-
+        webView.post(new Runnable() {
+            @Override
+            public void run() {
+                webView.loadUrl(url);
+            }
+        });
         CustomWebChromeClient webChromeClient = new CustomWebChromeClient(this) {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
@@ -713,6 +659,62 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public class WebClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, final String url) {
+            if (Uri.parse(url).getHost().equals(url)) {
+                webView.loadUrl(url);
+                return true;
+            }
+            if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
+                    || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
+                    || url.startsWith("mailto:") || url.startsWith("intent://")
+                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
+
+                new BottomDialog.Builder(MainActivity.this)
+                        .setTitle("You are leaving Colombo!")
+                        .setContent("Are you sure to open this link in the specific app?")
+                        .setPositiveText("OPEN")
+                        .setNegativeText("CONTINUE IN COLOMBO")
+                        .onNegative(new BottomDialog.ButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull BottomDialog bottomDialog) {
+                                bottomDialog.dismiss();
+                                webView.loadUrl(url);
+                            }
+                        })
+                        .setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_splash))
+                        .setCancelable(true)
+                        .onPositive(new BottomDialog.ButtonCallback() {
+                            @Override
+                            public void onClick(BottomDialog dialog) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(url));
+                                startActivity(intent);
+                            }
+                        }).show();
+                return true;
+            }
+            webView.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap facIcon) {
+            swipeRefreshLayout.setRefreshing(true);
+
+            if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setEnabled(false);
+
+            title.setText(webView.getTitle());
+        }
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -721,7 +723,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null)
             locationManager.removeUpdates(locationListener);
     }
@@ -730,10 +732,10 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        } else if (locationManager != null) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        } else if (locationManager != null)
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
-        }
 
         setPrefs();
 
