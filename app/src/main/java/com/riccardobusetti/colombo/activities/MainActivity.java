@@ -28,6 +28,7 @@ import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -68,6 +69,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
 import com.riccardobusetti.colombo.database.DBAdapter;
@@ -87,10 +89,12 @@ import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-    public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_SELECT_FILE = 100;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
+    private static final int LOCATION_PERMISSION_CODE = 1234;
+    private static final int STORAGE_PERMISSION_CODE = 5678;
 
     public static final int SEARCH_GOOGLE = 0, SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
 
@@ -133,8 +137,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -150,6 +153,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
         webView = (ObservableWebView) findViewById(R.id.webview);
         webView.setVisibility(View.GONE);
 
+        /** Location */
+        handleLocation();
+
         /** Recyclerviewer stuff*/
         gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
         rv = (RecyclerView) findViewById(R.id.recyclerViewer);
@@ -162,10 +168,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
         /** UI stuff */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
+        setSupportActionBar(toolbar);
         title = (TextView) findViewById(R.id.toolbar_title);
         appTitle = (TextView) findViewById(R.id.app_title);
         titleFrame = (FrameLayout) findViewById(R.id.big_title);
         cardSearch = (CardView) findViewById(R.id.card_search);
+        appbar = (AppBarLayout) findViewById(R.id.appbar);
+        search = findViewById(R.id.search);
 
         /** Load url of webview */
         String action = getIntent().getAction();
@@ -179,78 +188,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
             webView.loadUrl(getHomepage());
         }
 
-        /*Intent intent = getIntent();
-        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            if(intent.getData() != null){
-                webView.loadUrl(getIntent().getDataString());
-                if (webView.getVisibility() == View.GONE || titleFrame.getVisibility() == View.VISIBLE) {
-                    webView.setVisibility(View.VISIBLE);
-                    titleFrame.setVisibility(View.GONE);
-                }
-            }
-        } else {
-            webView.loadUrl(getHomepage());
-        }*/
-
-        appbar = (AppBarLayout) findViewById(R.id.appbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (prefs.getBoolean("light_icons", true)) {
-                if (coordinatorLayout != null) {
-                    coordinatorLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                }
-                appTitle.setTextColor(Color.parseColor("#233B3F"));
-            } else {
-                setTheme(R.style.WhiteIconsTheme);
-                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-            }
-        } else {
-            setTheme(R.style.WhiteIconsTheme);
-            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-        }
-
-        settings = (ImageView) findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            }
-        });
-
-        //webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
-        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
-        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setDatabaseEnabled(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        webSettings.setSaveFormData(true);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setLoadWithOverviewMode(true);
-
-        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
-        webSettings.setDisplayZoomControls(false);
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.supportZoom();
-
-        webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        webSettings.setAllowFileAccess(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
-        search = findViewById(R.id.search);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            if (search != null && search.getVisibility() == View.VISIBLE) {
-                search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_in));
-            }
-        }
-
+        /** Add toolbar clicklistener */
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -267,44 +205,95 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
             }
         });
 
-        setSupportActionBar(toolbar);
+        /** Set searchbar animation */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Without GPS permissions the location won't work!", Toast.LENGTH_SHORT).show();
-            } else {
-                locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-                locationListener = new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                    }
-
-                    @Override
-                    public void onStatusChanged(String s, int i, Bundle bundle) {
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String s) {
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String s) {
-                    }
-                };
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+            if (search != null && search.getVisibility() == View.VISIBLE) {
+                search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_in));
             }
         }
+
+        /** Initiate UI colors */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (prefs.getBoolean("light_icons", true)) {
+                if (coordinatorLayout != null) {
+                    coordinatorLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                }
+                appTitle.setTextColor(Color.parseColor("#233B3F"));
+            } else {
+                setTheme(R.style.WhiteIconsTheme);
+                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            }
+        } else {
+            setTheme(R.style.WhiteIconsTheme);
+            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+        }
+
+        /** Settings Button on Toolbar */
+        settings = (ImageView) findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            }
+        });
+
+        /** Set Webview params */
+        //webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
+        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webSettings.setSaveFormData(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+        webSettings.setDisplayZoomControls(false);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.supportZoom();
+        webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
         webView.setWebViewClient(new WebViewClient() {
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("market://") || url.startsWith("https://www.youtube.com") || url.startsWith("https://play.google.com")
-                        || url.startsWith("magnet:") || url.startsWith("mailto:")
-                        || url.startsWith("intent://")) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(url));
-                    startActivity(intent);
+            public boolean shouldOverrideUrlLoading(WebView view, final String url) {
+                if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
+                        || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
+                        || url.startsWith("mailto:") || url.startsWith("intent://")
+                        || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
+
+                    new BottomDialog.Builder(MainActivity.this)
+                            .setTitle("You are leaving Colombo!")
+                            .setContent("Are you sure to open this link in the specific app?")
+                            .setPositiveText("OPEN")
+                            .setNegativeText("CONTINUE")
+                            .onNegative(new BottomDialog.ButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull BottomDialog bottomDialog) {
+                                    bottomDialog.dismiss();
+                                    webView.loadUrl(url);
+                                }
+                            })
+                            .setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_splash))
+                            .setCancelable(true)
+                            .onPositive(new BottomDialog.ButtonCallback() {
+                                @Override
+                                public void onClick(BottomDialog dialog) {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setData(Uri.parse(url));
+                                    startActivity(intent);
+                                }
+                            }).show();
                     return true;
                 }
                 view.loadUrl(url);
@@ -316,14 +305,14 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
                 swipeRefreshLayout.setRefreshing(true);
 
                 if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
-
-                title.setText(webView.getUrl());
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 swipeRefreshLayout.setRefreshing(false);
                 swipeRefreshLayout.setEnabled(false);
+
+                title.setText(webView.getTitle());
             }
         });
 
@@ -338,8 +327,26 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
                     @Override
                     public void onClick(View view) {
 
-                        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            startActivity(new Intent(MainActivity.this, PermsActivity.class));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+                            } else {
+                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+
+                                String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
+
+                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+                                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                                dm.enqueue(request);
+
+                                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                intent.setType("*/*");
+
+                                Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
@@ -584,7 +591,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                    webView.setVisibility(View.VISIBLE);
+                    titleFrame.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -622,6 +632,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
                             case R.id.action_home:
                                 webView.clearHistory();
                                 webView.loadUrl(getHomepage());
+                                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                                    webView.setVisibility(View.VISIBLE);
+                                    titleFrame.setVisibility(View.GONE);
+                                }
                                 break;
                             case R.id.action_share:
                                 String shareBody = webView.getUrl();
@@ -764,14 +778,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
         setPrefs();
     }
 
-    /** Method for hide icons on click of searchview */
-    private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
-        for (int i=0; i<menu.size(); ++i) {
-            MenuItem item = menu.getItem(i);
-            if (item != exception) item.setVisible(visible);
-        }
-    }
-
     /**
      * Delete data from DB
      */
@@ -900,7 +906,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
             holder.setItemLongClickListener(new ItemLongClickListener() {
                 @Override
                 public void onItemLongClick(View v, final int pos) {
-                    Snackbar snackbar = Snackbar
+                    /*Snackbar snackbar = Snackbar
                             .make(coordinatorLayout, "Delete " + cardData.get(pos).getName() + " ?", Snackbar.LENGTH_LONG)
                             .setAction("DELETE", new View.OnClickListener() {
                                 @Override
@@ -909,7 +915,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
                                 }
                             });
 
-                    snackbar.show();
+                    snackbar.show();*/
+
                 }
             });
 
@@ -932,6 +939,37 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
             return cardData.size();
         }
 
+    }
+
+    /**
+     * Handle GPS
+     */
+    private void handleLocation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE);
+            }
+        } else {
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                }
+
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+                }
+
+                @Override
+                public void onProviderEnabled(String s) {
+                }
+
+                @Override
+                public void onProviderDisabled(String s) {
+                }
+            };
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+        }
     }
 
     /**
