@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                         .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                save(webView.getTitle(), webView.getUrl());
+                                save(input.toString(), webView.getUrl());
                                 dialog.dismiss();
                             }
                         }).show();
@@ -817,7 +817,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (result > 0) {
 
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark " + webView.getTitle() + " added!", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark added successfully!", Snackbar.LENGTH_SHORT);
             snackbar.show();
 
         } else {
