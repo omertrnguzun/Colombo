@@ -69,8 +69,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.MenuSheetView;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
@@ -729,6 +731,7 @@ public class MainActivity extends AppCompatActivity {
         if(result>0)
         {
             Snackbar.make(coordinatorLayout,"Bookmark updated successfully!",Snackbar.LENGTH_SHORT).show();
+            retrieve();
 
         }else
         {
@@ -1077,42 +1080,63 @@ public class MainActivity extends AppCompatActivity {
             holder.setItemLongClickListener(new ItemLongClickListener() {
                 @Override
                 public void onItemLongClick(View v, final int pos) {
-                    /*share.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            String shareBody = cardData.get(position).getCode();
-                            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                            sharingIntent.setType("text/plain");
-                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, cardData.get(position).getName());
-                            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                            startActivity(Intent.createChooser(sharingIntent, "Share bookmark"));
-                            bottomSheet.dismissSheet();
-                        }
-                    });
-
-                    rename.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            new MaterialDialog.Builder(MainActivity.this)
-                                    .title("Rename Bookmark")
-                                    .content("Give to this bookmark a new name!")
-                                    .inputType(InputType.TYPE_CLASS_TEXT)
-                                    .input("Bookmark name", cardData.get(position).getName(), new MaterialDialog.InputCallback() {
-                                        @Override
-                                        public void onInput(MaterialDialog dialog, CharSequence input) {
-                                            update(cardData.get(position).getId(), input.toString());
-                                        }
-                                    }).show();
-                        }
-                    });
-                    delete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            delete(cardData.get(position).getId());
-                            bottomSheet.dismissSheet();
-                        }
-                    });*/
-                    bottomSheet.showWithSheetView(LayoutInflater.from(MainActivity.this).inflate(R.layout.bookmark_options_dialog, bottomSheet, false));
+                    MenuSheetView menuSheetView =
+                            new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, "Bookmark " + cardData.get(pos).getName() + " options:", new MenuSheetView.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    switch (item.getItemId()) {
+                                        case R.id.action_share_bookmark:
+                                            String shareBody = cardData.get(position).getCode();
+                                            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                                            sharingIntent.setType("text/plain");
+                                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, cardData.get(position).getName());
+                                            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                                            startActivity(Intent.createChooser(sharingIntent, "Share bookmark"));
+                                            bottomSheet.dismissSheet();
+                                            break;
+                                        case R.id.action_rename_bookmark:
+                                            new MaterialDialog.Builder(MainActivity.this)
+                                                    .title("Rename Bookmark")
+                                                    .content("Give to this bookmark a new name!")
+                                                    .inputType(InputType.TYPE_CLASS_TEXT)
+                                                    .input("Bookmark name", cardData.get(position).getName(), new MaterialDialog.InputCallback() {
+                                                        @Override
+                                                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                                                            update(cardData.get(position).getId(), input.toString());
+                                                            dialog.dismiss();
+                                                        }
+                                                    }).show();
+                                            break;
+                                        case R.id.action_delete_bookmark:
+                                            new MaterialDialog.Builder(MainActivity.this)
+                                                    .title("Delete Bookmark?")
+                                                    .content("You want to delete: " + cardData.get(pos).getName() + "?")
+                                                    .positiveText("Yes")
+                                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                                        @Override
+                                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                            delete(cardData.get(position).getId());
+                                                            dialog.dismiss();
+                                                        }
+                                                    })
+                                                    .negativeText("No")
+                                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                                        @Override
+                                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    })
+                                                    .show();
+                                            break;
+                                    }
+                                    if (bottomSheet.isSheetShowing()) {
+                                        bottomSheet.dismissSheet();
+                                    }
+                                    return true;
+                                }
+                            });
+                    menuSheetView.inflateMenu(R.menu.menu_bookmarks);
+                    bottomSheet.showWithSheetView(menuSheetView);
                 }
             });
 
