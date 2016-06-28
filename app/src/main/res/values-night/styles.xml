@@ -1,0 +1,44 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- App Primart Dark Icons Theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Base app Theme -->
+    <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- SplashScreen Theme -->
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimarySplash</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkSplash</item>
+        <item name="colorAccent">@color/colorAccentSplash</item>
+    </style>
+
+    <style name="TextViewCustomFont">
+        <item name="fontPath">fonts/SpaceMono-Regular.ttf</item>
+    </style>
+
+    <style name="TextViewCustomFontBold">
+        <item name="fontPath">fonts/SpaceMono-Bold.ttf</item>
+    </style>
+
+    <style name="ToolbarSearchView" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="searchViewStyle">@style/CustomSearchView</item>
+    </style>
+
+    <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@null</item>
+        <item name="queryBackground">@null</item>
+        <item name="searchHintIcon">@null</item>
+    </style>
+
+</resources>
