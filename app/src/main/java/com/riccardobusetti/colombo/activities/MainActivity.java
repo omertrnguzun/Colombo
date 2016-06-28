@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout titleFrame;
     private String urlIntent = null;
     private CardView cardSearch;
+    private View bookmarkCustomView;
 
     private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
         Drawable drawable = toolbar.getOverflowIcon();
@@ -164,6 +165,10 @@ public class MainActivity extends AppCompatActivity {
             Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
             snackbar.show();
         }
+
+        /** Custom View for BottomDialogs */
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        bookmarkCustomView = inflater.inflate(R.layout.bookmark_options_dialog, null);
 
         /** Webview first stuff */
         webView = (ObservableWebView) findViewById(R.id.webview);
@@ -554,6 +559,8 @@ public class MainActivity extends AppCompatActivity {
                 if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
                     titleFrame.setVisibility(View.GONE);
+                } else if (searchView.getVisibility() == View.GONE) {
+                    searchView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -668,64 +675,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class WebClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, final String url) {
-            if (Uri.parse(url).getHost().equals(url)) {
-                webView.loadUrl(url);
-                return true;
-            } else if (urlIntent != null) {
-               webView.loadUrl(urlIntent);
-            }
-            if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
-                    || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
-                    || url.startsWith("mailto:") || url.startsWith("intent://")
-                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
-
-                new BottomDialog.Builder(MainActivity.this)
-                        .setTitle("You are leaving Colombo!")
-                        .setContent("Are you sure to open this link in the specific app?")
-                        .setPositiveText("OPEN")
-                        .setNegativeText("CONTINUE IN COLOMBO")
-                        .onNegative(new BottomDialog.ButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull BottomDialog bottomDialog) {
-                                bottomDialog.dismiss();
-                                webView.loadUrl(url);
-                            }
-                        })
-                        .setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_splash))
-                        .setCancelable(true)
-                        .onPositive(new BottomDialog.ButtonCallback() {
-                            @Override
-                            public void onClick(BottomDialog dialog) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(url));
-                                startActivity(intent);
-                            }
-                        }).show();
-                return true;
-            }
-            webView.loadUrl(url);
-            return true;
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap facIcon) {
-            swipeRefreshLayout.setRefreshing(true);
-
-            if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            swipeRefreshLayout.setRefreshing(false);
-            swipeRefreshLayout.setEnabled(false);
-
-            title.setText(webView.getTitle());
-        }
-    }
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -761,6 +710,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         setPrefs();
+    }
+
+    private void update(int id,String newName,String newCode)
+    {
+        DBAdapter db=new DBAdapter(this);
+        db.openDB();
+        long result=db.UPDATE(id,newName,newCode);
+        if(result>0)
+        {
+            Snackbar.make(coordinatorLayout,"Bookmark updated successfully!",Snackbar.LENGTH_SHORT).show();
+
+        }else
+        {
+            Snackbar.make(coordinatorLayout,"Unable to update the bookmark :_(",Snackbar.LENGTH_SHORT).show();
+        }
+        db.closeDB();
     }
 
     /**
@@ -999,6 +964,64 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Shortcut added to your home!", Toast.LENGTH_SHORT).show();
     }
 
+    public class WebClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, final String url) {
+            if (Uri.parse(url).getHost().equals(url)) {
+                webView.loadUrl(url);
+                return true;
+            } else if (urlIntent != null) {
+                webView.loadUrl(urlIntent);
+            }
+            if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
+                    || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
+                    || url.startsWith("mailto:") || url.startsWith("intent://")
+                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
+
+                new BottomDialog.Builder(MainActivity.this)
+                        .setTitle("You are leaving Colombo!")
+                        .setContent("Are you sure to open this link in the specific app?")
+                        .setPositiveText("OPEN")
+                        .setNegativeText("CONTINUE IN COLOMBO")
+                        .onNegative(new BottomDialog.ButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull BottomDialog bottomDialog) {
+                                bottomDialog.dismiss();
+                                webView.loadUrl(url);
+                            }
+                        })
+                        .setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_splash))
+                        .setCancelable(true)
+                        .onPositive(new BottomDialog.ButtonCallback() {
+                            @Override
+                            public void onClick(BottomDialog dialog) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(url));
+                                startActivity(intent);
+                            }
+                        }).show();
+                return true;
+            }
+            webView.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap facIcon) {
+            swipeRefreshLayout.setRefreshing(true);
+
+            if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setEnabled(false);
+
+            title.setText(webView.getTitle());
+        }
+    }
+
     /**
      * Adapter recyclerviewer
      */
@@ -1056,7 +1079,7 @@ public class MainActivity extends AppCompatActivity {
 
                     snackbar.show();*/
                     new BottomDialog.Builder(MainActivity.this)
-                            .setTitle("Share or Delete bookmark?")
+                            .setTitle("Bookmark menu")
                             .setPositiveText("DELETE")
                             .onPositive(new BottomDialog.ButtonCallback() {
                                 @Override
