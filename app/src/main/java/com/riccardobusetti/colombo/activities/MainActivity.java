@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView title, appTitle;
     private FrameLayout titleFrame;
-    private String url = null;
+    private String urlIntent = null;
     private CardView cardSearch;
 
     private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        url = getIntent().getDataString();
+        urlIntent = getIntent().getDataString();
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         title = (TextView) findViewById(R.id.toolbar_title);
@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
         /** Checking internet connection */
         if (AppStatus.getInstance(this).isOnline()) {
+
         } else {
             Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
             snackbar.show();
@@ -179,8 +180,16 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MyAdapter(this, cardDatas);
         rv.setAdapter(adapter);
         retrieve();
+
+        /** Load WebView url */
         webView.loadUrl(getHomepage());
-        webView.loadUrl(url);
+        if (urlIntent != null) {
+            webView.loadUrl(urlIntent);
+            if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                webView.setVisibility(View.VISIBLE);
+                titleFrame.setVisibility(View.GONE);
+            }
+        }
 
         /** Add toolbar clicklistener */
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -324,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         webView.post(new Runnable() {
             @Override
             public void run() {
-                webView.loadUrl(url);
+                webView.loadUrl(urlIntent);
             }
         });
         CustomWebChromeClient webChromeClient = new CustomWebChromeClient(this) {
@@ -665,6 +674,8 @@ public class MainActivity extends AppCompatActivity {
             if (Uri.parse(url).getHost().equals(url)) {
                 webView.loadUrl(url);
                 return true;
+            } else if (urlIntent != null) {
+               webView.loadUrl(urlIntent);
             }
             if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
                     || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
