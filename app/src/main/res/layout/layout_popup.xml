@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
+    android:background="#000000"
     android:padding="12dp">
 
     <TextView
@@ -12,7 +12,7 @@
         android:text="New Text"
         android:id="@+id/title"
         android:textSize="20sp"
-        android:textColor="@color/colorDarkBlue"
+        android:textColor="#FFFFFF"
         android:layout_margin="4dp" />
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/content"
-        android:textColor="@color/colorDarkBlue"
+        android:textColor="#B3FFFFFF"
         android:layout_margin="4dp" />
 
     <android.support.design.widget.TextInputLayout
@@ -52,8 +52,6 @@
         android:gravity="end">
 
         <android.support.v7.widget.AppCompatButton
-            android:background="@color/colorAccentDark"
-            android:textColor="#FAFAFA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dialog_cancel"
@@ -61,8 +59,6 @@
             android:layout_margin="4dp" />
 
         <android.support.v7.widget.AppCompatButton
-            android:background="@color/colorAccentDark"
-            android:textColor="#FAFAFA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dialog_ok"
