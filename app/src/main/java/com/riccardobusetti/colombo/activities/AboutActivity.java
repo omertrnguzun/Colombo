@@ -2,6 +2,7 @@ package com.riccardobusetti.colombo.activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +29,9 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                }
         fab = (FloatingActionButton) findViewById(R.id.fab);
         colombo = (LinearLayout) findViewById(R.id.layout_colombo);
         me = (LinearLayout) findViewById(R.id.layout_me);
