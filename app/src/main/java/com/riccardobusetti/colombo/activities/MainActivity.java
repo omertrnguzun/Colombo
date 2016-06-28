@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -37,6 +38,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener locationListener;
 
     private SharedPreferences prefs;
-
+    Bundle newBundy = new Bundle();
     private RecyclerView rv;
     private MyAdapter adapter;
     private ArrayList<CardData> cardDatas = new ArrayList<>();
@@ -235,68 +237,78 @@ public class MainActivity extends AppCompatActivity {
         /** Initiate UI colors */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (prefs.getBoolean("light_icons", true)) {
-                if (coordinatorLayout != null) {
-                    coordinatorLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                }
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 appTitle.setTextColor(Color.parseColor("#233B3F"));
             } else {
-                setTheme(R.style.WhiteIconsTheme);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 appTitle.setTextColor(Color.parseColor("#FAFAFA"));
             }
-        } else {
-            setTheme(R.style.WhiteIconsTheme);
-            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-        }
+            /** Settings Button on Toolbar */
+            ImageView settings = (ImageView) findViewById(R.id.settings);
+            settings.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                }
+            });
 
-        /** Settings Button on Toolbar */
-        ImageView settings = (ImageView) findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            }
-        });
+            /** Set Webview params */
+            //webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+            WebSettings webSettings = webView.getSettings();
+            webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
+            webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
+            webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+            webSettings.setAppCacheEnabled(true);
+            webSettings.setDatabaseEnabled(true);
+            webSettings.setDomStorageEnabled(true);
+            webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+            webSettings.setSaveFormData(true);
+            webSettings.setUseWideViewPort(true);
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+            webSettings.setDisplayZoomControls(false);
+            webSettings.setBuiltInZoomControls(true);
+            webSettings.supportZoom();
+            webView.requestFocus();
+            webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
+            webSettings.setAllowFileAccess(true);
+            webSettings.setAppCacheEnabled(true);
+            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
+            webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+            webView.setWebViewClient(new WebClient());
+            webView.setDownloadListener(new DownloadListener() {
+                @Override
+                public void onDownloadStart(final String url, String userAgent, final String contentDisposition, final String mimeType, long contentLength) {
+                    final String filename1 = URLUtil.guessFileName(url, contentDisposition, mimeType);
 
-        /** Set Webview params */
-        //webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
-        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
-        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setDatabaseEnabled(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        webSettings.setSaveFormData(true);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
-        webSettings.setDisplayZoomControls(false);
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.supportZoom();
-        webView.requestFocus();
-        webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        webSettings.setAllowFileAccess(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        webView.setWebViewClient(new WebClient());
-        webView.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart(final String url, String userAgent, final String contentDisposition, final String mimeType, long contentLength) {
-                final String filename1 = URLUtil.guessFileName(url, contentDisposition, mimeType);
+                    Snackbar snackbar = Snackbar.make(coordinatorLayout, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
+                    snackbar.setActionTextColor(Color.parseColor("#1DE9B6"));
+                    snackbar.setAction("DOWNLOAD", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
-                snackbar.setActionTextColor(Color.parseColor("#1DE9B6"));
-                snackbar.setAction("DOWNLOAD", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+                                } else {
+                                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+                                    String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
+
+                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+                                    DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                                    dm.enqueue(request);
+
+                                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                    intent.setType("*/*");
+
+                                    Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
+                                }
                             } else {
                                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
@@ -314,72 +326,63 @@ public class MainActivity extends AppCompatActivity {
 
                                 Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-
-                            String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
-
-                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-
-                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                            dm.enqueue(request);
-
-                            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                            intent.addCategory(Intent.CATEGORY_OPENABLE);
-                            intent.setType("*/*");
-
-                            Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
                         }
+                    });
+                    snackbar.show();
+                }
+            });
+            webView.post(new Runnable() {
+                @Override
+                public void run() {
+                    webView.loadUrl(urlIntent);
+                }
+            });
+            CustomWebChromeClient webChromeClient = new CustomWebChromeClient(this) {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+
+                    if (uploadMessage != null) {
+                        uploadMessage.onReceiveValue(null);
+                        uploadMessage = null;
                     }
-                });
-                snackbar.show();
-            }
-        });
-        webView.post(new Runnable() {
-            @Override
-            public void run() {
-                webView.loadUrl(urlIntent);
-            }
-        });
-        CustomWebChromeClient webChromeClient = new CustomWebChromeClient(this) {
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
 
-                if (uploadMessage != null) {
-                    uploadMessage.onReceiveValue(null);
-                    uploadMessage = null;
+                    uploadMessage = filePathCallback;
+
+                    Intent intent = fileChooserParams.createIntent();
+                    try {
+                        startActivityForResult(intent, REQUEST_SELECT_FILE);
+                    } catch (ActivityNotFoundException e) {
+                        uploadMessage = null;
+                        Toast.makeText(MainActivity.this.getApplicationContext(), "Cannot Open File Chooser", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+                    return true;
                 }
 
-                uploadMessage = filePathCallback;
-
-                Intent intent = fileChooserParams.createIntent();
-                try {
-                    startActivityForResult(intent, REQUEST_SELECT_FILE);
-                } catch (ActivityNotFoundException e) {
-                    uploadMessage = null;
-                    Toast.makeText(MainActivity.this.getApplicationContext(), "Cannot Open File Chooser", Toast.LENGTH_LONG).show();
-                    return false;
+                public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                    callback.invoke(origin, true, false);
                 }
-                return true;
-            }
 
-            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-                callback.invoke(origin, true, false);
-            }
-
-            @Override
-            public void onReceivedIcon(WebView view, Bitmap icon) {
-                super.onReceivedIcon(view, icon);
-                if (prefs.getBoolean("dynamic_colors", true)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (prefs.getBoolean("light_icons", true)) {
-                            Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    setColor(palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
-                                }
-                            });
+                @Override
+                public void onReceivedIcon(WebView view, Bitmap icon) {
+                    super.onReceivedIcon(view, icon);
+                    if (prefs.getBoolean("dynamic_colors", true)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (prefs.getBoolean("light_icons", true)) {
+                                Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
+                                    @Override
+                                    public void onGenerated(Palette palette) {
+                                        setColor(palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                                    }
+                                });
+                            } else {
+                                Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
+                                    @Override
+                                    public void onGenerated(Palette palette) {
+                                        setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                                    }
+                                });
+                            }
                         } else {
                             Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
                                 @Override
@@ -388,36 +391,29 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    } else {
-                        Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
-                            @Override
-                            public void onGenerated(Palette palette) {
-                                setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
-                            }
-                        });
                     }
                 }
-            }
-        };
+            };
 
-        webView.setWebChromeClient(webChromeClient);
+            webView.setWebChromeClient(webChromeClient);
 
-        appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                webView.setCanScrollVertically((appBarLayout.getHeight() - appBarLayout.getBottom()) != 0);
-            }
-        });
+            appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                @Override
+                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                    webView.setCanScrollVertically((appBarLayout.getHeight() - appBarLayout.getBottom()) != 0);
+                }
+            });
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.swipeRefresh));
+            swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+            swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.swipeRefresh));
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                webView.reload();
-            }
-        });
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    webView.reload();
+                }
+            });
+        }
     }
 
     @Override
@@ -709,8 +705,84 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        setPrefs();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (prefs.getBoolean("light_icons", true)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                appTitle.setTextColor(Color.parseColor("#233B3F"));
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            }
+            /** Settings Button on Toolbar */
+            ImageView settings = (ImageView) findViewById(R.id.settings);
+            settings.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                }
+            });
+            setPrefs();
+        }
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (prefs.getBoolean("light_icons", true)) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    appTitle.setTextColor(Color.parseColor("#233B3F"));
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+                }
+                onSaveInstanceState(newBundy);
+            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (prefs.getBoolean("light_icons", true)) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        appTitle.setTextColor(Color.parseColor("#233B3F"));
+                    } else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+                    }
+                    onSaveInstanceState(newBundy);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (prefs.getBoolean("light_icons", true)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                appTitle.setTextColor(Color.parseColor("#233B3F"));
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            }
+            outState.putBundle("newBundy", newBundy);
+        }
+    }
+
+        @Override
+        protected void onRestoreInstanceState (Bundle savedInstanceState){
+            super.onRestoreInstanceState(savedInstanceState);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (prefs.getBoolean("light_icons", true)) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    appTitle.setTextColor(Color.parseColor("#233B3F"));
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+                }
+                savedInstanceState.getBundle("newBundy");
+            }
+        }
+
 
     private void update(int id,String newName)
     {
@@ -935,17 +1007,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (prefs.getBoolean("light_icons", true)) {
-                if (coordinatorLayout != null) {
-                    coordinatorLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                }
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 appTitle.setTextColor(Color.parseColor("#233B3F"));
             } else {
-                setTheme(R.style.WhiteIconsTheme);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 appTitle.setTextColor(Color.parseColor("#FAFAFA"));
             }
-        } else {
-            setTheme(R.style.WhiteIconsTheme);
-            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
         }
     }
 
