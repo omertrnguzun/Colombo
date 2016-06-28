@@ -22,8 +22,8 @@ import com.riccardobusetti.colombo.util.AppStatus;
 
 public class SplashActivity extends Activity {
 
-    private static final int SPLASH_DISPLAY_LENGTH = 1000;
-    private static final int SPLASH_IMAGE_LENGHT = 600;
+    private static final int SPLASH_DISPLAY_LENGTH = 600;
+    private static final int SPLASH_IMAGE_LENGHT = 400;
     private ImageView icon, text;
     private CoordinatorLayout coordi;
     private SharedPreferences prefs;

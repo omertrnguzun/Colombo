@@ -65,7 +65,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +72,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
-import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
 import com.riccardobusetti.colombo.database.DBAdapter;
@@ -126,9 +124,6 @@ public class MainActivity extends AppCompatActivity {
     private String urlIntent = null;
     private CardView cardSearch;
     private BottomSheetLayout bottomSheet;
-    private LinearLayout share, rename, delete;
-    private LayoutInflater inflater;
-    private View view;
 
     private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
         Drawable drawable = toolbar.getOverflowIcon();
@@ -162,16 +157,11 @@ public class MainActivity extends AppCompatActivity {
         appTitle = (TextView) findViewById(R.id.app_title);
         titleFrame = (FrameLayout) findViewById(R.id.big_title);
         cardSearch = (CardView) findViewById(R.id.card_search);
-        View search = findViewById(R.id.search);
+        final View search = findViewById(R.id.search);
         setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
 
         /** BottomSheet initialization */
         bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
-        inflater = MainActivity.this.getLayoutInflater();
-        view = inflater.inflate(R.layout.bookmark_options_dialog, null);
-        share = (LinearLayout) view.findViewById(R.id.share_bookmark);
-        rename = (LinearLayout) view.findViewById(R.id.rename_bookmark);
-        delete = (LinearLayout) view.findViewById(R.id.delete_bookmark);
 
         /** Checking internet connection */
         if (AppStatus.getInstance(this).isOnline()) {
@@ -455,10 +445,10 @@ public class MainActivity extends AppCompatActivity {
             webView.goBack();
         } else if (searchView.getVisibility() == View.VISIBLE) {
             searchView.setVisibility(View.GONE);
-            searchView.setIconified(false);
         } else if (webView.canGoBack() && searchView.getVisibility() == View.VISIBLE) {
             searchView.setVisibility(View.GONE);
-            searchView.setIconified(false);
+        } else if (bottomSheet.isSheetShowing()) {
+            bottomSheet.dismissSheet();
         } else {
             super.onBackPressed();
         }
@@ -557,7 +547,6 @@ public class MainActivity extends AppCompatActivity {
                 else
                     webView.loadUrl(getSearchPrefix() + query);
 
-                searchView.setIconified(false);
                 searchView.setVisibility(View.GONE);
 
                 return false;
@@ -990,28 +979,28 @@ public class MainActivity extends AppCompatActivity {
                     || url.startsWith("mailto:") || url.startsWith("intent://")
                     || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
 
-                new BottomDialog.Builder(MainActivity.this)
-                        .setTitle("You are leaving Colombo!")
-                        .setContent("Are you sure to open this link in the specific app?")
-                        .setPositiveText("OPEN")
-                        .setNegativeText("CONTINUE IN COLOMBO")
-                        .onNegative(new BottomDialog.ButtonCallback() {
+                MenuSheetView menuSheetView =
+                        new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, "You want to open this link in the specific app?", new MenuSheetView.OnMenuItemClickListener() {
                             @Override
-                            public void onClick(@NonNull BottomDialog bottomDialog) {
-                                bottomDialog.dismiss();
-                                webView.loadUrl(url);
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch (item.getItemId()) {
+                                    case R.id.action_open:
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        intent.setData(Uri.parse(url));
+                                        startActivity(intent);
+                                        break;
+                                    case R.id.action_continue:
+                                        webView.loadUrl(url);
+                                        break;
+                                }
+                                if (bottomSheet.isSheetShowing()) {
+                                    bottomSheet.dismissSheet();
+                                }
+                                return true;
                             }
-                        })
-                        .setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_splash))
-                        .setCancelable(true)
-                        .onPositive(new BottomDialog.ButtonCallback() {
-                            @Override
-                            public void onClick(BottomDialog dialog) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(url));
-                                startActivity(intent);
-                            }
-                        }).show();
+                        });
+                menuSheetView.inflateMenu(R.menu.menu_intent_leave_colombo);
+                bottomSheet.showWithSheetView(menuSheetView);
                 return true;
             }
             webView.loadUrl(url);

@@ -103,5 +103,7 @@
     <string name="no_connection">No connection :_(</string>
     <string name="menu_rename">Rename</string>
     <string name="menu_delete">Delete</string>
+    <string name="menu_continue">Continue</string>
+    <string name="menu_open">Open</string>
 
 </resources>
