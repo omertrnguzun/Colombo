@@ -65,10 +65,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
@@ -121,7 +123,10 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout titleFrame;
     private String urlIntent = null;
     private CardView cardSearch;
-    private View bookmarkCustomView;
+    private BottomSheetLayout bottomSheet;
+    private LinearLayout share, rename, delete;
+    private LayoutInflater inflater;
+    private View view;
 
     private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
         Drawable drawable = toolbar.getOverflowIcon();
@@ -158,6 +163,14 @@ public class MainActivity extends AppCompatActivity {
         View search = findViewById(R.id.search);
         setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
 
+        /** BottomSheet initialization */
+        bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+        inflater = MainActivity.this.getLayoutInflater();
+        view = inflater.inflate(R.layout.bookmark_options_dialog, null);
+        share = (LinearLayout) view.findViewById(R.id.share_bookmark);
+        rename = (LinearLayout) view.findViewById(R.id.rename_bookmark);
+        delete = (LinearLayout) view.findViewById(R.id.delete_bookmark);
+
         /** Checking internet connection */
         if (AppStatus.getInstance(this).isOnline()) {
 
@@ -165,10 +178,6 @@ public class MainActivity extends AppCompatActivity {
             Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
             snackbar.show();
         }
-
-        /** Custom View for BottomDialogs */
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        bookmarkCustomView = inflater.inflate(R.layout.bookmark_options_dialog, null);
 
         /** Webview first stuff */
         webView = (ObservableWebView) findViewById(R.id.webview);
@@ -712,11 +721,11 @@ public class MainActivity extends AppCompatActivity {
         setPrefs();
     }
 
-    private void update(int id,String newName,String newCode)
+    private void update(int id,String newName)
     {
         DBAdapter db=new DBAdapter(this);
         db.openDB();
-        long result=db.UPDATE(id,newName,newCode);
+        long result=db.UPDATE(id,newName);
         if(result>0)
         {
             Snackbar.make(coordinatorLayout,"Bookmark updated successfully!",Snackbar.LENGTH_SHORT).show();
@@ -1050,7 +1059,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Inizialiazzione Bind
         @Override
-        public void onBindViewHolder(final MyHolder holder, int position) {
+        public void onBindViewHolder(final MyHolder holder, final int position) {
 
             holder.name.setText(cardData.get(position).getName());
 
@@ -1068,38 +1077,42 @@ public class MainActivity extends AppCompatActivity {
             holder.setItemLongClickListener(new ItemLongClickListener() {
                 @Override
                 public void onItemLongClick(View v, final int pos) {
-                    /*Snackbar snackbar = Snackbar
-                            .make(coordinatorLayout, "Delete " + cardData.get(pos).getName() + " ?", Snackbar.LENGTH_LONG)
-                            .setAction("DELETE", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    delete(cardData.get(pos).getId());
-                                }
-                            });
+                    /*share.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String shareBody = cardData.get(position).getCode();
+                            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                            sharingIntent.setType("text/plain");
+                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, cardData.get(position).getName());
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                            startActivity(Intent.createChooser(sharingIntent, "Share bookmark"));
+                            bottomSheet.dismissSheet();
+                        }
+                    });
 
-                    snackbar.show();*/
-                    new BottomDialog.Builder(MainActivity.this)
-                            .setTitle("Bookmark menu")
-                            .setPositiveText("DELETE")
-                            .onPositive(new BottomDialog.ButtonCallback() {
-                                @Override
-                                public void onClick(BottomDialog dialog) {
-                                    delete(cardData.get(pos).getId());
-                                }
-                            })
-                            .setNegativeText("SHARE")
-                            .onNegative(new BottomDialog.ButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull BottomDialog bottomDialog) {
-                                    String shareBody = cardData.get(pos).getCode();
-                                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                                    sharingIntent.setType("text/plain");
-                                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, cardData.get(pos).getName());
-                                    sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                                    startActivity(Intent.createChooser(sharingIntent, "Share bookmark"));
-                                }
-                            })
-                            .show();
+                    rename.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            new MaterialDialog.Builder(MainActivity.this)
+                                    .title("Rename Bookmark")
+                                    .content("Give to this bookmark a new name!")
+                                    .inputType(InputType.TYPE_CLASS_TEXT)
+                                    .input("Bookmark name", cardData.get(position).getName(), new MaterialDialog.InputCallback() {
+                                        @Override
+                                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                                            update(cardData.get(position).getId(), input.toString());
+                                        }
+                                    }).show();
+                        }
+                    });
+                    delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            delete(cardData.get(position).getId());
+                            bottomSheet.dismissSheet();
+                        }
+                    });*/
+                    bottomSheet.showWithSheetView(LayoutInflater.from(MainActivity.this).inflate(R.layout.bookmark_options_dialog, bottomSheet, false));
                 }
             });
 

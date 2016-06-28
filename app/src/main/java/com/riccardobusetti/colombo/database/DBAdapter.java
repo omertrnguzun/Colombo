@@ -82,11 +82,10 @@ public class DBAdapter {
     }
 
     //Aggiornare DB
-    public long UPDATE(int id, String name, String code) {
+    public long UPDATE(int id, String name) {
         try {
             ContentValues cv = new ContentValues();
             cv.put(Contants.NAME, name);
-            cv.put(Contants.CODE, code);
             return db.update(Contants.TB_NAME, cv, Contants.ROW_ID + " =?", new String[]{String.valueOf(id)});
         } catch (SQLException e) {
             e.printStackTrace();
