@@ -1110,7 +1110,12 @@ public class MainActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setEnabled(false);
 
-            title.setText(webView.getTitle());
+            /** Checking if you are on home */
+            if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                title.setText(R.string.search);
+            } else {
+                title.setText(webView.getTitle());
+            }
         }
     }
 
