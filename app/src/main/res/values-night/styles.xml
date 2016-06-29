@@ -5,8 +5,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="alertDialogTheme">@style/AlertDialogTheme</item>
-        <item name="alertDialogStyle">@style/AlertDialogTheme</item>
     </style>
 
     <!-- Base app Theme -->
@@ -15,8 +13,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="alertDialogTheme">@style/AlertDialogTheme</item>
-        <item name="alertDialogStyle">@style/AlertDialogTheme</item>
     </style>
 
     <!-- SplashScreen Theme -->
