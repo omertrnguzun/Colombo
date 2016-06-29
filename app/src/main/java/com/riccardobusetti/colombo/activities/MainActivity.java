@@ -154,6 +154,22 @@ public class MainActivity extends AppCompatActivity {
         final View search = findViewById(R.id.search);
         setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
 
+        /** Tutorial SnackBar */
+        if (prefs.getBoolean("first_time", true)) {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.tutorial, Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("YES", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+            });
+            snackbar.show();
+            prefs.edit().putBoolean("first_time", false).apply();
+        }
+
         /** Settings Button on Toolbar */
         ImageView settings = (ImageView) findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {

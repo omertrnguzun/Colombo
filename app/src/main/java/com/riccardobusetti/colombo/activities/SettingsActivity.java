@@ -70,6 +70,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_appearance);
 
+            findPreference("dynamic_colors").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Restart Colombo for changes!", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+
             findPreference("light_icons").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {

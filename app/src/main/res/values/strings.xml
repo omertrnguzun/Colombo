@@ -107,5 +107,6 @@
     <string name="menu_open">Open</string>
     <string name="menu_back">Return to previous app</string>
     <string name="search">Search</string>
+    <string name="tutorial">You want to see the tutorial?</string>
 
 </resources>

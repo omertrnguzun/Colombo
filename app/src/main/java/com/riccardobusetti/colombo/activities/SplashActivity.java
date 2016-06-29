@@ -51,29 +51,19 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 if (AppStatus.getInstance(SplashActivity.this).isOnline()) {
-                    if (prefs.getBoolean("first_time", true)) {
-                        startActivity(new Intent(SplashActivity.this, MainIntroActivity.class));
-                        prefs.edit().putBoolean("first_time", false).apply();
-                    } else {
-                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    }
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 } else {
                     Snackbar snackbar = Snackbar.make(coordi, R.string.no_connection, Snackbar.LENGTH_INDEFINITE);
                     snackbar.setAction("PROCEED", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (prefs.getBoolean("first_time", true)) {
-                                startActivity(new Intent(SplashActivity.this, MainIntroActivity.class));
-                                prefs.edit().putBoolean("first_time", false).apply();
-                            } else {
-                                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                            }
+                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         }
                     });
                     snackbar.show();
