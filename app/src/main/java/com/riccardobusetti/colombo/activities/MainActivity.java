@@ -90,23 +90,34 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
+    /** Integers */
     private static final int REQUEST_SELECT_FILE = 100;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
     private static final int LOCATION_PERMISSION_CODE = 1234;
     private static final int STORAGE_PERMISSION_CODE = 5678;
     private static final int SEARCH_GOOGLE = 0, SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
-    Bundle newBundy = new Bundle();
+
+    /** Array Vars */
     private ValueCallback<Uri[]> uploadMessage;
     private ValueCallback<Uri> uploadMessagePreLollipop;
+    private ArrayList<CardData> cardDatas = new ArrayList<>();
+
+    /** Boolean Values */
     private boolean isIncognito;
     private boolean desktop = true;
+
+    /** Strings Vars */
+    private String urlIntent = null;
+
+    /** Other Elements */
     private LocationManager locationManager;
     private LocationListener locationListener;
     private SharedPreferences prefs;
     private RecyclerView rv;
     private MyAdapter adapter;
-    private ArrayList<CardData> cardDatas = new ArrayList<>();
+    private Bundle newBundy = new Bundle();
 
+    /** UI Elements */
     private AppBarLayout appbar;
     private CoordinatorLayout coordinatorLayout;
     private SearchView searchView;
@@ -115,9 +126,11 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView title, appTitle;
     private FrameLayout titleFrame;
-    private String urlIntent = null;
     private CardView cardSearch;
     private BottomSheetLayout bottomSheet;
+    private View search;
+    private ImageView settings;
+    private GridLayoutManager gridLayoutManager;
 
     private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
         Drawable drawable = toolbar.getOverflowIcon();
@@ -133,145 +146,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /** Hardware acceleration */
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
-        /** Initialization of prefs */
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        setUpElements();
 
-        /** UI stuff */
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        appbar = (AppBarLayout) findViewById(R.id.appbar);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        urlIntent = getIntent().getDataString();
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        title = (TextView) findViewById(R.id.toolbar_title);
-        appTitle = (TextView) findViewById(R.id.app_title);
-        titleFrame = (FrameLayout) findViewById(R.id.big_title);
-        cardSearch = (CardView) findViewById(R.id.card_search);
-        final View search = findViewById(R.id.search);
-        setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
+        setUpBookmarksStructure();
 
-        /** Tutorial SnackBar */
-        if (prefs.getBoolean("first_time", true)) {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.tutorial, Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction("YES", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }
-            });
-            snackbar.show();
-            prefs.edit().putBoolean("first_time", false).apply();
-        }
+        setUpUiAnimations();
 
-        /** Settings Button on Toolbar */
-        ImageView settings = (ImageView) findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            }
-        });
-        if (settings != null && settings.getVisibility() == View.VISIBLE) {
-            settings.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotation));
-        }
+        setUpClickListeners();
 
-        /** BottomSheet initialization */
-        bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+        handleUrlLoading();
 
-        /** Checking internet connection */
-        if (AppStatus.getInstance(this).isOnline()) {
-
-        } else {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
-
-        /** Webview first stuff */
-        webView = (ObservableWebView) findViewById(R.id.webview);
-        webView.setVisibility(View.GONE);
-
-        /** Location */
         handleLocation();
 
-        /** Recyclerviewer stuff */
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
-        rv = (RecyclerView) findViewById(R.id.recyclerViewer);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(gridLayoutManager);
-        adapter = new MyAdapter(this, cardDatas);
-        rv.setAdapter(adapter);
-        retrieve();
-
-        /** Load WebView url */
-        webView.loadUrl(getHomepage());
-        if (urlIntent != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back_title));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-            webView.loadUrl(urlIntent);
-            if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                webView.setVisibility(View.VISIBLE);
-                titleFrame.setVisibility(View.GONE);
-            }
-        }
-
-        /** Add toolbar clicklistener */
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchView.setVisibility(View.VISIBLE);
-                searchView.setIconified(false);
-            }
-        });
-
-        toolbar.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                new MaterialDialog.Builder(MainActivity.this)
-                        .title("Add Bookmark?")
-                        .content("Give to your bookmark a name!")
-                        .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                save(input.toString(), webView.getUrl());
-                                dialog.dismiss();
-                            }
-                        }).show();
-                return true;
-            }
-        });
-
-        /** Set searchbar animation */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            if (search != null && search.getVisibility() == View.VISIBLE) {
-                search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_in));
-            }
-        }
-
-        /** Initiate UI colors */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (prefs.getBoolean("light_icons", true)) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                appTitle.setTextColor(Color.parseColor("#233B3F"));
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-            }
-        }
+        firstTimeSnackBar();
 
         /** Set Webview params */
         //webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
@@ -494,6 +384,9 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_main, menu);
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
+        searchView.setVisibility(View.GONE);
+        searchView.setIconified(false);
         searchView.setQueryHint("");
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
@@ -501,11 +394,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                if (webView.getVisibility() == View.GONE) {
+                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
-                }
-
-                if (titleFrame.getVisibility() == View.VISIBLE) {
                     titleFrame.setVisibility(View.GONE);
                 }
 
@@ -541,6 +431,7 @@ public class MainActivity extends AppCompatActivity {
                     webView.loadUrl(getSearchPrefix() + query);
 
                 searchView.setVisibility(View.GONE);
+                searchView.setIconified(false);
                 return false;
             }
 
@@ -570,10 +461,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
-        searchView.setVisibility(View.GONE);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -692,33 +579,13 @@ public class MainActivity extends AppCompatActivity {
 
         setPrefs();
 
-        if (AppStatus.getInstance(this).isOnline()) {
-
-        } else {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
+        checkInternet();
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (prefs.getBoolean("light_icons", true)) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                appTitle.setTextColor(Color.parseColor("#233B3F"));
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-            }
-            /** Settings Button on Toolbar */
-            ImageView settings = (ImageView) findViewById(R.id.settings);
-            settings.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                }
-            });
-            setPrefs();
+            setUpLightIcons();
         }
     }
 
@@ -727,25 +594,8 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (prefs.getBoolean("light_icons", true)) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    appTitle.setTextColor(Color.parseColor("#233B3F"));
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-                }
+                setUpLightIcons();
                 onSaveInstanceState(newBundy);
-            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (prefs.getBoolean("light_icons", true)) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        appTitle.setTextColor(Color.parseColor("#233B3F"));
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-                    }
-                    onSaveInstanceState(newBundy);
-                }
             }
         }
     }
@@ -753,128 +603,63 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (prefs.getBoolean("light_icons", true)) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                appTitle.setTextColor(Color.parseColor("#233B3F"));
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-            }
-            outState.putBundle("newBundy", newBundy);
-        }
+        setUpLightIcons();
+        outState.putBundle("newBundy", newBundy);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (prefs.getBoolean("light_icons", true)) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                appTitle.setTextColor(Color.parseColor("#233B3F"));
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+        setUpLightIcons();
+        savedInstanceState.getBundle("newBundy");
+
+    }
+
+    /**
+     * SetUp the UI elements importing them
+     */
+    private void setUpElements() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        appbar = (AppBarLayout) findViewById(R.id.appbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
+        title = (TextView) findViewById(R.id.toolbar_title); // SearchBar Title
+        appTitle = (TextView) findViewById(R.id.app_title); // Big Colombo TextView
+        titleFrame = (FrameLayout) findViewById(R.id.big_title); // FrameLayout with Big Colombo TextView
+        cardSearch = (CardView) findViewById(R.id.card_search); // CardView with SearchView
+        search = findViewById(R.id.search); // FrameLayout of cardSearch
+        bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+        settings = (ImageView) findViewById(R.id.settings);
+        webView = (ObservableWebView) findViewById(R.id.webview);
+        webView.setVisibility(View.GONE);
+        urlIntent = getIntent().getDataString();
+    }
+
+    /**
+     * Load the url based on actions
+     */
+    private void handleUrlLoading() {
+        if (urlIntent != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back_title));
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            webView.loadUrl(urlIntent);
+            if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                webView.setVisibility(View.VISIBLE);
+                titleFrame.setVisibility(View.GONE);
             }
-            savedInstanceState.getBundle("newBundy");
-        }
-    }
-
-
-    private void update(int id, String newName) {
-        DBAdapter db = new DBAdapter(this);
-        db.openDB();
-        long result = db.UPDATE(id, newName);
-        if (result > 0) {
-            Snackbar.make(coordinatorLayout, "Bookmark updated successfully!", Snackbar.LENGTH_SHORT).show();
-            retrieve();
-
         } else {
-            Snackbar.make(coordinatorLayout, "Unable to update the bookmark :_(", Snackbar.LENGTH_SHORT).show();
+            webView.loadUrl(getHomepage());
         }
-        db.closeDB();
-    }
-
-    /**
-     * Delete data from DB
-     */
-    private void delete(int id) {
-        DBAdapter db = new DBAdapter(this);
-        db.openDB();
-
-        long result = db.Delete(id);
-        if (result > 0) {
-            Snackbar.make(coordinatorLayout, "Bookmark deleted", Snackbar.LENGTH_SHORT).show();
-            retrieve();
-        } else {
-            Snackbar.make(coordinatorLayout, "Unable to Delete", Snackbar.LENGTH_SHORT).show();
-        }
-
-        db.closeDB();
-    }
-
-    /**
-     * Get data from DB
-     */
-    private void retrieve() {
-
-        DBAdapter db = new DBAdapter(this);
-        db.openDB();
-
-        cardDatas.clear();
-
-        //Prendere dati
-        Cursor c = db.getAllData();
-
-        //Guardare nei dati e aggiungere ad ArrayList
-        while (c.moveToNext()) {
-            int id = c.getInt(0);
-            String name = c.getString(1);
-            String code = c.getString(2);
-
-            CardData cardData = new CardData(id, name, code);
-
-            //Aggiungere ad arraylist
-            cardDatas.add(cardData);
-        }
-
-        //Controllo se ArrayList non è vuota
-        if (!(cardDatas.size() < 1)) {
-            rv.setAdapter(adapter);
-        }
-
-        db.closeDB();
-
-    }
-
-    /**
-     * Save data in DB
-     */
-    private void save(String name, String code) {
-
-        DBAdapter db = new DBAdapter(this);
-
-        //Aprire DataBase
-        db.openDB();
-
-        //Dichiarare cambiamenti
-        long result = db.add(name, code);
-
-        if (result > 0) {
-
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark added successfully!", Snackbar.LENGTH_SHORT);
-            snackbar.show();
-
-        } else {
-
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Impossible to save Bookmark :_(", Snackbar.LENGTH_SHORT);
-            snackbar.show();
-
-        }
-
-        db.closeDB();
-
-        retrieve();
     }
 
     /**
@@ -905,6 +690,123 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+        }
+    }
+
+    /**
+     * Handle Bookmark elements
+     */
+    private void setUpBookmarksStructure() {
+        gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
+        rv = (RecyclerView) findViewById(R.id.recyclerViewer);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(gridLayoutManager);
+        adapter = new MyAdapter(this, cardDatas);
+        rv.setAdapter(adapter);
+        retrieve();
+    }
+
+    /**
+     * SetUp the elements animated
+     */
+    private void setUpUiAnimations() {
+        if (settings != null && settings.getVisibility() == View.VISIBLE) {
+            settings.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotation));
+        }
+
+        if (search != null && search.getVisibility() == View.VISIBLE) {
+            search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_in));
+        }
+
+        if (appTitle != null && appTitle.getVisibility() == View.VISIBLE) {
+            appTitle.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in));
+        }
+    }
+
+    /**
+     * SetUp clicklisteners
+     */
+    private void setUpClickListeners() {
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (searchView.getVisibility() == View.GONE) {
+                    searchView.setVisibility(View.VISIBLE);
+                    searchView.setIconified(false);
+                }
+
+            }
+        });
+
+        toolbar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                new MaterialDialog.Builder(MainActivity.this)
+                        .title("Add Bookmark?")
+                        .content("Give to your bookmark a name!")
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                save(input.toString(), webView.getUrl());
+                                dialog.dismiss();
+                            }
+                        }).show();
+                return true;
+            }
+        });
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            }
+        });
+    }
+
+    /**
+     * Check internet class
+     */
+    private void checkInternet() {
+        if (AppStatus.getInstance(this).isOnline()) {
+
+        } else {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    }
+
+    /**
+     * SetUp white theme
+     */
+    private void setUpLightIcons() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (prefs.getBoolean("light_icons", true)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                appTitle.setTextColor(Color.parseColor("#233B3F"));
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            }
+        }
+    }
+
+    /**
+     * SetUp first time snackbar for tutorial
+     */
+    private void firstTimeSnackBar() {
+        if (prefs.getBoolean("first_time", true)) {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.tutorial, Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("YES", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+            });
+            snackbar.show();
+            prefs.edit().putBoolean("first_time", false).apply();
         }
     }
 
@@ -1026,6 +928,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Shortcut added to your home!", Toast.LENGTH_SHORT).show();
     }
 
+    /** SetUp WebClient */
     public class WebClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, final String url) {
@@ -1089,6 +992,105 @@ public class MainActivity extends AppCompatActivity {
                 title.setText(webView.getTitle());
             }
         }
+    }
+
+    /**
+     * Update database
+     */
+    private void update(int id, String newName) {
+        DBAdapter db = new DBAdapter(this);
+        db.openDB();
+        long result = db.UPDATE(id, newName);
+        if (result > 0) {
+            Snackbar.make(coordinatorLayout, "Bookmark updated successfully!", Snackbar.LENGTH_SHORT).show();
+            retrieve();
+
+        } else {
+            Snackbar.make(coordinatorLayout, "Unable to update the bookmark :_(", Snackbar.LENGTH_SHORT).show();
+        }
+        db.closeDB();
+    }
+
+    /**
+     * Delete data from DB
+     */
+    private void delete(int id) {
+        DBAdapter db = new DBAdapter(this);
+        db.openDB();
+
+        long result = db.Delete(id);
+        if (result > 0) {
+            Snackbar.make(coordinatorLayout, "Bookmark deleted", Snackbar.LENGTH_SHORT).show();
+            retrieve();
+        } else {
+            Snackbar.make(coordinatorLayout, "Unable to Delete", Snackbar.LENGTH_SHORT).show();
+        }
+
+        db.closeDB();
+    }
+
+    /**
+     * Get data from DB
+     */
+    private void retrieve() {
+
+        DBAdapter db = new DBAdapter(this);
+        db.openDB();
+
+        cardDatas.clear();
+
+        //Prendere dati
+        Cursor c = db.getAllData();
+
+        //Guardare nei dati e aggiungere ad ArrayList
+        while (c.moveToNext()) {
+            int id = c.getInt(0);
+            String name = c.getString(1);
+            String code = c.getString(2);
+
+            CardData cardData = new CardData(id, name, code);
+
+            //Aggiungere ad arraylist
+            cardDatas.add(cardData);
+        }
+
+        //Controllo se ArrayList non è vuota
+        if (!(cardDatas.size() < 1)) {
+            rv.setAdapter(adapter);
+        }
+
+        db.closeDB();
+
+    }
+
+    /**
+     * Save data in DB
+     */
+    private void save(String name, String code) {
+
+        DBAdapter db = new DBAdapter(this);
+
+        //Aprire DataBase
+        db.openDB();
+
+        //Dichiarare cambiamenti
+        long result = db.add(name, code);
+
+        if (result > 0) {
+
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark added successfully!", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+
+        } else {
+
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Impossible to save Bookmark :_(", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+
+        }
+
+        db.closeDB();
+
+        retrieve();
     }
 
     /**
