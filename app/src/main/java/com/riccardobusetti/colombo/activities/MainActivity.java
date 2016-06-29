@@ -1103,6 +1103,10 @@ public class MainActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(true);
 
             if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
+
+            if (searchView.getVisibility() == View.VISIBLE) {
+                searchView.setVisibility(View.GONE);
+            }
         }
 
         @Override
