@@ -106,6 +106,6 @@
     <string name="menu_continue">Continue</string>
     <string name="menu_open">Open</string>
     <string name="menu_back">Return to previous app</string>
-    <string name="search">Search Here</string>
+    <string name="search">Search</string>
 
 </resources>

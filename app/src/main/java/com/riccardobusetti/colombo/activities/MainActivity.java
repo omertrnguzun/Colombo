@@ -6,7 +6,6 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
-import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +26,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -81,7 +79,6 @@ import com.riccardobusetti.colombo.holder.MyHolder;
 import com.riccardobusetti.colombo.util.AppStatus;
 import com.riccardobusetti.colombo.util.ItemClickListener;
 import com.riccardobusetti.colombo.util.ItemLongClickListener;
-import com.riccardobusetti.colombo.util.RecentSuggestionsProvider;
 import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
@@ -113,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
     private AppBarLayout appbar;
     private CoordinatorLayout coordinatorLayout;
     private SearchView searchView;
-    private SearchRecentSuggestions suggestions;
     private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
@@ -486,8 +482,6 @@ public class MainActivity extends AppCompatActivity {
         searchView.setQueryHint("");
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
-        suggestions = new SearchRecentSuggestions(MainActivity.this, RecentSuggestionsProvider.AUTHORITY, RecentSuggestionsProvider.MODE);
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -531,47 +525,12 @@ public class MainActivity extends AppCompatActivity {
                 } else
                     webView.loadUrl(getSearchPrefix() + query);
 
-                if (!isIncognito) suggestions.saveRecentQuery(query, null);
-
                 searchView.setVisibility(View.GONE);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-                Cursor cursor = searchView.getSuggestionsAdapter().getCursor();
-                cursor.moveToPosition(position);
-                String query = cursor.getString(2);
-
-                searchView.setQuery(query, false);
-
-                if (webView.getVisibility() == View.GONE) {
-                    webView.setVisibility(View.VISIBLE);
-                }
-
-                if (titleFrame.getVisibility() == View.VISIBLE) {
-                    titleFrame.setVisibility(View.GONE);
-                }
-
-                if (URLUtil.isValidUrl(query))
-                    webView.loadUrl(query);
-                else
-                    webView.loadUrl(getSearchPrefix() + query);
-
-                searchView.setVisibility(View.GONE);
-
                 return false;
             }
         });
@@ -596,10 +555,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        if (prefs.getBoolean("suggestions", true))
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
         searchView.setVisibility(View.GONE);
@@ -1101,8 +1056,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap facIcon) {
             swipeRefreshLayout.setRefreshing(true);
-
-            if (!isIncognito && suggestions != null) suggestions.saveRecentQuery(url, null);
 
             if (searchView.getVisibility() == View.VISIBLE) {
                 searchView.setVisibility(View.GONE);
