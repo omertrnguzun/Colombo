@@ -446,18 +446,24 @@ public class MainActivity extends AppCompatActivity {
         } else if (bottomSheet.isSheetShowing()) {
             bottomSheet.dismissSheet();
         } else {
-        } else {
-            new AlertDialog.Builder(this)
-                    .setTitle("Exit Colombo")
-                    .setMessage("Are you sure you want to exit Colombo ?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            MaterialDialog dialog = new MaterialDialog.Builder(this)
+                    .title("Exit Colombo")
+                    .content("Are you sure you want to exit Colombo ?")
+                    .positiveText("Yes")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
                             finish();
                         }
-
                     })
-                    .setNegativeButton("No", null)
+                    .negativeText("No")
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
                     .show();
         }
     }
