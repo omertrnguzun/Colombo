@@ -31,10 +31,12 @@ public class MainIntroActivity extends IntroActivity {
                 .backgroundDark(R.color.colorPrimaryDark)
                 .build());
     }
-    
-        public void onBackPressed() {
+
+    public void onBackPressed() {
         super.onBackPressed();
-        MainIntroActivity.this.finish(); Intent intent1 = new Intent(MainIntroActivity.this,MainActivity.class); intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        MainIntroActivity.this.finish();
+        Intent intent1 = new Intent(MainIntroActivity.this, MainActivity.class);
+        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
 
 

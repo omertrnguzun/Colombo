@@ -105,5 +105,6 @@
     <string name="menu_delete">Delete</string>
     <string name="menu_continue">Continue</string>
     <string name="menu_open">Open</string>
+    <string name="menu_back">Return to previous app</string>
 
 </resources>
