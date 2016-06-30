@@ -108,5 +108,7 @@
     <string name="menu_back">Return to previous app</string>
     <string name="search">Search</string>
     <string name="tutorial">You want to see the tutorial?</string>
+    <string name="home_bookmarks">Home with Bookmarks</string>
+    <string name="home_bookmarks_description">Launch directly the search instaed the bookmarks screen.</string>
 
 </resources>

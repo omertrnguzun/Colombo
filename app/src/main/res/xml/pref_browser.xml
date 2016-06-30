@@ -16,6 +16,12 @@
         android:defaultValue="" />
 
     <SwitchPreference
+        android:key="home_bookmarks"
+        android:title="@string/home_bookmarks"
+        android:summary="@string/home_bookmarks_description"
+        android:defaultValue="true"/>
+
+    <SwitchPreference
         android:key="gestures"
         android:title="@string/gestures"
         android:summary="@string/gestures_description"

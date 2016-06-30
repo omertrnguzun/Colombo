@@ -63,7 +63,9 @@ public class ObservableWebView extends WebView {
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-
+        if (t == 0) {
+            getRootView().findViewById(R.id.swipe_layout).setEnabled(true);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -126,8 +128,6 @@ public class ObservableWebView extends WebView {
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
                 break;
             case MotionEvent.ACTION_UP:
-                getRootView().findViewById(R.id.swipe_layout).setEnabled(getScrollY() == 0 && !canScrollVertically);
-                break;
             case MotionEvent.ACTION_CANCEL:
                 if (next != null) next.setPressed(false);
                 if (previous != null) previous.setPressed(false);

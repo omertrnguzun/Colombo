@@ -90,26 +90,36 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
-    /** Integers */
+    /**
+     * Integers
+     */
     private static final int REQUEST_SELECT_FILE = 100;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
     private static final int LOCATION_PERMISSION_CODE = 1234;
     private static final int STORAGE_PERMISSION_CODE = 5678;
     private static final int SEARCH_GOOGLE = 0, SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
 
-    /** Array Vars */
+    /**
+     * Array Vars
+     */
     private ValueCallback<Uri[]> uploadMessage;
     private ValueCallback<Uri> uploadMessagePreLollipop;
     private ArrayList<CardData> cardDatas = new ArrayList<>();
 
-    /** Boolean Values */
+    /**
+     * Boolean Values
+     */
     private boolean isIncognito;
     private boolean desktop = true;
 
-    /** Strings Vars */
+    /**
+     * Strings Vars
+     */
     private String urlIntent = null;
 
-    /** Other Elements */
+    /**
+     * Other Elements
+     */
     private LocationManager locationManager;
     private LocationListener locationListener;
     private SharedPreferences prefs;
@@ -117,7 +127,9 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter adapter;
     private Bundle newBundy = new Bundle();
 
-    /** UI Elements */
+    /**
+     * UI Elements
+     */
     private AppBarLayout appbar;
     private CoordinatorLayout coordinatorLayout;
     private SearchView searchView;
@@ -461,6 +473,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -556,6 +569,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
+
+    @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
@@ -634,7 +652,12 @@ public class MainActivity extends AppCompatActivity {
         bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
         settings = (ImageView) findViewById(R.id.settings);
         webView = (ObservableWebView) findViewById(R.id.webview);
-        webView.setVisibility(View.GONE);
+        if (prefs.getBoolean("home_bookmarks", true)) {
+            webView.setVisibility(View.GONE);
+        } else {
+            webView.setVisibility(View.VISIBLE);
+            titleFrame.setVisibility(View.GONE);
+        }
         urlIntent = getIntent().getDataString();
     }
 
@@ -928,72 +951,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Shortcut added to your home!", Toast.LENGTH_SHORT).show();
     }
 
-    /** SetUp WebClient */
-    public class WebClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, final String url) {
-            if (Uri.parse(url).getHost().equals(url)) {
-                webView.loadUrl(url);
-                return true;
-            } else if (urlIntent != null) {
-                webView.loadUrl(urlIntent);
-            }
-            if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
-                    || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
-                    || url.startsWith("mailto:") || url.startsWith("intent://")
-                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
-
-                MenuSheetView menuSheetView =
-                        new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, "You want to open this link in the specific app?", new MenuSheetView.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                switch (item.getItemId()) {
-                                    case R.id.action_open:
-                                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setData(Uri.parse(url));
-                                        startActivity(intent);
-                                        break;
-                                    case R.id.action_continue:
-                                        webView.loadUrl(url);
-                                        break;
-                                }
-                                if (bottomSheet.isSheetShowing()) {
-                                    bottomSheet.dismissSheet();
-                                }
-                                return true;
-                            }
-                        });
-                menuSheetView.inflateMenu(R.menu.menu_intent_leave_colombo);
-                bottomSheet.showWithSheetView(menuSheetView);
-                return true;
-            }
-            webView.loadUrl(url);
-            return true;
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap facIcon) {
-            swipeRefreshLayout.setRefreshing(true);
-
-            if (searchView.getVisibility() == View.VISIBLE) {
-                searchView.setVisibility(View.GONE);
-            }
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            swipeRefreshLayout.setRefreshing(false);
-            swipeRefreshLayout.setEnabled(false);
-
-            /** Checking if you are on home */
-            if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                title.setText(R.string.search);
-            } else {
-                title.setText(webView.getTitle());
-            }
-        }
-    }
-
     /**
      * Update database
      */
@@ -1091,6 +1048,74 @@ public class MainActivity extends AppCompatActivity {
         db.closeDB();
 
         retrieve();
+    }
+
+    /**
+     * SetUp WebClient
+     */
+    public class WebClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, final String url) {
+            if (Uri.parse(url).getHost().equals(url)) {
+                webView.loadUrl(url);
+                return true;
+            } else if (urlIntent != null) {
+                webView.loadUrl(urlIntent);
+            }
+            if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
+                    || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
+                    || url.startsWith("mailto:") || url.startsWith("intent://")
+                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
+
+                MenuSheetView menuSheetView =
+                        new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, "You want to open this link in the specific app?", new MenuSheetView.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch (item.getItemId()) {
+                                    case R.id.action_open:
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        intent.setData(Uri.parse(url));
+                                        startActivity(intent);
+                                        break;
+                                    case R.id.action_continue:
+                                        webView.loadUrl(url);
+                                        break;
+                                }
+                                if (bottomSheet.isSheetShowing()) {
+                                    bottomSheet.dismissSheet();
+                                }
+                                return true;
+                            }
+                        });
+                menuSheetView.inflateMenu(R.menu.menu_intent_leave_colombo);
+                bottomSheet.showWithSheetView(menuSheetView);
+                return true;
+            }
+            webView.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap facIcon) {
+            swipeRefreshLayout.setRefreshing(true);
+
+            if (searchView.getVisibility() == View.VISIBLE) {
+                searchView.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setEnabled(false);
+
+            /** Checking if you are on home */
+            if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                title.setText(R.string.search);
+            } else {
+                title.setText(webView.getTitle());
+            }
+        }
     }
 
     /**
