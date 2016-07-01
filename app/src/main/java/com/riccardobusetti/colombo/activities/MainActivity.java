@@ -36,7 +36,6 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -480,6 +479,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_new:
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                startActivity(intent);
+                break;
             case R.id.action_home:
                 webView.clearHistory();
                 webView.loadUrl(getHomepage());
@@ -496,9 +500,9 @@ public class MainActivity extends AppCompatActivity {
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share link"));
                 break;
-            case R.id.action_refresh:
+            /*case R.id.action_refresh:
                 webView.reload();
-                break;
+                break;*/
             case R.id.action_bookmark:
                 if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
                     webView.setVisibility(View.GONE);
@@ -733,16 +737,21 @@ public class MainActivity extends AppCompatActivity {
      * SetUp the elements animated
      */
     private void setUpUiAnimations() {
-        if (settings != null && settings.getVisibility() == View.VISIBLE) {
-            settings.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotation));
-        }
 
-        if (search != null && search.getVisibility() == View.VISIBLE) {
-            search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_in));
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        if (appTitle != null && appTitle.getVisibility() == View.VISIBLE) {
-            appTitle.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in));
+            if (settings != null && settings.getVisibility() == View.VISIBLE) {
+                settings.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotation));
+            }
+
+            if (search != null && search.getVisibility() == View.VISIBLE) {
+                search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_in));
+            }
+
+            if (appTitle != null && appTitle.getVisibility() == View.VISIBLE) {
+                appTitle.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in));
+            }
+
         }
     }
 
@@ -805,11 +814,15 @@ public class MainActivity extends AppCompatActivity {
     private void setUpLightIcons() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (prefs.getBoolean("light_icons", true)) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                coordinatorLayout.setSystemUiVisibility(coordinatorLayout.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 appTitle.setTextColor(Color.parseColor("#233B3F"));
+                Drawable drawable_black = getResources().getDrawable(R.drawable.ic_settings_title);
+                settings.setImageDrawable(drawable_black);
             } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                setTheme(R.style.AppThemeNoActionBar);
                 appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+                Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
+                settings.setImageDrawable(drawable_light);
             }
         }
     }
@@ -924,15 +937,7 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (prefs.getBoolean("light_icons", true)) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                appTitle.setTextColor(Color.parseColor("#233B3F"));
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-            }
-        }
+        setUpLightIcons();
     }
 
     /**

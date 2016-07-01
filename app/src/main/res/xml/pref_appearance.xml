@@ -6,10 +6,4 @@
         android:title="@string/pref_dynamic_colors"
         android:summary="@string/pref_dynamic_colors_summary"/>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="dark"
-        android:title="@string/pref_dark"
-        android:summary="@string/pref_dark_summary"/>
-
 </PreferenceScreen>

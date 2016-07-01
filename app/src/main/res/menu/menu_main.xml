@@ -8,14 +8,19 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_new"
+        android:title="@string/menu_new"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_home"
         android:title="@string/menu_home"
         app:showAsAction="never" />
 
-    <item
+    <!--<item
         android:id="@+id/action_refresh"
         android:title="@string/menu_refresh"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
 
     <item
         android:id="@+id/action_search_words"
