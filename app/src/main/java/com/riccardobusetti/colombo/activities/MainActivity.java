@@ -394,6 +394,10 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            menu.findItem(R.id.action_new).setVisible(false);
+        }
+
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
         searchView.setVisibility(View.GONE);
@@ -550,13 +554,18 @@ public class MainActivity extends AppCompatActivity {
                     appTitle.setText(R.string.app_name);
                     cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
                     title.setTextColor(Color.parseColor("#696969"));
-                    setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
+                    }
                 } else {
                     //When enter in incognito
                     appTitle.setText(R.string.app_name_incognito);
                     cardSearch.setCardBackgroundColor(Color.parseColor("#233B3F"));
                     title.setTextColor(Color.parseColor("#FAFAFA"));
-                    setOverflowButtonColor(toolbar, Color.parseColor("#FAFAFA"));
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        setOverflowButtonColor(toolbar, Color.parseColor("#FAFAFA"));
+                    }
+
                 }
                 break;
             case R.id.action_add:
@@ -1058,7 +1067,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * SetUp WebClient
      */
-    public class WebClient extends WebViewClient {
+    private class WebClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, final String url) {
             if (Uri.parse(url).getHost().equals(url)) {
