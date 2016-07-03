@@ -63,7 +63,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,6 +85,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static android.os.Build.VERSION_CODES.M;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -125,8 +126,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rv;
     private MyAdapter adapter;
     private Bundle newBundy = new Bundle();
-    private LayoutInflater layoutInflater;
-    private PopupWindow popupWindow;
 
     /**
      * UI Elements
@@ -144,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
     private View search;
     private ImageView settings;
     private GridLayoutManager gridLayoutManager;
+    private Menu menuAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (Build.VERSION.SDK_INT >= M) {
                             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                             } else {
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
                 if (prefs.getBoolean("dynamic_colors", true)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Build.VERSION.SDK_INT >= M) {
                         if (prefs.getBoolean("light_icons", true)) {
                             Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
                                 @Override
@@ -577,7 +577,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= M) {
             setUpLightIcons();
         }
     }
@@ -586,7 +586,7 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= M) {
                 setUpLightIcons();
                 onSaveInstanceState(newBundy);
             }
@@ -663,7 +663,7 @@ public class MainActivity extends AppCompatActivity {
      * Handle GPS
      */
     private void handleLocation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE);
             }
@@ -786,7 +786,7 @@ public class MainActivity extends AppCompatActivity {
      * SetUp white theme
      */
     private void setUpLightIcons() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= M) {
             if (prefs.getBoolean("light_icons", true)) {
                 coordinatorLayout.setSystemUiVisibility(coordinatorLayout.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 appTitle.setTextColor(Color.parseColor("#233B3F"));
