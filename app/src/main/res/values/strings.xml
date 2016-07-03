@@ -88,7 +88,7 @@
     <string name="description_gps">Colombo has build in GPS location capabilities. To use webapps that require location Colombo must have access to your GPS. (SKIP THIS IF ALREADY GRANTED)</string>
     <string name="menu_new">New Tab</string>
     <string name="pref_header_about">About Colombo</string>
-    <string name="menu_dekstop">Dekstop Site</string>
+    <string name="menu_dekstop">Dekstop View</string>
     <string name="menu_add">Add to home</string>
     <string name="gestures">Gestures</string>
     <string name="gestures_description">Disable or Enable Gestures, like swiping from left to right</string>
@@ -111,5 +111,10 @@
     <string name="tutorial">You want to see the tutorial?</string>
     <string name="home_bookmarks">Home with Bookmarks</string>
     <string name="home_bookmarks_description">Launch directly the search instaed the bookmarks screen.</string>
+    <string name="description_about">A fast, light and</string>
+    <string name="description_about_2">beautiful browser</string>
+    <string name="team_text">The Team</string>
+    <string name="libs_text">Libraries</string>
+    <string name="links_text">More</string>
 
 </resources>

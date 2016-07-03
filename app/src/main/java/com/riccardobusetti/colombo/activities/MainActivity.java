@@ -64,6 +64,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -125,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rv;
     private MyAdapter adapter;
     private Bundle newBundy = new Bundle();
+    private LayoutInflater layoutInflater;
+    private PopupWindow popupWindow;
 
     /**
      * UI Elements
@@ -251,12 +254,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 snackbar.show();
-            }
-        });
-        webView.post(new Runnable() {
-            @Override
-            public void run() {
-                webView.loadUrl(urlIntent);
             }
         });
         CustomWebChromeClient webChromeClient = new CustomWebChromeClient(this) {
@@ -489,7 +486,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.action_home:
-                webView.clearHistory();
                 webView.loadUrl(getHomepage());
                 if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
@@ -958,7 +954,7 @@ public class MainActivity extends AppCompatActivity {
         data.setData(Uri.parse(webView.getUrl()));
         shortcutintent.putExtra("duplicate", false);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, webView.getTitle());
-        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher);
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_home_shortcut);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
         sendBroadcast(shortcutintent);
@@ -1112,10 +1108,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap facIcon) {
             swipeRefreshLayout.setRefreshing(true);
-
-            if (searchView.getVisibility() == View.VISIBLE) {
-                searchView.setVisibility(View.GONE);
-            }
         }
 
         @Override
@@ -1123,12 +1115,8 @@ public class MainActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setEnabled(false);
 
-            /** Checking if you are on home */
-            if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                title.setText(R.string.search);
-            } else {
-                title.setText(webView.getTitle());
-            }
+            title.setText(webView.getTitle());
+
         }
     }
 

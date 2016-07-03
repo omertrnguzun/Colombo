@@ -1,23 +1,26 @@
 package com.riccardobusetti.colombo.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.riccardobusetti.colombo.R;
-import com.riccardobusetti.colombo.util.StaticUtils;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class AboutActivity extends AppCompatActivity {
 
-    FloatingActionButton fab;
-    LinearLayout colombo, me, james, matteo;
+    private CoordinatorLayout coordinatorLayout;
+    private TextView rate, github;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,23 +29,25 @@ public class AboutActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         setContentView(R.layout.activity_about);
+        setTitle("About");
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        colombo = (LinearLayout) findViewById(R.id.layout_colombo);
-        me = (LinearLayout) findViewById(R.id.layout_me);
-        james = (LinearLayout) findViewById(R.id.layout_james);
-        matteo = (LinearLayout) findViewById(R.id.layout_matteo);
 
-        fab.setImageDrawable(StaticUtils.getVectorDrawable(this, R.drawable.ic_review));
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordi_about);
+        rate = (TextView) findViewById(R.id.rate);
+        github = (TextView) findViewById(R.id.github);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                coordinatorLayout.setSystemUiVisibility(coordinatorLayout.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
 
         setUpClick();
 
     }
 
-    private void setUpClick() {
+   private void setUpClick() {
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        rate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.riccardobusetti.colombo");
@@ -51,7 +56,7 @@ public class AboutActivity extends AppCompatActivity {
             }
         });
 
-        colombo.setOnClickListener(new View.OnClickListener() {
+        github.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Uri uri = Uri.parse("https://github.com/RiccardoBusetti/Colombo");
@@ -60,32 +65,6 @@ public class AboutActivity extends AppCompatActivity {
             }
         });
 
-        me.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Uri uri = Uri.parse("https://github.com/RiccardoBusetti");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
-
-        james.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Uri uri = Uri.parse("https://github.com/TheAndroidMaster");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
-
-        matteo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Uri uri = Uri.parse("https://github.com/OhMyLob");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -93,5 +72,10 @@ public class AboutActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home)
             finish();
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

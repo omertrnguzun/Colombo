@@ -24,6 +24,11 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
+    <style name="AppTheme.CustomPopUp">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
     <style name="TextViewCustomFont">
         <item name="fontPath">fonts/SpaceMono-Regular.ttf</item>
     </style>
