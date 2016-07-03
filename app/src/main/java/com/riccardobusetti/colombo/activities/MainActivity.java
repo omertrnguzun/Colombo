@@ -640,15 +640,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private void handleUrlLoading() {
         if (urlIntent != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back_title));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back_title));
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
+            }
             webView.loadUrl(urlIntent);
             if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                 webView.setVisibility(View.VISIBLE);
@@ -656,6 +658,9 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             webView.loadUrl(getHomepage());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
+            }
         }
     }
 
