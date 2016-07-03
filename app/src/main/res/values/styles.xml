@@ -15,6 +15,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Base app Theme -->
+    <style name="AppThemeSettings" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    </style>
+
     <!-- SplashScreen Theme -->
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->

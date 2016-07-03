@@ -32,7 +32,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -145,15 +144,6 @@ public class MainActivity extends AppCompatActivity {
     private View search;
     private ImageView settings;
     private GridLayoutManager gridLayoutManager;
-
-    private static void setOverflowButtonColor(final Toolbar toolbar, final int color) {
-        Drawable drawable = toolbar.getOverflowIcon();
-        if (drawable != null) {
-            drawable = DrawableCompat.wrap(drawable);
-            DrawableCompat.setTint(drawable.mutate(), color);
-            toolbar.setOverflowIcon(drawable);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -391,16 +381,15 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             menu.findItem(R.id.action_new).setVisible(false);
         }
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
-        searchView.setVisibility(View.GONE);
-        searchView.setIconified(false);
         searchView.setQueryHint("");
         searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setIconified(true);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -442,8 +431,9 @@ public class MainActivity extends AppCompatActivity {
                 } else
                     webView.loadUrl(getSearchPrefix() + query);
 
-                searchView.setVisibility(View.GONE);
                 searchView.setIconified(false);
+                searchView.setVisibility(View.GONE);
+                searchView.clearFocus();
                 return false;
             }
 
@@ -453,23 +443,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                    webView.setVisibility(View.VISIBLE);
-                    titleFrame.setVisibility(View.GONE);
-                } else if (searchView.getVisibility() == View.GONE) {
-                    searchView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                searchView.setIconified(false);
-                searchView.setVisibility(View.GONE);
                 return false;
             }
         });
@@ -500,9 +476,6 @@ public class MainActivity extends AppCompatActivity {
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share link"));
                 break;
-            /*case R.id.action_refresh:
-                webView.reload();
-                break;*/
             case R.id.action_bookmark:
                 if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
                     webView.setVisibility(View.GONE);
@@ -550,18 +523,11 @@ public class MainActivity extends AppCompatActivity {
                     appTitle.setText(R.string.app_name);
                     cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
                     title.setTextColor(Color.parseColor("#696969"));
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
-                    }
                 } else {
                     //When enter in incognito
                     appTitle.setText(R.string.app_name_incognito);
                     cardSearch.setCardBackgroundColor(Color.parseColor("#233B3F"));
                     title.setTextColor(Color.parseColor("#FAFAFA"));
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        setOverflowButtonColor(toolbar, Color.parseColor("#FAFAFA"));
-                    }
-
                 }
                 break;
             case R.id.action_add:
@@ -652,7 +618,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        setOverflowButtonColor(toolbar, Color.parseColor("#696969"));
         title = (TextView) findViewById(R.id.toolbar_title); // SearchBar Title
         appTitle = (TextView) findViewById(R.id.app_title); // Big Colombo TextView
         titleFrame = (FrameLayout) findViewById(R.id.big_title); // FrameLayout with Big Colombo TextView
@@ -767,11 +732,15 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (searchView.getVisibility() == View.GONE) {
-                    searchView.setVisibility(View.VISIBLE);
+                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                    webView.setVisibility(View.VISIBLE);
+                    titleFrame.setVisibility(View.GONE);
                     searchView.setIconified(false);
+                    searchView.setVisibility(View.VISIBLE);
+                } else {
+                    searchView.setIconified(false);
+                    searchView.setVisibility(View.VISIBLE);
                 }
-
             }
         });
 
@@ -1116,7 +1085,6 @@ public class MainActivity extends AppCompatActivity {
             swipeRefreshLayout.setEnabled(false);
 
             title.setText(webView.getTitle());
-
         }
     }
 

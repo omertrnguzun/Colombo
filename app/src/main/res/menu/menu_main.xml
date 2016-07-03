@@ -8,55 +8,60 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_new"
-        android:title="@string/menu_new"
-        app:showAsAction="never" />
+        android:title=""
+        android:id="@+id/menu"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_menu">
 
-    <item
-        android:id="@+id/action_home"
-        android:title="@string/menu_home"
-        app:showAsAction="never" />
+        <menu>
+            <item
+                android:id="@+id/action_new"
+                android:title="@string/menu_new"
+                app:showAsAction="never"/>
 
-    <!--<item
-        android:id="@+id/action_refresh"
-        android:title="@string/menu_refresh"
-        app:showAsAction="never" />-->
+            <item
+                android:id="@+id/action_home"
+                android:title="@string/menu_home"
+                app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_search_words"
-        android:title="@string/menu_search_words"
-        app:showAsAction="never" />
+            <item
+                android:id="@+id/action_search_words"
+                android:title="@string/menu_search_words"
+                app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_dekstop"
-        android:title="@string/menu_dekstop"
-        android:checkable="true"
-        app:showAsAction="never" />
+            <item
+                android:id="@+id/action_dekstop"
+                android:title="@string/menu_dekstop"
+                android:checkable="true"
+                app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_bookmark"
-        android:title="@string/menu_bookmark"
-        app:showAsAction="never" />
+            <item
+                android:id="@+id/action_bookmark"
+                android:title="@string/menu_bookmark"
+                app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_incognito"
-        android:title="@string/menu_incognito"
-        android:checkable="true"
-        app:showAsAction="never" />
+            <item
+                android:id="@+id/action_incognito"
+                android:title="@string/menu_incognito"
+                android:checkable="true"
+                app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_add"
-        android:title="@string/menu_add"
-        app:showAsAction="never" />
+            <item
+                android:id="@+id/action_add"
+                android:title="@string/menu_add"
+                app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_share"
-        android:title="@string/menu_share"
-        app:showAsAction="never" />
+            <item
+                android:id="@+id/action_share"
+                android:title="@string/menu_share"
+                app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/menu_settings"
-        app:showAsAction="never" />
+            <item
+                android:id="@+id/action_settings"
+                android:title="@string/menu_settings"
+                app:showAsAction="never" />
+        </menu>
+
+    </item>
 
 </menu>

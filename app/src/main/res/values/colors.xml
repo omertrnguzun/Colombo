@@ -23,6 +23,7 @@
     <color name="colorTextGrey">#737373</color>
     <color name="colorTextDarkGrey">#4B4B4B</color>
 
-    <color name="colorIconGrey">#757575</color>
+    <color name="colorIconGrey">#696969</color>
+    <color name="colorIconWhite">#FAFAFA</color>
 
 </resources>
