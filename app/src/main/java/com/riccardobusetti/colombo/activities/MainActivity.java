@@ -11,10 +11,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -137,13 +138,14 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
     private TextView title, appTitle;
-    private FrameLayout titleFrame;
+    private FrameLayout titleFrame, webviewContainer;
     private CardView cardSearch;
     private BottomSheetLayout bottomSheet;
     private View search;
     private ImageView settings;
     private GridLayoutManager gridLayoutManager;
-    private Menu menuAction;
+    private View backround_bookmark_text;
+    private TextView bookmark_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,6 +284,9 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onGenerated(Palette palette) {
                                     setColor(palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
+                                    }
                                 }
                             });
                         } else {
@@ -289,6 +294,9 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onGenerated(Palette palette) {
                                     setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
+                                    }
                                 }
                             });
                         }
@@ -297,8 +305,15 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onGenerated(Palette palette) {
                                 setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
+                                }
                             }
                         });
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), Color.parseColor("#80DEEA")));
                     }
                 }
             }
@@ -420,7 +435,39 @@ public class MainActivity extends AppCompatActivity {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
                 }
+                if (query.endsWith(".mil") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".edu") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".int") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
                 if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".de") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".uk") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".it") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".jp") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".ru") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
                 }
@@ -523,11 +570,31 @@ public class MainActivity extends AppCompatActivity {
                     appTitle.setText(R.string.app_name);
                     cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
                     title.setTextColor(Color.parseColor("#696969"));
+                    setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                    rv.setBackgroundColor(Color.parseColor("#FAFAFA"));
+                    webviewContainer.setBackgroundColor(Color.parseColor("#FAFAFA"));
+                    bookmark_text.setTextColor(Color.parseColor("#233B3F"));
+                    backround_bookmark_text.setBackgroundColor(Color.parseColor("#B2EBF2"));
+
+                    setUpLightIcons();
                 } else {
                     //When enter in incognito
                     appTitle.setText(R.string.app_name_incognito);
-                    cardSearch.setCardBackgroundColor(Color.parseColor("#233B3F"));
+                    cardSearch.setCardBackgroundColor(Color.parseColor("#455A64"));
                     title.setTextColor(Color.parseColor("#FAFAFA"));
+                    rv.setBackgroundColor(Color.parseColor("#263238"));
+                    webviewContainer.setBackgroundColor(Color.parseColor("#263238"));
+                    bookmark_text.setTextColor(Color.parseColor("#FAFAFA"));
+                    backround_bookmark_text.setBackgroundColor(Color.parseColor("#37474F"));
+
+                    if (prefs.getBoolean("light_icons", true)) {
+                    } else {
+                        setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryIncognito));
+                        setTheme(R.style.AppThemeNoActionBar);
+                        appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+                        Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
+                        settings.setImageDrawable(drawable_light);
+                    }
                 }
                 break;
             case R.id.action_add:
@@ -556,26 +623,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        } else if (locationManager != null)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        } else if (locationManager != null) {
             locationManager.removeUpdates(locationListener);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-        } else if (locationManager != null)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        } else if (locationManager != null) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+        }
 
         setPrefs();
 
         checkInternet();
     }
 
-    @Override
+    /*@Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (Build.VERSION.SDK_INT >= M) {
             setUpLightIcons();
@@ -606,7 +674,7 @@ public class MainActivity extends AppCompatActivity {
         setUpLightIcons();
         savedInstanceState.getBundle("newBundy");
 
-    }
+    }*/
 
     /**
      * SetUp the UI elements importing them
@@ -623,6 +691,9 @@ public class MainActivity extends AppCompatActivity {
         titleFrame = (FrameLayout) findViewById(R.id.big_title); // FrameLayout with Big Colombo TextView
         cardSearch = (CardView) findViewById(R.id.card_search); // CardView with SearchView
         search = findViewById(R.id.search); // FrameLayout of cardSearch
+        webviewContainer = (FrameLayout) findViewById(R.id.webviewContainer);
+        backround_bookmark_text = findViewById(R.id.backround_bookmarks);
+        bookmark_text = (TextView) findViewById(R.id.text_bookmark);
         bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
         settings = (ImageView) findViewById(R.id.settings);
         webView = (ObservableWebView) findViewById(R.id.webview);
@@ -825,6 +896,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** Class for black and white bitmap */
+    private static void setLocked(ImageView v) {
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+        ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
+        v.setColorFilter(cf);
+    }
+
     /**
      * Method to get homepage from prefs
      */
@@ -870,6 +949,8 @@ public class MainActivity extends AppCompatActivity {
      * Set color class to change dinamically color of UI
      */
     private void setColor(int color) {
+        color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), StaticUtils.darkColor(color));
             colorAnimation.setDuration(150);
@@ -884,11 +965,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             colorAnimation.start();
-
-            setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), color));
         }
 
-        int colorFrom = ContextCompat.getColor(this, R.color.colorPrimary);
+        int colorFrom = ContextCompat.getColor(this, !isIncognito ? R.color.colorPrimaryIncognito : R.color.colorPrimary);
         Drawable backgroundFrom = appbar.getBackground();
         if (backgroundFrom instanceof ColorDrawable)
             colorFrom = ((ColorDrawable) backgroundFrom).getColor();
@@ -939,8 +1018,10 @@ public class MainActivity extends AppCompatActivity {
      * Update database
      */
     private void update(int id, String newName) {
+
         DBAdapter db = new DBAdapter(this);
         db.openDB();
+
         long result = db.UPDATE(id, newName);
         if (result > 0) {
             Snackbar.make(coordinatorLayout, "Bookmark updated successfully!", Snackbar.LENGTH_SHORT).show();
@@ -949,6 +1030,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Snackbar.make(coordinatorLayout, "Unable to update the bookmark :_(", Snackbar.LENGTH_SHORT).show();
         }
+
         db.closeDB();
     }
 
@@ -956,6 +1038,7 @@ public class MainActivity extends AppCompatActivity {
      * Delete data from DB
      */
     private void delete(int id) {
+
         DBAdapter db = new DBAdapter(this);
         db.openDB();
 
@@ -966,6 +1049,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Snackbar.make(coordinatorLayout, "Unable to Delete", Snackbar.LENGTH_SHORT).show();
         }
+
+        retrieve();
 
         db.closeDB();
     }
@@ -1010,8 +1095,6 @@ public class MainActivity extends AppCompatActivity {
     private void save(String name, String code) {
 
         DBAdapter db = new DBAdapter(this);
-
-        //Aprire DataBase
         db.openDB();
 
         //Dichiarare cambiamenti
