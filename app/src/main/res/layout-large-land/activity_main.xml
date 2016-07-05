@@ -201,12 +201,94 @@
                         android:layout_below="@+id/backround_bookmarks"
                         android:scrollbars="vertical" />
 
+                    <FrameLayout
+                        android:id="@+id/frameNoBookmarks"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/image_no_bookmarks"
+                                android:layout_centerHorizontal="true"
+                                android:layout_width="150dp"
+                                android:layout_height="150dp"
+                                android:src="@drawable/ic_no_bookmarks"/>
+
+                            <TextView
+                                android:layout_below="@+id/image_no_bookmarks"
+                                android:id="@+id/text_no_bookmarks"
+                                style="@style/TextViewCustomFontBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="16dp"
+                                android:text="You have no bookmarks"
+                                android:textColor="@color/colorTextDarkBlue"
+                                android:textSize="16dp" />
+
+                        </RelativeLayout>
+
+                    </FrameLayout>
+
                     <com.riccardobusetti.colombo.view.ObservableWebView
                         android:id="@+id/webview"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:behavior_overlapTop="80dp"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    <FrameLayout
+                        android:visibility="gone"
+                        android:id="@+id/frameError"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorCyanLight">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/image_error"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:layout_width="150dp"
+                                android:layout_height="150dp"
+                                android:src="@drawable/ic_webview_error"/>
+
+                            <TextView
+                                android:layout_centerHorizontal="true"
+                                android:layout_below="@+id/image_error"
+                                android:id="@+id/title_error"
+                                style="@style/TextViewCustomFontBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Colombo Error"
+                                android:layout_marginTop="10dp"
+                                android:textColor="@color/colorTextDarkBlue"
+                                android:textSize="16dp" />
+
+                            <TextView
+                                android:layout_centerHorizontal="true"
+                                android:layout_below="@+id/title_error"
+                                android:id="@+id/text_error"
+                                style="@style/TextViewCustomFontBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="16dp"
+                                android:text="No connection :/"
+                                android:textColor="@color/colorTextDarkBlue"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginBottom="16dp"
+                                android:layout_marginRight="16dp"/>
+
+                        </RelativeLayout>
+
+                    </FrameLayout>
 
                 </RelativeLayout>
 

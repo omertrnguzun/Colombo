@@ -139,14 +139,14 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
     private TextView title, appTitle;
-    private FrameLayout titleFrame, webviewContainer;
+    private FrameLayout titleFrame, webviewContainer, frameNoBookmarks, frameError;
     private CardView cardSearch;
     private BottomSheetLayout bottomSheet;
     private View search;
     private ImageView settings;
     private GridLayoutManager gridLayoutManager;
     private View backround_bookmark_text;
-    private TextView bookmark_text;
+    private TextView bookmark_text, no_bookmark_text;
     private ImageView back, forward, bookmark;
     private Menu menu;
 
@@ -182,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
         setUpElements();
 
         setUpBookmarksStructure();
+
+        detectArraySize();
 
         setUpUiAnimations();
 
@@ -601,6 +603,7 @@ public class MainActivity extends AppCompatActivity {
                     webviewContainer.setBackgroundColor(Color.parseColor("#E0F7FA"));
                     bookmark_text.setTextColor(Color.parseColor("#233B3F"));
                     backround_bookmark_text.setBackgroundColor(Color.parseColor("#B2EBF2"));
+                    no_bookmark_text.setTextColor(Color.parseColor("#233B3F"));
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu));
@@ -617,6 +620,7 @@ public class MainActivity extends AppCompatActivity {
                     webviewContainer.setBackgroundColor(Color.parseColor("#263238"));
                     bookmark_text.setTextColor(Color.parseColor("#FAFAFA"));
                     backround_bookmark_text.setBackgroundColor(Color.parseColor("#37474F"));
+                    no_bookmark_text.setTextColor(Color.parseColor("#FAFAFA"));
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu_white));
@@ -756,6 +760,10 @@ public class MainActivity extends AppCompatActivity {
             forward = (ImageView) findViewById(R.id.forward);
             bookmark = (ImageView) findViewById(R.id.bookmark);
         }
+        frameNoBookmarks = (FrameLayout) findViewById(R.id.frameNoBookmarks);
+        frameNoBookmarks.setVisibility(View.GONE);
+        frameError = (FrameLayout) findViewById(R.id.frameError);
+        no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
     }
 
     /**
@@ -829,6 +837,15 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MyAdapter(this, cardDatas);
         rv.setAdapter(adapter);
         retrieve();
+    }
+
+    /** Scans if array is empty or not*/
+    private void detectArraySize() {
+        if (cardDatas.isEmpty()) {
+            frameNoBookmarks.setVisibility(View.VISIBLE);
+        } else {
+            frameNoBookmarks.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -944,10 +961,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkInternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-
+            if (frameError.getVisibility() == View.VISIBLE) {
+                frameError.setVisibility(View.GONE);
+            }
         } else {
             Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
             snackbar.show();
+            frameError.setVisibility(View.VISIBLE);
         }
     }
 
@@ -1192,6 +1212,8 @@ public class MainActivity extends AppCompatActivity {
 
         db.closeDB();
 
+        detectArraySize();
+
     }
 
     /**
@@ -1250,7 +1272,7 @@ public class MainActivity extends AppCompatActivity {
                                             intent.setData(Uri.parse(url));
                                             startActivity(intent);
                                         } else {
-                                            Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, R.string.erro_action_view, Toast.LENGTH_SHORT).show();
                                         }
                                         break;
                                     case R.id.action_continue:
@@ -1274,6 +1296,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap facIcon) {
             swipeRefreshLayout.setRefreshing(true);
+            checkInternet();
         }
 
         @Override
