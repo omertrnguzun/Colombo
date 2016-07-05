@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="120dp"
     android:clickable="true"
-    android:background="@color/colorAccentDark"
+    android:background="@color/colorPrimaryLight"
     android:foreground="?attr/selectableItemBackground">
 
     <TextView
@@ -16,8 +16,8 @@
         android:textSize="16dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/coloTextBlack"
+        android:textColor="@color/colorTextBlack"
         android:layout_margin="16dp"
-        style="@style/TextViewCustomFont"/>
+        style="@style/TextViewCustomFontBold"/>
 
 </RelativeLayout>

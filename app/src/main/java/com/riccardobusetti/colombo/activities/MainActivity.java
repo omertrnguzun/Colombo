@@ -569,10 +569,10 @@ public class MainActivity extends AppCompatActivity {
                     //When exit from incognito
                     appTitle.setText(R.string.app_name);
                     cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
-                    title.setTextColor(Color.parseColor("#696969"));
+                    title.setTextColor(Color.parseColor("#B2B2B2"));
                     setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
                     rv.setBackgroundColor(Color.parseColor("#FAFAFA"));
-                    webviewContainer.setBackgroundColor(Color.parseColor("#FAFAFA"));
+                    webviewContainer.setBackgroundColor(Color.parseColor("#E0F7FA"));
                     bookmark_text.setTextColor(Color.parseColor("#233B3F"));
                     backround_bookmark_text.setBackgroundColor(Color.parseColor("#B2EBF2"));
 
