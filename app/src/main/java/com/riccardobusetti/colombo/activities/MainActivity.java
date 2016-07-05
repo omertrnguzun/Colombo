@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager gridLayoutManager;
     private View backround_bookmark_text;
     private TextView bookmark_text;
+    private ImageView back, forward, bookmark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -571,7 +573,7 @@ public class MainActivity extends AppCompatActivity {
                     cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
                     title.setTextColor(Color.parseColor("#B2B2B2"));
                     setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                    rv.setBackgroundColor(Color.parseColor("#FAFAFA"));
+                    rv.setBackgroundColor(Color.parseColor("#E0F7FA"));
                     webviewContainer.setBackgroundColor(Color.parseColor("#E0F7FA"));
                     bookmark_text.setTextColor(Color.parseColor("#233B3F"));
                     backround_bookmark_text.setBackgroundColor(Color.parseColor("#B2EBF2"));
@@ -594,6 +596,16 @@ public class MainActivity extends AppCompatActivity {
                         appTitle.setTextColor(Color.parseColor("#FAFAFA"));
                         Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
                         settings.setImageDrawable(drawable_light);
+                        if (isTablet(this)) {
+                            Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
+                            back.setImageDrawable(drawable_back_white);
+
+                            Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
+                            forward.setImageDrawable(drawable_forward_white);
+
+                            Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
+                            bookmark.setImageDrawable(drawable_bookmark_white);
+                        }
                     }
                 }
                 break;
@@ -704,6 +716,12 @@ public class MainActivity extends AppCompatActivity {
             titleFrame.setVisibility(View.GONE);
         }
         urlIntent = getIntent().getDataString();
+
+        if (isTablet(this)) {
+            back = (ImageView) findViewById(R.id.back);
+            forward = (ImageView) findViewById(R.id.forward);
+            bookmark = (ImageView) findViewById(R.id.bookmark);
+        }
     }
 
     /**
@@ -714,7 +732,7 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
-                toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back_title));
+                toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back_toolbar));
                 toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -844,6 +862,47 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
+
+        if (isTablet(this)) {
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (webView.canGoBack()) {
+                        webView.goBack();
+                    } else {
+                        Snackbar.make(coordinatorLayout, "No history", Snackbar.LENGTH_SHORT);
+                    }
+                }
+            });
+
+            forward.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (webView.canGoForward()) {
+                        webView.goForward();
+                    } else {
+                        Snackbar.make(coordinatorLayout, "No history", Snackbar.LENGTH_SHORT);
+                    }
+                }
+            });
+
+            bookmark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new MaterialDialog.Builder(MainActivity.this)
+                            .title("Add Bookmark?")
+                            .content("Give to your bookmark a name!")
+                            .inputType(InputType.TYPE_CLASS_TEXT)
+                            .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
+                                @Override
+                                public void onInput(MaterialDialog dialog, CharSequence input) {
+                                    save(input.toString(), webView.getUrl());
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                }
+            });
+        }
     }
 
     /**
@@ -868,11 +927,31 @@ public class MainActivity extends AppCompatActivity {
                 appTitle.setTextColor(Color.parseColor("#233B3F"));
                 Drawable drawable_black = getResources().getDrawable(R.drawable.ic_settings_title);
                 settings.setImageDrawable(drawable_black);
+                if (isTablet(this)) {
+                    Drawable drawable_back_black = getResources().getDrawable(R.drawable.ic_back_title);
+                    back.setImageDrawable(drawable_back_black);
+
+                    Drawable drawable_forward_black = getResources().getDrawable(R.drawable.ic_forward_title);
+                    forward.setImageDrawable(drawable_forward_black);
+
+                    Drawable drawable_bookmark_black = getResources().getDrawable(R.drawable.ic_bookmark_title);
+                    bookmark.setImageDrawable(drawable_bookmark_black);
+                }
             } else {
                 setTheme(R.style.AppThemeNoActionBar);
                 appTitle.setTextColor(Color.parseColor("#FAFAFA"));
                 Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
                 settings.setImageDrawable(drawable_light);
+                if (isTablet(this)) {
+                    Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
+                    back.setImageDrawable(drawable_back_white);
+
+                    Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
+                    forward.setImageDrawable(drawable_forward_white);
+
+                    Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
+                    bookmark.setImageDrawable(drawable_bookmark_white);
+                }
             }
         }
     }
@@ -943,6 +1022,15 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return "https://www.google.com/search?q=";
         }
+    }
+
+    /** Detect if running on tablet screen */
+    private static Boolean isTablet(Context context) {
+        if ((context.getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+            return true;
+        }
+        return false;
     }
 
     /**

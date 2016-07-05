@@ -57,6 +57,7 @@
                                 android:textSize="38sp" />
 
                             <ImageView
+                                android:foreground="?attr/selectableItemBackgroundBorderless"
                                 android:id="@+id/settings"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
