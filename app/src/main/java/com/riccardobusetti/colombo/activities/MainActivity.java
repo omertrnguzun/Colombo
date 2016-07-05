@@ -148,6 +148,28 @@ public class MainActivity extends AppCompatActivity {
     private View backround_bookmark_text;
     private TextView bookmark_text;
     private ImageView back, forward, bookmark;
+    private Menu menu;
+
+    /**
+     * Class for black and white bitmap
+     */
+    private static void setLocked(ImageView v) {
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+        ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
+        v.setColorFilter(cf);
+    }
+
+    /**
+     * Detect if running on tablet screen
+     */
+    private static Boolean isTablet(Context context) {
+        if ((context.getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -398,6 +420,8 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
+        this.menu = menu;
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             menu.findItem(R.id.action_new).setVisible(false);
         }
@@ -578,6 +602,11 @@ public class MainActivity extends AppCompatActivity {
                     bookmark_text.setTextColor(Color.parseColor("#233B3F"));
                     backround_bookmark_text.setBackgroundColor(Color.parseColor("#B2EBF2"));
 
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu));
+                        toolbar.setNavigationIcon(R.drawable.ic_search_toolbar);
+                    }
+
                     setUpLightIcons();
                 } else {
                     //When enter in incognito
@@ -588,6 +617,11 @@ public class MainActivity extends AppCompatActivity {
                     webviewContainer.setBackgroundColor(Color.parseColor("#263238"));
                     bookmark_text.setTextColor(Color.parseColor("#FAFAFA"));
                     backround_bookmark_text.setBackgroundColor(Color.parseColor("#37474F"));
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu_white));
+                        toolbar.setNavigationIcon(R.drawable.ic_search_toolbar_white);
+                    }
 
                     if (prefs.getBoolean("light_icons", true)) {
                     } else {
@@ -632,29 +666,6 @@ public class MainActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        } else if (locationManager != null) {
-            locationManager.removeUpdates(locationListener);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        } else if (locationManager != null) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
-        }
-
-        setPrefs();
-
-        checkInternet();
-    }
-
     /*@Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (Build.VERSION.SDK_INT >= M) {
@@ -687,6 +698,29 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.getBundle("newBundy");
 
     }*/
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        } else if (locationManager != null) {
+            locationManager.removeUpdates(locationListener);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        } else if (locationManager != null) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+        }
+
+        setPrefs();
+
+        checkInternet();
+    }
 
     /**
      * SetUp the UI elements importing them
@@ -975,14 +1009,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Class for black and white bitmap */
-    private static void setLocked(ImageView v) {
-        ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
-        ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
-        v.setColorFilter(cf);
-    }
-
     /**
      * Method to get homepage from prefs
      */
@@ -1022,15 +1048,6 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return "https://www.google.com/search?q=";
         }
-    }
-
-    /** Detect if running on tablet screen */
-    private static Boolean isTablet(Context context) {
-        if ((context.getResources().getConfiguration().screenLayout &
-                Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -1228,9 +1245,13 @@ public class MainActivity extends AppCompatActivity {
                             public boolean onMenuItemClick(MenuItem item) {
                                 switch (item.getItemId()) {
                                     case R.id.action_open:
-                                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setData(Uri.parse(url));
-                                        startActivity(intent);
+                                        if (getIntent().getAction() != null) {
+                                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                                            intent.setData(Uri.parse(url));
+                                            startActivity(intent);
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                        }
                                         break;
                                     case R.id.action_continue:
                                         webView.loadUrl(url);
