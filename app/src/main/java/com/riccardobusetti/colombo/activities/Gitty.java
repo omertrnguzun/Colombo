@@ -21,7 +21,7 @@ public class Gitty extends GittyReporter {
 
         // Set Auth token to open issues if user doesn't have a GitHub account
         // For example, you can register a bot account on GitHub that will open bugs for you.
-        setGuestOAuth2Token("b027dcedd6afe6a1487cead8518017a9ce82dcfa");
+        //setGuestOAuth2Token("b027dcedd6afe6a1487cead8518017a9ce82dcfa");
 
 
         // OPTIONAL METHODS
@@ -32,7 +32,7 @@ public class Gitty extends GittyReporter {
 
         // Set if Gitty can use your Auth token for users without a GitHub account (default: true)
         // If false, Gitty will redirect non registred users to github.com/join
-        enableGuestGitHubLogin(true);
+        enableGuestGitHubLogin(false);
 
         // Include other relevant info in your bug report (like custom variables)
         //setExtraInfo("Example string");
