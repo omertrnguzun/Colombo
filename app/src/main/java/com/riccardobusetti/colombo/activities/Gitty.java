@@ -21,7 +21,7 @@ public class Gitty extends GittyReporter {
 
         // Set Auth token to open issues if user doesn't have a GitHub account
         // For example, you can register a bot account on GitHub that will open bugs for you.
-        setGuestOAuth2Token("8f53db1feb75a2e585c3fed4afe80b156f88ae1c");
+        setGuestOAuth2Token("b027dcedd6afe6a1487cead8518017a9ce82dcfa");
 
 
         // OPTIONAL METHODS
@@ -35,16 +35,15 @@ public class Gitty extends GittyReporter {
         enableGuestGitHubLogin(true);
 
         // Include other relevant info in your bug report (like custom variables)
-        setExtraInfo("Example string");
+        //setExtraInfo("Example string");
 
         // Allow users to edit debug info (default: false)
         canEditDebugInfo(true);
 
         // Customize Gitty appearance
-        setFabColor1(Color.parseColor("#64FFDA"), Color.parseColor("#1DE9B6"), Color.parseColor("#1DE9B6"));
-        setFabColor2(Color.parseColor("#64FFDA"), Color.parseColor("#1DE9B6"), Color.parseColor("#1DE9B6"));
-        setBackgroundColor1(Color.parseColor("#80DEEA"));
-        setBackgroundColor2(Color.parseColor("#80DEEA"));
-        setRippleColor(Color.parseColor("#1DE9B6"));
+        setFabColor1(Color.parseColor("#FFEB3B"), Color.parseColor("#FBC02D"), Color.parseColor("#FFD600"));
+        setFabColor2(Color.parseColor("#E91E63"), Color.parseColor("#C2185B"), Color.parseColor("#C51162"));
+        setBackgroundColor1(Color.parseColor("#673AB7"));
+        setBackgroundColor2(Color.parseColor("#607D8B"));
     }
 }
