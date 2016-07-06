@@ -670,39 +670,6 @@ public class MainActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    /*@Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        if (Build.VERSION.SDK_INT >= M) {
-            setUpLightIcons();
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (Build.VERSION.SDK_INT >= M) {
-                setUpLightIcons();
-                onSaveInstanceState(newBundy);
-            }
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        setUpLightIcons();
-        outState.putBundle("newBundy", newBundy);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        setUpLightIcons();
-        savedInstanceState.getBundle("newBundy");
-
-    }*/
-
     @Override
     public void onPause() {
         super.onPause();
@@ -1252,12 +1219,6 @@ public class MainActivity extends AppCompatActivity {
     private class WebClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, final String url) {
-            if (Uri.parse(url).getHost().equals(url)) {
-                webView.loadUrl(url);
-                return true;
-            } else if (urlIntent != null) {
-                webView.loadUrl(urlIntent);
-            }
             if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
                     || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
                     || url.startsWith("mailto:") || url.startsWith("intent://")
@@ -1292,6 +1253,59 @@ public class MainActivity extends AppCompatActivity {
                 bottomSheet.showWithSheetView(menuSheetView);
                 return true;
             }
+            webView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (webView.getHitTestResult().getType() == WebView.HitTestResult.IMAGE_TYPE
+                            || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+
+                        Toast.makeText(MainActivity.this, "Imageeee", Toast.LENGTH_SHORT).show();
+
+
+                    } else if (webView.getHitTestResult().getType() == WebView.HitTestResult.ANCHOR_TYPE
+                            || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE) {
+                        MenuSheetView menuSheetView =
+                                new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, "Action with this link: " + webView.getHitTestResult().getExtra(), new MenuSheetView.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem item) {
+                                        switch (item.getItemId()) {
+                                            case R.id.action_open_new_link:
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                                intent.setData(Uri.parse(webView.getHitTestResult().getExtra()));
+                                                startActivity(intent);
+                                                break;
+                                                } else {
+                                                    Toast.makeText(MainActivity.this, "Tabs aren't avaliable for Android KitKat or <", Toast.LENGTH_SHORT).show();
+                                                }
+                                            case R.id.action_open_save_bookmark:
+                                                new MaterialDialog.Builder(MainActivity.this)
+                                                        .title("Add Bookmark?")
+                                                        .content("Give to your bookmark a name!")
+                                                        .inputType(InputType.TYPE_CLASS_TEXT)
+                                                        .input("Bookmark name", "", new MaterialDialog.InputCallback() {
+                                                            @Override
+                                                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                                                save(input.toString(), webView.getHitTestResult().getExtra());
+                                                                dialog.dismiss();
+                                                            }
+                                                        }).show();
+                                                break;
+                                        }
+                                        if (bottomSheet.isSheetShowing()) {
+                                            bottomSheet.dismissSheet();
+                                        }
+                                        return true;
+                                    }
+                                });
+                        menuSheetView.inflateMenu(R.menu.menu_open_link);
+                        bottomSheet.showWithSheetView(menuSheetView);
+                        return true;
+                    }
+                    return true;
+                }
+            });
             webView.loadUrl(url);
             return true;
         }
