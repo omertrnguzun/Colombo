@@ -117,5 +117,6 @@
     <string name="libs_text">Libraries</string>
     <string name="links_text">More</string>
     <string name="erro_action_view">Colombo can\'t open this app outside</string>
+    <string name="menu_open_new">Open in new tab</string>
 
 </resources>

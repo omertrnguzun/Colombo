@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.SearchView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +28,7 @@ public class ObservableWebView extends WebView {
     private boolean canScrollVertically;
 
     private WebView webView;
+    private SearchView searchView;
 
     private CustomWebChromeClient webChromeClient;
     private View previous, next;
@@ -66,11 +68,18 @@ public class ObservableWebView extends WebView {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         webView = (WebView) getRootView().findViewById(R.id.webview);
+        searchView = (SearchView) getRootView().findViewById(R.id.action_search);
 
         if (t == 0 && webView.getScrollY() == 0) {
             getRootView().findViewById(R.id.swipe_layout).setEnabled(true);
         } else if (t > 0 && webView.getScrollY() > 0){
             getRootView().findViewById(R.id.swipe_layout).setEnabled(false);
+        }
+
+        if (t > 0 && searchView.getVisibility() == View.VISIBLE) {
+            searchView.setIconified(false);
+            searchView.setVisibility(View.GONE);
+            searchView.clearFocus();
         }
     }
 

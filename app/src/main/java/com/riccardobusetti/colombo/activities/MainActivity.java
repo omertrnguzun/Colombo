@@ -839,7 +839,9 @@ public class MainActivity extends AppCompatActivity {
         retrieve();
     }
 
-    /** Scans if array is empty or not*/
+    /**
+     * Scans if array is empty or not
+     */
     private void detectArraySize() {
         if (cardDatas.isEmpty()) {
             frameNoBookmarks.setVisibility(View.VISIBLE);
@@ -1268,7 +1270,8 @@ public class MainActivity extends AppCompatActivity {
                                 switch (item.getItemId()) {
                                     case R.id.action_open:
                                         if (getIntent().getAction() != null) {
-                                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                                            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                                             intent.setData(Uri.parse(url));
                                             startActivity(intent);
                                         } else {
@@ -1359,6 +1362,16 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem item) {
                                     switch (item.getItemId()) {
+                                        case R.id.action_open_new:
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                                intent.setData(Uri.parse(cardData.get(pos).getCode()));
+                                                startActivity(intent);
+                                            } else {
+                                                Toast.makeText(c, "Tabs aren't avaliable for Android KitKat or <", Toast.LENGTH_SHORT).show();
+                                            }
+                                            break;
                                         case R.id.action_share_bookmark:
                                             String shareBody = cardData.get(position).getCode();
                                             Intent sharingIntent = new Intent(Intent.ACTION_SEND);

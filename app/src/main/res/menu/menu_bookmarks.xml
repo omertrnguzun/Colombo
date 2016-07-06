@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_open_new"
+        android:title="@string/menu_open_new"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_open"/>
+
+    <item
         android:id="@+id/action_share_bookmark"
         android:title="@string/menu_share"
         app:showAsAction="never"
