@@ -38,7 +38,7 @@ public class Gitty extends GittyReporter {
         //setExtraInfo("Example string");
 
         // Allow users to edit debug info (default: false)
-        canEditDebugInfo(true);
+        canEditDebugInfo(false);
 
         // Customize Gitty appearance
         setFabColor1(Color.parseColor("#FFEB3B"), Color.parseColor("#FBC02D"), Color.parseColor("#FFD600"));
