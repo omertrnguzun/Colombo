@@ -83,6 +83,8 @@ import com.riccardobusetti.colombo.util.StaticUtils;
 import com.riccardobusetti.colombo.view.CustomWebChromeClient;
 import com.riccardobusetti.colombo.view.ObservableWebView;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -193,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
         handleLocation();
 
-        firstTimeSnackBar();
+        //firstTimeSnackBar();
 
         /** Set Webview params */
         //webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
@@ -215,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setBuiltInZoomControls(true);
         webSettings.supportZoom();
         webView.requestFocus();
+        webSettings.setDomStorageEnabled(true);
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setAllowFileAccess(true);
         webSettings.setAppCacheEnabled(true);
@@ -356,6 +359,7 @@ public class MainActivity extends AppCompatActivity {
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.swipeRefresh));
+        swipeRefreshLayout.setNestedScrollingEnabled(true);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -1088,7 +1092,6 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
-
         setUpLightIcons();
     }
 
@@ -1120,7 +1123,6 @@ public class MainActivity extends AppCompatActivity {
         if (result > 0) {
             Snackbar.make(coordinatorLayout, "Bookmark updated successfully!", Snackbar.LENGTH_SHORT).show();
             retrieve();
-
         } else {
             Snackbar.make(coordinatorLayout, "Unable to update the bookmark :_(", Snackbar.LENGTH_SHORT).show();
         }
@@ -1197,20 +1199,15 @@ public class MainActivity extends AppCompatActivity {
         long result = db.add(name, code);
 
         if (result > 0) {
-
             Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark added successfully!", Snackbar.LENGTH_SHORT);
             snackbar.show();
-
+            retrieve();
         } else {
-
             Snackbar snackbar = Snackbar.make(coordinatorLayout, "Impossible to save Bookmark :_(", Snackbar.LENGTH_SHORT);
             snackbar.show();
-
         }
 
         db.closeDB();
-
-        retrieve();
     }
 
     /**
@@ -1258,14 +1255,39 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onLongClick(View view) {
                     if (webView.getHitTestResult().getType() == WebView.HitTestResult.IMAGE_TYPE
                             || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+                        MenuSheetView menuSheetView =
+                                new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, getFilenameFromURL(webView.getHitTestResult().getExtra()), new MenuSheetView.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem item) {
+                                        switch (item.getItemId()) {
+                                            case R.id.action_save_image:
+                                                WebView.HitTestResult hr = webView.getHitTestResult();
+                                                int type = hr.getType();
+                                                String imageUrl = hr.getExtra();
 
-                        Toast.makeText(MainActivity.this, "Imageeee", Toast.LENGTH_SHORT).show();
+                                                File file = new File(MainActivity.this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), getFilenameFromURL(imageUrl));
 
-
+                                                DownloadManager downloadManager = (DownloadManager) MainActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+                                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageUrl));
+                                                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+                                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
+                                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                                downloadManager.enqueue(request);
+                                                break;
+                                        }
+                                        if (bottomSheet.isSheetShowing()) {
+                                            bottomSheet.dismissSheet();
+                                        }
+                                        return true;
+                                    }
+                                });
+                        menuSheetView.inflateMenu(R.menu.menu_save_image);
+                        bottomSheet.showWithSheetView(menuSheetView);
+                        return true;
                     } else if (webView.getHitTestResult().getType() == WebView.HitTestResult.ANCHOR_TYPE
                             || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE) {
                         MenuSheetView menuSheetView =
-                                new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, "Action with this link: " + webView.getHitTestResult().getExtra(), new MenuSheetView.OnMenuItemClickListener() {
+                                new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, webView.getHitTestResult().getExtra(), new MenuSheetView.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem item) {
                                         switch (item.getItemId()) {
@@ -1291,6 +1313,20 @@ public class MainActivity extends AppCompatActivity {
                                                                 dialog.dismiss();
                                                             }
                                                         }).show();
+                                                break;
+                                            case R.id.action_copy_link:
+                                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Link", webView.getHitTestResult().getExtra());
+                                                clipboard.setPrimaryClip(clip);
+                                                Toast.makeText(MainActivity.this, "Link Copied", Toast.LENGTH_SHORT).show();
+                                                break;
+                                            case R.id.action_share_link:
+                                                String shareBody = webView.getHitTestResult().getExtra();
+                                                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                                                sharingIntent.setType("text/plain");
+                                                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Website Link");
+                                                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                                                startActivity(Intent.createChooser(sharingIntent, "Share link"));
                                                 break;
                                         }
                                         if (bottomSheet.isSheetShowing()) {
@@ -1323,6 +1359,21 @@ public class MainActivity extends AppCompatActivity {
 
             title.setText(webView.getTitle());
         }
+    }
+
+    /** Another method to get image file name */
+    protected String getFilenameFromURL(URL url) {
+        return getFilenameFromURL(url.getFile());
+    }
+
+    /** Get file name method from Jack*/
+    protected String getFilenameFromURL(String url) {
+        String[] p = url.split("/");
+        String s = p[p.length - 1];
+        if (s.indexOf("?") > -1) {
+            return s.substring(0, s.indexOf("?"));
+        }
+        return s;
     }
 
     /**

@@ -120,5 +120,9 @@
     <string name="menu_open_new">Open in new tab</string>
     <string name="menu_open_new_link">Open this link in new tab</string>
     <string name="menu_open_save_bookmark">Add to bookmarks</string>
+    <string name="menu_save_image">Save image</string>
+    <string name="menu_open_copy_link">Copy link</string>
+    <string name="menu_save_image_link">Copy image link</string>
+    <string name="menu_open_share_link">Share link</string>
 
 </resources>
