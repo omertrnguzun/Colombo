@@ -1267,12 +1267,33 @@ public class MainActivity extends AppCompatActivity {
 
                                                 File file = new File(MainActivity.this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), getFilenameFromURL(imageUrl));
 
-                                                DownloadManager downloadManager = (DownloadManager) MainActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
-                                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageUrl));
-                                                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-                                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
-                                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                                downloadManager.enqueue(request);
+                                                if (Build.VERSION.SDK_INT >= M) {
+                                                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+                                                    } else {
+                                                        if (imageUrl.contains("http") && imageUrl.contains("https")) {
+                                                            DownloadManager downloadManager = (DownloadManager) MainActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+                                                            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageUrl));
+                                                            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+                                                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
+                                                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                                            downloadManager.enqueue(request);
+                                                        } else {
+                                                            Toast.makeText(MainActivity.this, "Download can't download this image :(", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                } else {
+                                                    if (imageUrl.contains("http") && imageUrl.contains("https")) {
+                                                        DownloadManager downloadManager = (DownloadManager) MainActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+                                                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageUrl));
+                                                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+                                                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
+                                                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                                        downloadManager.enqueue(request);
+                                                    } else {
+                                                        Toast.makeText(MainActivity.this, "Download can't download this image :(", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
                                                 break;
                                         }
                                         if (bottomSheet.isSheetShowing()) {

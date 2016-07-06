@@ -35,4 +35,14 @@
 
     </header>
 
+    <header
+        android:icon="@drawable/ic_bug_report"
+        android:title="@string/pref_header_report">
+
+        <intent
+            android:targetPackage="com.riccardobusetti.colombo"
+            android:targetClass="com.riccardobusetti.colombo.activities.Gitty" />
+
+    </header>
+
 </preference-headers>
