@@ -15,8 +15,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -151,16 +149,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView bookmark_text, no_bookmark_text;
     private ImageView back, forward, bookmark;
     private Menu menu;
-
-    /**
-     * Class for black and white bitmap
-     */
-    private static void setLocked(ImageView v) {
-        ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
-        ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
-        v.setColorFilter(cf);
-    }
 
     /**
      * Detect if running on tablet screen
@@ -432,6 +420,10 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.action_new).setVisible(false);
         }
 
+        if (prefs.getBoolean("swipe_to_refresh", true)) {
+            menu.findItem(R.id.action_refresh).setVisible(false);
+        }
+
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
         searchView.setQueryHint("");
@@ -546,6 +538,9 @@ public class MainActivity extends AppCompatActivity {
                     webView.setVisibility(View.VISIBLE);
                     titleFrame.setVisibility(View.GONE);
                 }
+                break;
+            case R.id.action_refresh:
+                webView.reload();
                 break;
             case R.id.action_share:
                 String shareBody = webView.getUrl();
@@ -677,6 +672,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null) {
             locationManager.removeUpdates(locationListener);
@@ -1161,10 +1157,7 @@ public class MainActivity extends AppCompatActivity {
 
         cardDatas.clear();
 
-        //Prendere dati
         Cursor c = db.getAllData();
-
-        //Guardare nei dati e aggiungere ad ArrayList
         while (c.moveToNext()) {
             int id = c.getInt(0);
             String name = c.getString(1);
@@ -1172,11 +1165,9 @@ public class MainActivity extends AppCompatActivity {
 
             CardData cardData = new CardData(id, name, code);
 
-            //Aggiungere ad arraylist
             cardDatas.add(cardData);
         }
 
-        //Controllo se ArrayList non è vuota
         if (!(cardDatas.size() < 1)) {
             rv.setAdapter(adapter);
         }
@@ -1195,7 +1186,6 @@ public class MainActivity extends AppCompatActivity {
         DBAdapter db = new DBAdapter(this);
         db.openDB();
 
-        //Dichiarare cambiamenti
         long result = db.add(name, code);
 
         if (result > 0) {
@@ -1208,6 +1198,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         db.closeDB();
+    }
+
+    /**
+     * Another method to get image file name
+     */
+    protected String getFilenameFromURL(URL url) {
+        return getFilenameFromURL(url.getFile());
+    }
+
+    /**
+     * Get file name method from Jack
+     */
+    protected String getFilenameFromURL(String url) {
+        String[] p = url.split("/");
+        String s = p[p.length - 1];
+        if (s.indexOf("?") > -1) {
+            return s.substring(0, s.indexOf("?"));
+        }
+        return s;
     }
 
     /**
@@ -1279,7 +1288,7 @@ public class MainActivity extends AppCompatActivity {
                                                             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                                                             downloadManager.enqueue(request);
                                                         } else {
-                                                            Toast.makeText(MainActivity.this, "Download can't download this image :(", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(MainActivity.this, "Colombo can't download this image :(", Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
                                                 } else {
@@ -1314,11 +1323,11 @@ public class MainActivity extends AppCompatActivity {
                                         switch (item.getItemId()) {
                                             case R.id.action_open_new_link:
                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                                Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                                                intent.setData(Uri.parse(webView.getHitTestResult().getExtra()));
-                                                startActivity(intent);
-                                                break;
+                                                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                                    intent.setData(Uri.parse(webView.getHitTestResult().getExtra()));
+                                                    startActivity(intent);
+                                                    break;
                                                 } else {
                                                     Toast.makeText(MainActivity.this, "Tabs aren't avaliable for Android KitKat or <", Toast.LENGTH_SHORT).show();
                                                 }
@@ -1359,8 +1368,9 @@ public class MainActivity extends AppCompatActivity {
                         menuSheetView.inflateMenu(R.menu.menu_open_link);
                         bottomSheet.showWithSheetView(menuSheetView);
                         return true;
+                    } else {
+                        return false;
                     }
-                    return true;
                 }
             });
             webView.loadUrl(url);
@@ -1369,32 +1379,21 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap facIcon) {
-            swipeRefreshLayout.setRefreshing(true);
+            if (prefs.getBoolean("circle_progress", true)) {
+                swipeRefreshLayout.setRefreshing(true);
+            }
             checkInternet();
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            swipeRefreshLayout.setRefreshing(false);
-            swipeRefreshLayout.setEnabled(false);
+            if (prefs.getBoolean("circle_progress", true)) {
+                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setEnabled(false);
+            }
 
             title.setText(webView.getTitle());
         }
-    }
-
-    /** Another method to get image file name */
-    protected String getFilenameFromURL(URL url) {
-        return getFilenameFromURL(url.getFile());
-    }
-
-    /** Get file name method from Jack*/
-    protected String getFilenameFromURL(String url) {
-        String[] p = url.split("/");
-        String s = p[p.length - 1];
-        if (s.indexOf("?") > -1) {
-            return s.substring(0, s.indexOf("?"));
-        }
-        return s;
     }
 
     /**

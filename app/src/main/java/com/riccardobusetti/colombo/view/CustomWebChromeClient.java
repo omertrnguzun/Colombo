@@ -141,7 +141,7 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
                 alertDialog = new BottomSheetDialog(activity);
                 View v = activity.getLayoutInflater().inflate(R.layout.layout_popup, null, false);
 
-                v.setBackgroundColor(palette.getDarkVibrantColor(Color.parseColor("#80DEEA")));
+                v.setBackgroundColor(palette.getVibrantColor(Color.parseColor("#80DEEA")));
 
                 ((TextView) v.findViewById(R.id.title)).setText(url);
                 ((TextView) v.findViewById(R.id.content)).setText(message);
@@ -180,7 +180,7 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
                 alertDialog = new BottomSheetDialog(activity);
                 View v = activity.getLayoutInflater().inflate(R.layout.layout_popup, null, false);
 
-                v.setBackgroundColor(palette.getDarkVibrantColor(Color.parseColor("#80DEEA")));
+                v.setBackgroundColor(palette.getVibrantColor(Color.parseColor("#80DEEA")));
 
                 ((TextView) v.findViewById(R.id.title)).setText(url);
                 ((TextView) v.findViewById(R.id.content)).setText(message);
@@ -226,7 +226,7 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
                 alertDialog = new BottomSheetDialog(activity);
                 View v = activity.getLayoutInflater().inflate(R.layout.layout_popup, null, false);
 
-                v.setBackgroundColor(palette.getDarkVibrantColor(Color.parseColor("#80DEEA")));
+                v.setBackgroundColor(palette.getVibrantColor(Color.parseColor("#80DEEA")));
 
                 ((TextView) v.findViewById(R.id.title)).setText(message);
                 v.findViewById(R.id.content).setVisibility(View.GONE);

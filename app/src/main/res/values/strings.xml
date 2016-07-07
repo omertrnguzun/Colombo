@@ -125,5 +125,9 @@
     <string name="menu_save_image_link">Copy image link</string>
     <string name="menu_open_share_link">Share link</string>
     <string name="pref_header_report">Report bugs</string>
+    <string name="pref_swipe_to_refresh">Swipe to refresh</string>
+    <string name="pref_swipe_to_refresh_summary">Enable or Disable swipe to refresh if you don\'t like it or you have problems with it.</string>
+    <string name="pref_circle_progress">Circle progress</string>
+    <string name="pref_circle_progress_summary">Enable or Disable circle progress if you don\'t like it.</string>
 
 </resources>

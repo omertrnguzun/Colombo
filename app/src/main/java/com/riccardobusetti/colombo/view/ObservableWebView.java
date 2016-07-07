@@ -70,10 +70,12 @@ public class ObservableWebView extends WebView {
         webView = (WebView) getRootView().findViewById(R.id.webview);
         searchView = (SearchView) getRootView().findViewById(R.id.action_search);
 
-        if (t == 0 && webView.getScrollY() == 0) {
-            getRootView().findViewById(R.id.swipe_layout).setEnabled(true);
-        } else if (t > 0 && webView.getScrollY() > 0){
-            getRootView().findViewById(R.id.swipe_layout).setEnabled(false);
+        if (prefs.getBoolean("swipe_to_refresh", true)) {
+            if (t == 0 && webView.getScrollY() == 0) {
+                getRootView().findViewById(R.id.swipe_layout).setEnabled(true);
+            } else if (t > 0 && webView.getScrollY() > 0) {
+                getRootView().findViewById(R.id.swipe_layout).setEnabled(false);
+            }
         }
 
         if (t > 0 && searchView.getVisibility() == View.VISIBLE) {

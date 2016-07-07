@@ -25,6 +25,11 @@
                 app:showAsAction="never" />
 
             <item
+                android:id="@+id/action_refresh"
+                android:title="@string/menu_refresh"
+                app:showAsAction="never" />
+
+            <item
                 android:id="@+id/action_search_words"
                 android:title="@string/menu_search_words"
                 app:showAsAction="never" />

@@ -6,4 +6,16 @@
         android:title="@string/pref_dynamic_colors"
         android:summary="@string/pref_dynamic_colors_summary"/>
 
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="swipe_to_refresh"
+        android:title="@string/pref_swipe_to_refresh"
+        android:summary="@string/pref_swipe_to_refresh_summary"/>
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="circle_progress"
+        android:title="@string/pref_circle_progress"
+        android:summary="@string/pref_circle_progress_summary"/>
+
 </PreferenceScreen>

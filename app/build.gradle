@@ -8,8 +8,8 @@ android {
         applicationId "com.riccardobusetti.colombo"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 14
-        versionName "2.3"
+        versionCode 15
+        versionName "2.3.1"
         vectorDrawables.useSupportLibrary = true
     }
 
