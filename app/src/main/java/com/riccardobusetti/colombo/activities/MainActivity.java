@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity {
      * Detect if running on tablet screen
      */
     private static Boolean isTablet(Context context) {
-        if ((context.getResources().getConfiguration().screenLayout &
-                Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
+                && context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             return true;
         }
         return false;
@@ -1043,7 +1043,10 @@ public class MainActivity extends AppCompatActivity {
      * Set color class to change dinamically color of UI
      */
     private void setColor(int color) {
-        color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
+        if (prefs.getBoolean("light_icons", true)){
+        } else {
+            color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), StaticUtils.darkColor(color));
@@ -1393,6 +1396,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             title.setText(webView.getTitle());
+            searchView.setQuery(webView.getUrl(), false);
+
         }
     }
 
