@@ -68,7 +68,7 @@ public class ObservableWebView extends WebView {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         webView = (WebView) getRootView().findViewById(R.id.webview);
-        searchView = (SearchView) getRootView().findViewById(R.id.action_search);
+        searchView = (SearchView) getRootView().findViewById(R.id.searchView);
 
         if (prefs.getBoolean("swipe_to_refresh", true)) {
             if (t == 0 && webView.getScrollY() == 0) {

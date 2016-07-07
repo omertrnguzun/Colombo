@@ -32,7 +32,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -170,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
         setUpElements();
+
+        setUpSearchView();
 
         setUpBookmarksStructure();
 
@@ -382,6 +383,9 @@ public class MainActivity extends AppCompatActivity {
             webView.goBack();
         } else if (searchView.getVisibility() == View.VISIBLE) {
             searchView.setVisibility(View.GONE);
+            if (toolbar.getVisibility() == View.GONE) {
+                toolbar.setVisibility(View.VISIBLE);
+            }
         } else if (webView.canGoBack() && searchView.getVisibility() == View.VISIBLE) {
             searchView.setVisibility(View.GONE);
         } else if (bottomSheet.isSheetShowing()) {
@@ -423,103 +427,6 @@ public class MainActivity extends AppCompatActivity {
         if (prefs.getBoolean("swipe_to_refresh", true)) {
             menu.findItem(R.id.action_refresh).setVisible(false);
         }
-
-        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
-        searchView.setQueryHint("");
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setIconified(true);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                    webView.setVisibility(View.VISIBLE);
-                    titleFrame.setVisibility(View.GONE);
-                }
-
-                if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".com") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".gov") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".net") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".org") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".mil") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".edu") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".int") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".de") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".uk") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".it") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".jp") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".ru") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-
-                } else
-                    webView.loadUrl(getSearchPrefix() + query);
-
-                searchView.setIconified(false);
-                searchView.setVisibility(View.GONE);
-                searchView.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                return false;
-            }
-        });
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -733,6 +640,112 @@ public class MainActivity extends AppCompatActivity {
         no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
     }
 
+    private void setUpSearchView() {
+        searchView = (SearchView) findViewById(R.id.searchView);
+        searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
+        searchView.setQueryHint("");
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setIconified(true);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                    webView.setVisibility(View.VISIBLE);
+                    titleFrame.setVisibility(View.GONE);
+                }
+
+                if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".com") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".gov") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".net") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".org") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".mil") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".edu") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".int") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".de") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".uk") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".it") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".jp") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".ru") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+
+                } else
+                    webView.loadUrl(getSearchPrefix() + query);
+
+                searchView.setIconified(false);
+                searchView.setVisibility(View.GONE);
+                searchView.clearFocus();
+                if (toolbar.getVisibility() == View.GONE) {
+                    toolbar.setVisibility(View.VISIBLE);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                if (toolbar.getVisibility() == View.GONE) {
+                    toolbar.setVisibility(View.VISIBLE);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
     /**
      * Load the url based on actions
      */
@@ -851,9 +864,11 @@ public class MainActivity extends AppCompatActivity {
                     titleFrame.setVisibility(View.GONE);
                     searchView.setIconified(false);
                     searchView.setVisibility(View.VISIBLE);
+                    toolbar.setVisibility(View.GONE);
                 } else {
                     searchView.setIconified(false);
                     searchView.setVisibility(View.VISIBLE);
+                    toolbar.setVisibility(View.GONE);
                 }
             }
         });
