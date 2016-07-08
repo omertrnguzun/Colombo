@@ -195,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setAppCacheEnabled(true);
         webSettings.setDatabaseEnabled(true);
-        webSettings.setDomStorageEnabled(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         webSettings.setSaveFormData(true);
         webSettings.setUseWideViewPort(true);
@@ -382,13 +381,6 @@ public class MainActivity extends AppCompatActivity {
             webView.goBack();
         } else if (searchView.getVisibility() == View.VISIBLE) {
             searchView.setVisibility(View.GONE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                if (isIncognito) {
-                    toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar_white));
-                } else {
-                    toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
-                }
-            }
         } else if (webView.canGoBack() && searchView.getVisibility() == View.VISIBLE) {
             searchView.setVisibility(View.GONE);
         } else if (bottomSheet.isSheetShowing()) {
@@ -512,13 +504,6 @@ public class MainActivity extends AppCompatActivity {
                 searchView.setIconified(false);
                 searchView.setVisibility(View.GONE);
                 searchView.clearFocus();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (isIncognito) {
-                        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar_white));
-                    } else {
-                        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
-                    }
-                }
                 return false;
             }
 
@@ -531,13 +516,6 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (isIncognito) {
-                        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar_white));
-                    } else {
-                        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
-                    }
-                }
                 return false;
             }
         });
@@ -873,11 +851,9 @@ public class MainActivity extends AppCompatActivity {
                     titleFrame.setVisibility(View.GONE);
                     searchView.setIconified(false);
                     searchView.setVisibility(View.VISIBLE);
-                    toolbar.setNavigationIcon(null);
                 } else {
                     searchView.setIconified(false);
                     searchView.setVisibility(View.VISIBLE);
-                    toolbar.setNavigationIcon(null);
                 }
             }
         });
