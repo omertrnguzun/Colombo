@@ -739,7 +739,14 @@ public class MainActivity extends AppCompatActivity {
         settings = (ImageView) findViewById(R.id.settings);
 
         webView = (ObservableWebView) findViewById(R.id.webview);
-        webView.setVisibility(View.GONE);
+        if (urlIntent == null) {
+            if (prefs.getBoolean("home_bookmarks", true)) {
+                webView.setVisibility(View.GONE);
+            } else {
+                webView.setVisibility(View.VISIBLE);
+                titleFrame.setVisibility(View.GONE);
+            }
+        }
 
         if (isTablet(this)) {
             back = (ImageView) findViewById(R.id.back);
@@ -751,6 +758,22 @@ public class MainActivity extends AppCompatActivity {
         frameNoBookmarks.setVisibility(View.GONE);
         frameError = (FrameLayout) findViewById(R.id.frameError);
         no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
+            settings.setImageDrawable(drawable_light);
+            if (isTablet(this)) {
+                Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
+                back.setImageDrawable(drawable_back_white);
+
+                Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
+                forward.setImageDrawable(drawable_forward_white);
+
+                Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
+                bookmark.setImageDrawable(drawable_bookmark_white);
+            }
+        }
     }
 
     /**

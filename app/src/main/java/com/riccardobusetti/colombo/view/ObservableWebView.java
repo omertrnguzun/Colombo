@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -27,11 +28,11 @@ public class ObservableWebView extends WebView {
 
     private boolean canScrollVertically;
 
-    private WebView webView;
+    private ObservableWebView webView;
     private SearchView searchView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private CustomWebChromeClient webChromeClient;
-    private View previous, next;
 
     private SharedPreferences prefs;
 
@@ -55,11 +56,6 @@ public class ObservableWebView extends WebView {
         setNestedScrollingEnabled(true);
     }
 
-    public void setNavigationViews(View previous, View next) {
-        this.previous = previous;
-        this.next = next;
-    }
-
     public void setCanScrollVertically(boolean canScrollVertically) {
         this.canScrollVertically = canScrollVertically;
     }
@@ -67,17 +63,21 @@ public class ObservableWebView extends WebView {
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        webView = (WebView) getRootView().findViewById(R.id.webview);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        webView = (ObservableWebView) getRootView().findViewById(R.id.webview);
         searchView = (SearchView) getRootView().findViewById(R.id.action_search);
+        swipeRefreshLayout = (SwipeRefreshLayout) getRootView().findViewById(R.id.swipe_layout);
 
         if (prefs.getBoolean("swipe_to_refresh", true)) {
             if (t == 0 && webView.getScrollY() == 0) {
-                getRootView().findViewById(R.id.swipe_layout).setEnabled(true);
+                swipeRefreshLayout.setEnabled(true);
             } else if (t > 0 && webView.getScrollY() > 0) {
-                getRootView().findViewById(R.id.swipe_layout).setEnabled(false);
+                swipeRefreshLayout.setEnabled(false);
             }
         } else {
-            getRootView().findViewById(R.id.swipe_layout).setEnabled(false);
+            swipeRefreshLayout.setEnabled(false);
         }
 
         if (t > 0 && searchView.getVisibility() == View.VISIBLE) {
@@ -148,15 +148,12 @@ public class ObservableWebView extends WebView {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                if (next != null) next.setPressed(false);
-                if (previous != null) previous.setPressed(false);
-
                 endX = event.getX();
                 animate().x(0).setDuration(50).start();
 
                 if (prefs.getBoolean("gestures", true)) {
-                    if (startX - endX > 500 && canGoForward()) goForward();
-                    else if (startX - endX < -500 && canGoBack()) goBack();
+                    if (startX - endX > 700 && canGoForward()) goForward();
+                    else if (startX - endX < - 700 && canGoBack()) goBack();
                 }
 
                 stopNestedScroll();
@@ -165,11 +162,6 @@ public class ObservableWebView extends WebView {
 
         return super.onTouchEvent(event);
     }
-
-    /*private int getOverscrollDistance() {
-        if (next != null) return next.getWidth();
-        else return 200;
-    }*/
 
     @Override
     public boolean isNestedScrollingEnabled() {
