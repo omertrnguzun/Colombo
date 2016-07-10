@@ -190,26 +190,43 @@ public class MainActivity extends AppCompatActivity {
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         WebSettings webSettings = webView.getSettings();
+
+        /** Editable settings */
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setDatabaseEnabled(true);
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        webSettings.setSaveFormData(true);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
+        webSettings.setBuiltInZoomControls(prefs.getBoolean("zooming", true));
+
+        /** Zoom */
         webSettings.setDisplayZoomControls(false);
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.supportZoom();
-        webView.requestFocus();
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        webSettings.setAllowFileAccess(true);
+        webSettings.setSupportZoom(true);
+
+        /** Cache Settings */
         webSettings.setAppCacheEnabled(true);
+        webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+
+        /** Database support */
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setDatabasePath(this.getFilesDir().getPath() + getPackageName() + "/databases/");
+
+        /** File settings */
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAllowFileAccessFromFileURLs(true);
+
+        webView.setFocusable(true);
+        webView.setFocusableInTouchMode(true);
+        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webSettings.setDomStorageEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
+        }
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setSupportMultipleWindows(true);
+        webSettings.supportMultipleWindows();
+        webSettings.setUseWideViewPort(true);
+
+
         webView.setWebViewClient(new WebClient());
         webView.setDownloadListener(new DownloadListener() {
             @Override
@@ -672,6 +689,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+        webView.onPause();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null) {
@@ -682,13 +700,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        webView.onResume();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
         }
-
-        setPrefs();
 
         checkInternet();
     }
@@ -698,35 +715,37 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setUpElements() {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        urlIntent = getIntent().getDataString();
+
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+
         title = (TextView) findViewById(R.id.toolbar_title); // SearchBar Title
         appTitle = (TextView) findViewById(R.id.app_title); // Big Colombo TextView
         titleFrame = (FrameLayout) findViewById(R.id.big_title); // FrameLayout with Big Colombo TextView
+
         cardSearch = (CardView) findViewById(R.id.card_search); // CardView with SearchView
         search = findViewById(R.id.search); // FrameLayout of cardSearch
+
         webviewContainer = (FrameLayout) findViewById(R.id.webviewContainer);
+
         backround_bookmark_text = findViewById(R.id.backround_bookmarks);
         bookmark_text = (TextView) findViewById(R.id.text_bookmark);
         bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
         settings = (ImageView) findViewById(R.id.settings);
+
         webView = (ObservableWebView) findViewById(R.id.webview);
-        if (prefs.getBoolean("home_bookmarks", true)) {
-            webView.setVisibility(View.GONE);
-        } else {
-            webView.setVisibility(View.VISIBLE);
-            titleFrame.setVisibility(View.GONE);
-        }
-        urlIntent = getIntent().getDataString();
+        webView.setVisibility(View.GONE);
 
         if (isTablet(this)) {
             back = (ImageView) findViewById(R.id.back);
             forward = (ImageView) findViewById(R.id.forward);
             bookmark = (ImageView) findViewById(R.id.bookmark);
         }
+
         frameNoBookmarks = (FrameLayout) findViewById(R.id.frameNoBookmarks);
         frameNoBookmarks.setVisibility(View.GONE);
         frameError = (FrameLayout) findViewById(R.id.frameError);
@@ -738,6 +757,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void handleUrlLoading() {
         if (urlIntent != null) {
+            webView.loadUrl(urlIntent);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -748,9 +768,7 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                 });
-            }
-            webView.loadUrl(urlIntent);
-            if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+            } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                 webView.setVisibility(View.VISIBLE);
                 titleFrame.setVisibility(View.GONE);
             }
@@ -1043,7 +1061,7 @@ public class MainActivity extends AppCompatActivity {
      * Set color class to change dinamically color of UI
      */
     private void setColor(int color) {
-        if (prefs.getBoolean("light_icons", true)){
+        if (prefs.getBoolean("light_icons", true)) {
         } else {
             color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
         }
@@ -1081,17 +1099,6 @@ public class MainActivity extends AppCompatActivity {
         colorAnimation.start();
 
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
-    }
-
-    /**
-     * Method to set stuff when returning from settings
-     */
-    private void setPrefs() {
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
-        webSettings.setGeolocationEnabled(prefs.getBoolean("location_services", true));
-        webSettings.setSupportZoom(prefs.getBoolean("zooming", false));
-        setUpLightIcons();
     }
 
     /**
@@ -1231,7 +1238,8 @@ public class MainActivity extends AppCompatActivity {
             if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
                     || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
                     || url.startsWith("mailto:") || url.startsWith("intent://")
-                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
+                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")
+                    && webView.getHitTestResult() != null) {
 
                 MenuSheetView menuSheetView =
                         new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, "You want to open this link in the specific app?", new MenuSheetView.OnMenuItemClickListener() {
@@ -1385,6 +1393,7 @@ public class MainActivity extends AppCompatActivity {
             if (prefs.getBoolean("circle_progress", true)) {
                 swipeRefreshLayout.setRefreshing(true);
             }
+
             checkInternet();
         }
 
