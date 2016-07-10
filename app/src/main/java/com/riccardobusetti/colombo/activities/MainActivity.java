@@ -363,14 +363,15 @@ public class MainActivity extends AppCompatActivity {
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.swipeRefresh));
-        swipeRefreshLayout.setNestedScrollingEnabled(true);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                webView.reload();
-            }
-        });
+        if (prefs.getBoolean("swipe_to_refresh", true)) {
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    webView.reload();
+                }
+            });
+        }
     }
 
     @Override
@@ -1098,6 +1099,7 @@ public class MainActivity extends AppCompatActivity {
         });
         colorAnimation.start();
 
+
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
     }
 
@@ -1392,6 +1394,9 @@ public class MainActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap facIcon) {
             if (prefs.getBoolean("circle_progress", true)) {
                 swipeRefreshLayout.setRefreshing(true);
+            } else {
+                swipeRefreshLayout.setEnabled(false);
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             checkInternet();

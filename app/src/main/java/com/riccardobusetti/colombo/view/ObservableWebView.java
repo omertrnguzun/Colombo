@@ -76,6 +76,8 @@ public class ObservableWebView extends WebView {
             } else if (t > 0 && webView.getScrollY() > 0) {
                 getRootView().findViewById(R.id.swipe_layout).setEnabled(false);
             }
+        } else {
+            getRootView().findViewById(R.id.swipe_layout).setEnabled(false);
         }
 
         if (t > 0 && searchView.getVisibility() == View.VISIBLE) {
