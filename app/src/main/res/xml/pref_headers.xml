@@ -10,31 +10,25 @@
 
     <header
         android:title="@string/pref_header_intro">
-
         <intent
             android:targetPackage="com.riccardobusetti.colombo"
             android:targetClass="com.riccardobusetti.colombo.activities.MainIntroActivity" />
-
     </header>
 
     <header
         android:title="@string/pref_header_report"
         android:summary="@string/pref_header_report_summary">
-
         <intent
             android:targetPackage="com.riccardobusetti.colombo"
             android:targetClass="com.riccardobusetti.colombo.activities.Gitty" />
-
     </header>
 
     <header
         android:title="@string/pref_header_about"
         android:summary="@string/pref_header_about_summary">
-
         <intent
             android:targetPackage="com.riccardobusetti.colombo"
             android:targetClass="com.riccardobusetti.colombo.activities.AboutActivity" />
-
     </header>
 
 </preference-headers>

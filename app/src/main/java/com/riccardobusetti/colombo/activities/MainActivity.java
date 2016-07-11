@@ -17,7 +17,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -186,8 +185,6 @@ public class MainActivity extends AppCompatActivity {
         handleUrlLoading();
 
         handleLocation();
-
-        handleOrientation();
 
         //firstTimeSnackBar();
 
@@ -401,34 +398,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
+        if (webView.canGoBack() && searchView.getVisibility() == View.VISIBLE) {
+            searchView.setIconified(false);
+            searchView.setVisibility(View.GONE);
+            searchView.clearFocus();
+        } else if (webView.canGoBack()) {
             webView.goBack();
         } else if (searchView.getVisibility() == View.VISIBLE) {
+            searchView.setIconified(false);
             searchView.setVisibility(View.GONE);
-        } else if (webView.canGoBack() && searchView.getVisibility() == View.VISIBLE) {
-            searchView.setVisibility(View.GONE);
+            searchView.clearFocus();
         } else if (bottomSheet.isSheetShowing()) {
             bottomSheet.dismissSheet();
         } else {
-            MaterialDialog dialog = new MaterialDialog.Builder(this)
-                    .title("Exit Colombo")
-                    .content("Are you sure you want to exit Colombo ?")
-                    .positiveText("Yes")
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                            finish();
-                        }
-                    })
-                    .negativeText("No")
-                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .show();
+            super.onBackPressed();
         }
     }
 
@@ -694,6 +677,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (searchView.getVisibility() == View.VISIBLE) {
+                searchView.setVisibility(View.VISIBLE);
+            } else {
+                searchView.setVisibility(View.GONE);
+            }
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            if (searchView.getVisibility() == View.VISIBLE) {
+                searchView.setVisibility(View.VISIBLE);
+            } else {
+                searchView.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         webView.onPause();
@@ -846,16 +848,6 @@ public class MainActivity extends AppCompatActivity {
             };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
         }
-    }
-
-    /** Handle Device orientation change */
-    private void handleOrientation() {
-        mOrientationListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
-            @Override
-            public void onOrientationChanged(int orientation) {
-                Toast.makeText(MainActivity.this, "Orientation Changed", Toast.LENGTH_SHORT).show();
-            }
-        };
     }
 
     /**
