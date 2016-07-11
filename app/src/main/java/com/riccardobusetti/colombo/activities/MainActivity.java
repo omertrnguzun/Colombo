@@ -179,6 +179,8 @@ public class MainActivity extends AppCompatActivity {
 
         setUpClickListeners();
 
+        setUpLightIcons();
+
         handleUrlLoading();
 
         handleLocation();
@@ -691,6 +693,7 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         webView.onPause();
+        webView.pauseTimers();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null) {
@@ -702,6 +705,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         webView.onResume();
+        webView.resumeTimers();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null) {
@@ -782,6 +786,8 @@ public class MainActivity extends AppCompatActivity {
     private void handleUrlLoading() {
         if (urlIntent != null) {
             webView.loadUrl(urlIntent);
+            webView.setVisibility(View.VISIBLE);
+            titleFrame.setVisibility(View.GONE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -792,9 +798,6 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                 });
-            } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                webView.setVisibility(View.VISIBLE);
-                titleFrame.setVisibility(View.GONE);
             }
         } else {
             webView.loadUrl(getHomepage());
@@ -1298,8 +1301,7 @@ public class MainActivity extends AppCompatActivity {
             webView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (webView.getHitTestResult().getType() == WebView.HitTestResult.IMAGE_TYPE
-                            || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+                    if (webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
                         MenuSheetView menuSheetView =
                                 new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, getFilenameFromURL(webView.getHitTestResult().getExtra()), new MenuSheetView.OnMenuItemClickListener() {
                                     @Override
@@ -1351,7 +1353,8 @@ public class MainActivity extends AppCompatActivity {
                         bottomSheet.showWithSheetView(menuSheetView);
                         return true;
                     } else if (webView.getHitTestResult().getType() == WebView.HitTestResult.ANCHOR_TYPE
-                            || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE) {
+                            || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE
+                            || webView.getHitTestResult().getType() == WebView.HitTestResult.IMAGE_TYPE) {
                         MenuSheetView menuSheetView =
                                 new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, webView.getHitTestResult().getExtra(), new MenuSheetView.OnMenuItemClickListener() {
                                     @Override
@@ -1403,6 +1406,14 @@ public class MainActivity extends AppCompatActivity {
                                 });
                         menuSheetView.inflateMenu(R.menu.menu_open_link);
                         bottomSheet.showWithSheetView(menuSheetView);
+                        return true;
+                    } else if (webView.getHitTestResult().getType() == WebView.HitTestResult.UNKNOWN_TYPE) {
+                        Toast.makeText(MainActivity.this, "Unknown url scheme :_(", Toast.LENGTH_SHORT).show();
+                        return true;
+                    } else if (webView.getHitTestResult().getType() == WebView.HitTestResult.PHONE_TYPE) {
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse(webView.getHitTestResult().getExtra()));
+                        startActivity(intent);
                         return true;
                     } else {
                         return false;
