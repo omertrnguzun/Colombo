@@ -21,6 +21,7 @@ public class AboutActivity extends AppCompatActivity {
 
     private CoordinatorLayout coordinatorLayout;
     private TextView rate, github;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class AboutActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         setContentView(R.layout.activity_about);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setTitle("About");
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -84,7 +84,6 @@
 
         <activity
             android:name=".activities.Gitty">
-
         </activity>
 
     </application>

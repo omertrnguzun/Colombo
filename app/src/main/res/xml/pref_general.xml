@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/general_1_title">
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="javascript"
+        android:title="@string/pref_javascript"
+        android:summary="@string/pref_javascript_summary" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="location_services"
+        android:title="@string/pref_location"
+        android:summary="@string/pref_location_summary" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="zooming"
+        android:title="@string/pref_zoom"
+        android:summary="@string/pref_zoom_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/general_2_title">
+        <ListPreference
+            android:key="search_engine"
+            android:title="@string/search_engines"
+            android:summary="@string/search_engines_summary"
+            android:entries="@array/search_engines_titles"
+            android:defaultValue="0"
+            android:entryValues="@array/search_engines_values" />
+
+        <EditTextPreference
+            android:key="homepage"
+            android:title="@string/homepage"
+            android:summary="@string/homepage_sumamry"
+            android:defaultValue="" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/general_3_title">
+        <SwitchPreference
+            android:key="home_bookmarks"
+            android:title="@string/home_bookmarks"
+            android:summary="@string/home_bookmarks_description"
+            android:defaultValue="true"/>
+
+        <SwitchPreference
+            android:key="gestures"
+            android:title="@string/gestures"
+            android:summary="@string/gestures_description"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

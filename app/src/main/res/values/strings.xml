@@ -77,7 +77,7 @@
 
     <string name="title_1">Welcome to Colombo</string>
     <string name="description_1">Colombo is a lightweight, fast and beautifully designed Browser!</string>
-    <string name="pref_header_intro">Show Tutorial</string>
+    <string name="pref_header_intro">Guide</string>
     <string name="title_2">How to navigate?</string>
     <string name="description_2">Press the Search Icon on the SearchBar to find what you want! You can use http/www/normal search</string>
     <string name="title_3">Incognito Mode</string>
@@ -129,5 +129,13 @@
     <string name="pref_swipe_to_refresh_summary">Enable or Disable swipe to refresh if you don\'t like it or you have problems with it.</string>
     <string name="pref_circle_progress">Circle progress</string>
     <string name="pref_circle_progress_summary">Enable or Disable circle progress if you don\'t like it.</string>
+    <string name="general_2_title">Search</string>
+    <string name="general_3_title">Others</string>
+    <string name="pref_header_report_summary">Send Colombo issues on GitHub</string>
+    <string name="pref_header_about_summary">Tutorial is in WIP</string>
+    <string name="pref_header_general">General</string>
+    <string name="general_1_title">Website</string>
+    <string name="appearence_1_title">UI</string>
+    <string name="appearence_2_title">UX</string>
 
 </resources>

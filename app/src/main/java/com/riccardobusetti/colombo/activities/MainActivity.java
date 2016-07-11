@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -46,6 +47,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private RecyclerView rv;
     private MyAdapter adapter;
-    private Bundle newBundy = new Bundle();
+    private OrientationEventListener mOrientationListener;
 
     /**
      * UI Elements
@@ -184,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
         handleUrlLoading();
 
         handleLocation();
+
+        handleOrientation();
 
         //firstTimeSnackBar();
 
@@ -566,7 +570,7 @@ public class MainActivity extends AppCompatActivity {
                 String shareBody = webView.getUrl();
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Website Link");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, webView.getTitle());
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share link"));
                 break;
@@ -715,6 +719,12 @@ public class MainActivity extends AppCompatActivity {
         checkInternet();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        webView.destroy();
+    }
+
     /**
      * SetUp the UI elements importing them
      */
@@ -763,7 +773,7 @@ public class MainActivity extends AppCompatActivity {
         frameError = (FrameLayout) findViewById(R.id.frameError);
         no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
             appTitle.setTextColor(Color.parseColor("#FAFAFA"));
             Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
             settings.setImageDrawable(drawable_light);
@@ -836,6 +846,16 @@ public class MainActivity extends AppCompatActivity {
             };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
         }
+    }
+
+    /** Handle Device orientation change */
+    private void handleOrientation() {
+        mOrientationListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                Toast.makeText(MainActivity.this, "Orientation Changed", Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     /**
@@ -1286,6 +1306,7 @@ public class MainActivity extends AppCompatActivity {
                                         webView.loadUrl(url);
                                         break;
                                 }
+                                bottomSheet.setUseHardwareLayerWhileAnimating(true);
                                 if (bottomSheet.isSheetShowing()) {
                                     bottomSheet.dismissSheet();
                                 }
@@ -1336,6 +1357,7 @@ public class MainActivity extends AppCompatActivity {
                                                 }
                                                 break;
                                         }
+                                        bottomSheet.setUseHardwareLayerWhileAnimating(true);
                                         if (bottomSheet.isSheetShowing()) {
                                             bottomSheet.dismissSheet();
                                         }
@@ -1391,6 +1413,7 @@ public class MainActivity extends AppCompatActivity {
                                                 startActivity(Intent.createChooser(sharingIntent, "Share link"));
                                                 break;
                                         }
+                                        bottomSheet.setUseHardwareLayerWhileAnimating(true);
                                         if (bottomSheet.isSheetShowing()) {
                                             bottomSheet.dismissSheet();
                                         }
@@ -1546,6 +1569,7 @@ public class MainActivity extends AppCompatActivity {
                                                     .show();
                                             break;
                                     }
+                                    bottomSheet.setUseHardwareLayerWhileAnimating(true);
                                     if (bottomSheet.isSheetShowing()) {
                                         bottomSheet.dismissSheet();
                                     }

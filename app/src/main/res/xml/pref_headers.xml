@@ -1,22 +1,14 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
+        android:fragment="com.riccardobusetti.colombo.activities.SettingsActivity$GeneralPreferenceFragment"
+        android:title="@string/pref_header_general" />
+
+    <header
         android:fragment="com.riccardobusetti.colombo.activities.SettingsActivity$AppearancePreferenceFragment"
-        android:icon="@drawable/ic_palette"
         android:title="@string/pref_header_appearance" />
 
     <header
-        android:fragment="com.riccardobusetti.colombo.activities.SettingsActivity$WebsitePreferenceFragment"
-        android:icon="@drawable/ic_preferences"
-        android:title="@string/pref_header_website" />
-
-    <header
-        android:fragment="com.riccardobusetti.colombo.activities.SettingsActivity$BrowserPreferenceFragment"
-        android:icon="@drawable/ic_website"
-        android:title="@string/pref_header_browser" />
-
-    <header
-        android:icon="@drawable/ic_intro"
         android:title="@string/pref_header_intro">
 
         <intent
@@ -26,22 +18,22 @@
     </header>
 
     <header
-        android:icon="@drawable/ic_about"
-        android:title="@string/pref_header_about">
-
-        <intent
-            android:targetPackage="com.riccardobusetti.colombo"
-            android:targetClass="com.riccardobusetti.colombo.activities.AboutActivity" />
-
-    </header>
-
-    <header
-        android:icon="@drawable/ic_bug_report"
-        android:title="@string/pref_header_report">
+        android:title="@string/pref_header_report"
+        android:summary="@string/pref_header_report_summary">
 
         <intent
             android:targetPackage="com.riccardobusetti.colombo"
             android:targetClass="com.riccardobusetti.colombo.activities.Gitty" />
+
+    </header>
+
+    <header
+        android:title="@string/pref_header_about"
+        android:summary="@string/pref_header_about_summary">
+
+        <intent
+            android:targetPackage="com.riccardobusetti.colombo"
+            android:targetClass="com.riccardobusetti.colombo.activities.AboutActivity" />
 
     </header>
 

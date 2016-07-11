@@ -60,7 +60,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName) || AppearancePreferenceFragment.class.getName().equals(fragmentName)
-                || WebsitePreferenceFragment.class.getName().equals(fragmentName) || BrowserPreferenceFragment.class.getName().equals(fragmentName);
+                || GeneralPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -70,13 +70,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_appearance);
 
-            findPreference("dynamic_colors").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Restart Colombo for changes!", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                findPreference("dynamic_colors").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Restart Colombo for changes!", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 findPreference("light_icons").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -91,20 +94,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class WebsitePreferenceFragment extends PreferenceFragment {
+    public static class GeneralPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_website);
-        }
-    }
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class BrowserPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_browser);
-
+            addPreferencesFromResource(R.xml.pref_general);
         }
     }
 }
