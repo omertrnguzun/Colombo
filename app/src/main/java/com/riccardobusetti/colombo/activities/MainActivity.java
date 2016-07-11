@@ -1266,22 +1266,20 @@ public class MainActivity extends AppCompatActivity {
             if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
                     || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
                     || url.startsWith("mailto:") || url.startsWith("intent://")
-                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")
-                    && webView.getHitTestResult() != null) {
+                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
 
                 MenuSheetView menuSheetView =
-                        new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, "You want to open this link in the specific app?", new MenuSheetView.OnMenuItemClickListener() {
+                        new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, url, new MenuSheetView.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
                                 switch (item.getItemId()) {
                                     case R.id.action_open:
-                                        if (getIntent().getAction() != null) {
-                                            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                        try {
+                                            Intent intent = new Intent(Intent.ACTION_VIEW);
                                             intent.setData(Uri.parse(url));
                                             startActivity(intent);
-                                        } else {
-                                            Toast.makeText(MainActivity.this, R.string.erro_action_view, Toast.LENGTH_SHORT).show();
+                                        } catch (Exception exc) {
+                                            Toast.makeText(MainActivity.this, "Colombo didn't know this link :_(", Toast.LENGTH_SHORT).show();
                                         }
                                         break;
                                     case R.id.action_continue:
@@ -1311,23 +1309,18 @@ public class MainActivity extends AppCompatActivity {
                                                 WebView.HitTestResult hr = webView.getHitTestResult();
                                                 int type = hr.getType();
                                                 String imageUrl = hr.getExtra();
-
                                                 File file = new File(MainActivity.this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), getFilenameFromURL(imageUrl));
 
                                                 if (Build.VERSION.SDK_INT >= M) {
                                                     if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                                                     } else {
-                                                        if (imageUrl.contains("http") && imageUrl.contains("https")) {
                                                             DownloadManager downloadManager = (DownloadManager) MainActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
                                                             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageUrl));
                                                             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
                                                             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
                                                             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                                                             downloadManager.enqueue(request);
-                                                        } else {
-                                                            Toast.makeText(MainActivity.this, "Colombo can't download this image :(", Toast.LENGTH_SHORT).show();
-                                                        }
                                                     }
                                                 } else {
                                                     if (imageUrl.contains("http") && imageUrl.contains("https")) {
