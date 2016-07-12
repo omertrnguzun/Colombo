@@ -16,13 +16,13 @@
             android:targetClass="com.riccardobusetti.colombo.activities.MainIntroActivity" />
     </header>
 
-    <header
+    <!--<header
         android:title="@string/pref_header_report"
         android:summary="@string/pref_header_report_summary">
         <intent
             android:targetPackage="com.riccardobusetti.colombo"
-            android:targetClass="com.riccardobusetti.colombo.activities.Gitty" />
-    </header>
+            android:targetClass="com.riccardobusetti.colombo.activities.FeedbackActivity" />
+    </header>-->
 
     <header
         android:title="@string/pref_header_about">

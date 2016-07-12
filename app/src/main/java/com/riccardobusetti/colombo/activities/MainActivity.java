@@ -1423,6 +1423,7 @@ public class MainActivity extends AppCompatActivity {
                                                 } else {
                                                     Toast.makeText(MainActivity.this, "Tabs aren't avaliable for Android KitKat or <", Toast.LENGTH_SHORT).show();
                                                 }
+                                                break;
                                             case R.id.action_open_save_bookmark:
                                                 new MaterialDialog.Builder(MainActivity.this)
                                                         .title("Add Bookmark?")
