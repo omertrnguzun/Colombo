@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private boolean isIncognito;
     private boolean desktop = true;
+    private boolean immersive = true;
 
     /**
      * Strings Vars
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
         handleLocation();
 
-        //firstTimeSnackBar();
+        firstTimeSnackBar();
 
         /** Set Webview params */
         //webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
@@ -429,6 +430,8 @@ public class MainActivity extends AppCompatActivity {
 
         this.menu = menu;
 
+        menu.findItem(R.id.action_immersive).setVisible(false);
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             menu.findItem(R.id.action_new).setVisible(false);
         }
@@ -592,6 +595,20 @@ public class MainActivity extends AppCompatActivity {
                     webView.getSettings().setUserAgentString("");
                     webView.reload();
                     desktop = true;
+                }
+                break;
+            case R.id.action_immersive:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                }
+                if (immersive) {
+
+                    immersive = false;
+                } else {
+
+                    immersive = true;
                 }
                 break;
             case R.id.action_incognito:

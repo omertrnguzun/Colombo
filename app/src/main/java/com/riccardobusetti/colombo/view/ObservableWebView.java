@@ -117,17 +117,20 @@ public class ObservableWebView extends WebView {
             case MotionEvent.ACTION_MOVE:
                 float deltaY = startY - eventY;
 
-                if (dispatchNestedPreScroll(0, (int) deltaY, scrollConsumed, scrollOffset)) {
-                    deltaY -= scrollConsumed[1];
-                    startY = eventY - scrollOffset[1];
-                    event.offsetLocation(0, -scrollOffset[1]);
-                    nestedOffsetY += scrollOffset[1];
-                }
+                if (prefs.getBoolean("sticky_header", true)) {
+                } else {
+                    if (dispatchNestedPreScroll(0, (int) deltaY, scrollConsumed, scrollOffset)) {
+                        deltaY -= scrollConsumed[1];
+                        startY = eventY - scrollOffset[1];
+                        event.offsetLocation(0, -scrollOffset[1]);
+                        nestedOffsetY += scrollOffset[1];
+                    }
 
-                if (dispatchNestedScroll(0, scrollOffset[1], 0, (int) deltaY, scrollOffset)) {
-                    event.offsetLocation(0, scrollOffset[1]);
-                    nestedOffsetY += scrollOffset[1];
-                    startY -= scrollOffset[1];
+                    if (dispatchNestedScroll(0, scrollOffset[1], 0, (int) deltaY, scrollOffset)) {
+                        event.offsetLocation(0, scrollOffset[1]);
+                        nestedOffsetY += scrollOffset[1];
+                        startY -= scrollOffset[1];
+                    }
                 }
 
                 if (prefs.getBoolean("gestures", true)) {
