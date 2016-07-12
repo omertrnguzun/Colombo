@@ -82,10 +82,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activities.Gitty">
-        </activity>
-
     </application>
 
 </manifest>

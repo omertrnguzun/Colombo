@@ -2,23 +2,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/general_1_title">
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="javascript"
-        android:title="@string/pref_javascript"
-        android:summary="@string/pref_javascript_summary" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="javascript"
+            android:title="@string/pref_javascript"
+            android:summary="@string/pref_javascript_summary" />
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="location_services"
-        android:title="@string/pref_location"
-        android:summary="@string/pref_location_summary" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="location_services"
+            android:title="@string/pref_location"
+            android:summary="@string/pref_location_summary" />
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="zooming"
-        android:title="@string/pref_zoom"
-        android:summary="@string/pref_zoom_summary" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="zooming"
+            android:title="@string/pref_zoom"
+            android:summary="@string/pref_zoom_summary" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="cookies"
+            android:title="@string/pref_cookies"
+            android:summary="@string/pref_cookies_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/general_2_title">
@@ -35,6 +41,14 @@
             android:title="@string/homepage"
             android:summary="@string/homepage_sumamry"
             android:defaultValue="" />
+
+        <ListPreference
+            android:key="show_open_dialog"
+            android:title="@string/search_open_dialog"
+            android:summary="@string/search_open_dialog_summary"
+            android:entries="@array/search_open_dialog_titles"
+            android:defaultValue="0"
+            android:entryValues="@array/search_open_dialog_values" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/general_3_title">
@@ -42,13 +56,13 @@
             android:key="home_bookmarks"
             android:title="@string/home_bookmarks"
             android:summary="@string/home_bookmarks_description"
-            android:defaultValue="true"/>
+            android:defaultValue="true" />
 
         <SwitchPreference
             android:key="gestures"
             android:title="@string/gestures"
             android:summary="@string/gestures_description"
-            android:defaultValue="true"/>
+            android:defaultValue="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>

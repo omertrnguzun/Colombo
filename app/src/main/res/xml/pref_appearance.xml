@@ -1,17 +1,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/appearence_2_title">
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="swipe_to_refresh"
-        android:title="@string/pref_swipe_to_refresh"
-        android:summary="@string/pref_swipe_to_refresh_summary"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="swipe_to_refresh"
+            android:title="@string/pref_swipe_to_refresh"
+            android:summary="@string/pref_swipe_to_refresh_summary" />
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="circle_progress"
-        android:title="@string/pref_circle_progress"
-        android:summary="@string/pref_circle_progress_summary"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="circle_progress"
+            android:title="@string/pref_circle_progress"
+            android:summary="@string/pref_circle_progress_summary" />
     </PreferenceCategory>
 
 </PreferenceScreen>

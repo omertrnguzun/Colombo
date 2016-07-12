@@ -8,12 +8,17 @@
     <color name="colorAccentDark">#1DE9B6</color>
 
     <color name="colorPrimaryIncognito">#263238</color>
-    <color name="colorPrimaryDarkIncognito">#1B2123</color>
-    <color name="colorAccentIncognito">#37474F</color>
 
     <color name="colorPrimarySplash">#F5F5F5</color>
     <color name="colorPrimaryDarkSplash">#E0E0E0</color>
     <color name="colorAccentSplash">#64FFDA</color>
+
+    <color name="colorSlide1">#283593</color>
+    <color name="colorSlide1Dark">#1A237E</color>
+    <color name="colorSlide2">#03A9F4</color>
+    <color name="colorSlide2Dark">#0288D1</color>
+    <color name="colorSlide3">#5E35B1</color>
+    <color name="colorSlide3Dark">#4527A0</color>
 
     <color name="swipeRefresh">#757575</color>
     <color name="swipeRefreshIncognito">#424242</color>
@@ -25,6 +30,5 @@
     <color name="colorTextDarkGrey">#4B4B4B</color>
 
     <color name="colorIconGrey">#696969</color>
-    <color name="colorIconWhite">#FAFAFA</color>
 
 </resources>

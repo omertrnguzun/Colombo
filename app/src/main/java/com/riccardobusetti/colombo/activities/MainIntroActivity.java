@@ -20,15 +20,29 @@ public class MainIntroActivity extends IntroActivity {
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        /**
-         * Standard slide (like Google's intros)
-         */
+
         addSlide(new SimpleSlide.Builder()
                 .title(R.string.title_1)
                 .description(R.string.description_1)
-                .image(R.drawable.ic_splash)
-                .background(R.color.colorPrimary)
-                .backgroundDark(R.color.colorPrimaryDark)
+                .image(R.drawable.ic_slide_1)
+                .background(R.color.colorSlide1)
+                .backgroundDark(R.color.colorSlide1Dark)
+                .build());
+
+        addSlide(new SimpleSlide.Builder()
+                .title(R.string.title_2)
+                .description(R.string.description_2)
+                .image(R.drawable.ic_slide_2)
+                .background(R.color.colorSlide2)
+                .backgroundDark(R.color.colorSlide2Dark)
+                .build());
+
+        addSlide(new SimpleSlide.Builder()
+                .title(R.string.title_3)
+                .description(R.string.description_3)
+                .image(R.drawable.ic_slide_3)
+                .background(R.color.colorSlide3)
+                .backgroundDark(R.color.colorSlide3Dark)
                 .build());
     }
 
@@ -38,6 +52,4 @@ public class MainIntroActivity extends IntroActivity {
         Intent intent1 = new Intent(MainIntroActivity.this, MainActivity.class);
         intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
-
-
 }

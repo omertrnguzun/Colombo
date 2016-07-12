@@ -53,6 +53,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_CODE = 1234;
     private static final int STORAGE_PERMISSION_CODE = 5678;
     private static final int SEARCH_GOOGLE = 0, SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
+    private static final int OPEN_ALWAYS = 0, OPEN_APP = 1, OPEN_LINK = 2;
 
     /**
      * Array Vars
@@ -209,26 +211,31 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
+        /** Cookie Settings */
+        if (prefs.getBoolean("cookies", true)) {
+            CookieManager.getInstance().setAcceptCookie(true);
+        }
+
         /** Database support */
         webSettings.setDatabaseEnabled(true);
         webSettings.setDatabasePath(this.getFilesDir().getPath() + getPackageName() + "/databases/");
+        webSettings.setDomStorageEnabled(true);
 
         /** File settings */
         webSettings.setAllowFileAccess(true);
         webSettings.setAllowFileAccessFromFileURLs(true);
 
+        /** UI Mode */
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);
+
+        /** Other settings */
         webView.setFocusable(true);
         webView.setFocusableInTouchMode(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        webSettings.setDomStorageEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
         }
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setSupportMultipleWindows(true);
-        webSettings.supportMultipleWindows();
-        webSettings.setUseWideViewPort(true);
-
 
         webView.setWebViewClient(new WebClient());
         webView.setDownloadListener(new DownloadListener() {
@@ -568,6 +575,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_search_words:
                 webView.showFindDialog(null, true);
+                InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 break;
             case R.id.action_dekstop:
                 if (item.isChecked()) {
@@ -680,19 +689,9 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (searchView.getVisibility() == View.VISIBLE) {
-                searchView.setVisibility(View.VISIBLE);
-            } else {
-                searchView.setVisibility(View.GONE);
-            }
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            if (searchView.getVisibility() == View.VISIBLE) {
-                searchView.setVisibility(View.VISIBLE);
-            } else {
-                searchView.setVisibility(View.GONE);
-            }
-        }
+        searchView.setVisibility(View.GONE);
+        searchView.setIconified(false);
+        searchView.clearFocus();
     }
 
     @Override
@@ -1279,41 +1278,87 @@ public class MainActivity extends AppCompatActivity {
                     || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
                     || url.startsWith("mailto:") || url.startsWith("intent://")
                     || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
+                switch (Integer.parseInt(prefs.getString("show_open_dialog", "0"))) {
+                    case OPEN_ALWAYS:
+                        MenuSheetView menuSheetView =
+                                new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, url, new MenuSheetView.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem item) {
+                                        switch (item.getItemId()) {
+                                            case R.id.action_open:
+                                                try {
+                                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                    intent.setData(Uri.parse(url));
+                                                    startActivity(intent);
+                                                } catch (Exception exc) {
+                                                    Toast.makeText(MainActivity.this, "Colombo didn't know this link :_(", Toast.LENGTH_SHORT).show();
+                                                }
+                                                break;
+                                            case R.id.action_continue:
+                                                webView.loadUrl(url);
+                                                break;
 
-                MenuSheetView menuSheetView =
-                        new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, url, new MenuSheetView.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                switch (item.getItemId()) {
-                                    case R.id.action_open:
-                                        try {
-                                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                                            intent.setData(Uri.parse(url));
-                                            startActivity(intent);
-                                        } catch (Exception exc) {
-                                            Toast.makeText(MainActivity.this, "Colombo didn't know this link :_(", Toast.LENGTH_SHORT).show();
                                         }
-                                        break;
-                                    case R.id.action_continue:
-                                        webView.loadUrl(url);
-                                        break;
-                                }
-                                bottomSheet.setUseHardwareLayerWhileAnimating(true);
-                                if (bottomSheet.isSheetShowing()) {
-                                    bottomSheet.dismissSheet();
-                                }
-                                return true;
-                            }
-                        });
-                menuSheetView.inflateMenu(R.menu.menu_intent_leave_colombo);
-                bottomSheet.showWithSheetView(menuSheetView);
-                return true;
+                                        bottomSheet.setUseHardwareLayerWhileAnimating(true);
+                                        if (bottomSheet.isSheetShowing()) {
+                                            bottomSheet.dismissSheet();
+                                        }
+                                        return true;
+                                    }
+                                });
+                        menuSheetView.inflateMenu(R.menu.menu_intent_leave_colombo);
+                        bottomSheet.showWithSheetView(menuSheetView);
+                        return true;
+                    case OPEN_APP:
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            startActivity(intent);
+                        } catch (Exception exc) {
+                            Toast.makeText(MainActivity.this, "Colombo didn't know this link :_(", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    case OPEN_LINK:
+                        webView.loadUrl(url);
+                        return true;
+                    default:
+                        MenuSheetView menuSheetView2 =
+                                new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, url, new MenuSheetView.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem item) {
+                                        switch (item.getItemId()) {
+                                            case R.id.action_open:
+                                                try {
+                                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                    intent.setData(Uri.parse(url));
+                                                    startActivity(intent);
+                                                } catch (Exception exc) {
+                                                    Toast.makeText(MainActivity.this, "Colombo didn't know this link :_(", Toast.LENGTH_SHORT).show();
+                                                }
+                                                break;
+                                            case R.id.action_continue:
+                                                webView.loadUrl(url);
+                                                break;
+
+                                        }
+                                        bottomSheet.setUseHardwareLayerWhileAnimating(true);
+                                        if (bottomSheet.isSheetShowing()) {
+                                            bottomSheet.dismissSheet();
+                                        }
+                                        return true;
+                                    }
+                                });
+                        menuSheetView2.inflateMenu(R.menu.menu_intent_leave_colombo);
+                        bottomSheet.showWithSheetView(menuSheetView2);
+                        return true;
+                }
             }
+
             webView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if (webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
-                        MenuSheetView menuSheetView =
+                        MenuSheetView menuSheetView1 =
                                 new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, getFilenameFromURL(webView.getHitTestResult().getExtra()), new MenuSheetView.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem item) {
@@ -1356,12 +1401,13 @@ public class MainActivity extends AppCompatActivity {
                                         return true;
                                     }
                                 });
-                        menuSheetView.inflateMenu(R.menu.menu_save_image);
-                        bottomSheet.showWithSheetView(menuSheetView);
+                        menuSheetView1.inflateMenu(R.menu.menu_save_image);
+                        bottomSheet.showWithSheetView(menuSheetView1);
                         return true;
                     } else if (webView.getHitTestResult().getType() == WebView.HitTestResult.ANCHOR_TYPE
                             || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE
-                            || webView.getHitTestResult().getType() == WebView.HitTestResult.IMAGE_TYPE) {
+                            || webView.getHitTestResult().getType() == WebView.HitTestResult.IMAGE_TYPE
+                            || webView.getHitTestResult().getType() == WebView.HitTestResult.UNKNOWN_TYPE) {
                         MenuSheetView menuSheetView =
                                 new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, webView.getHitTestResult().getExtra(), new MenuSheetView.OnMenuItemClickListener() {
                                     @Override
@@ -1414,9 +1460,6 @@ public class MainActivity extends AppCompatActivity {
                                 });
                         menuSheetView.inflateMenu(R.menu.menu_open_link);
                         bottomSheet.showWithSheetView(menuSheetView);
-                        return true;
-                    } else if (webView.getHitTestResult().getType() == WebView.HitTestResult.UNKNOWN_TYPE) {
-                        Toast.makeText(MainActivity.this, "Unknown url scheme :_(", Toast.LENGTH_SHORT).show();
                         return true;
                     } else if (webView.getHitTestResult().getType() == WebView.HitTestResult.PHONE_TYPE) {
                         Intent intent = new Intent(Intent.ACTION_DIAL);

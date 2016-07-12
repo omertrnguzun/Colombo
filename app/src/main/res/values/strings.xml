@@ -7,50 +7,62 @@
     <string name="menu_refresh">Refresh</string>
     <string name="menu_incognito">Incognito Mode</string>
     <string name="menu_share">Share</string>
-    <string name="menu_perms">Permissions</string>
     <string name="menu_settings">Settings</string>
 
 
-    <string name="dialog_close">CLOSE</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">CANCEL</string>
-    <string name="dialog_dismiss">DISMISS</string>
 
-    <string name="msg_no_history">You don\'t have any history</string>
     <string name="msg_upload_failed">Upload failed >:(</string>
-    <string name="msg_connection_failed">No connection :_(</string>
-
-    <string name="action_network_settings">Network Settings</string>
-    <string name="loading_video">Loading Video</string>
-
-    <string name="title_activity_settings">Settings</string>
 
     <string name="pref_header_appearance">Appearance</string>
 
     <string name="pref_dynamic_colors">Dynamic Colors</string>
-    <string name="pref_dynamic_colors_summary">Affects whether the color scheme changes based on the website.</string>
+    <string name="pref_dynamic_colors_summary">Affects whether the color scheme changes based on the website</string>
 
     <string name="navbar_tint">Navigation Bar Tint</string>
-    <string name="navbar_tint_summary">Tints the navigation bar to the color scheme of the app. Note that this will not work on devices that have physical navigation buttons.</string>
-
-    <string name="pref_header_website">Website Settings</string>
+    <string name="navbar_tint_summary">Tints the navigation bar to the color scheme of the app. Note that this will not work on devices that have physical navigation button</string>
 
     <string name="pref_javascript">Enable JavaScript</string>
-    <string name="pref_javascript_summary">Changes whether JavaScript is run when a website is loaded. With JavaScript disabled you can navigate faster!</string>
-
-    <string name="pref_desktop">Show Desktop Site</string>
-    <string name="pref_desktop_summary">Forces websites to load the desktop version.</string>
+    <string name="pref_javascript_summary">Changes whether JavaScript is run when a website is loaded. With JavaScript disabled you can navigate faster</string>
 
     <string name="pref_location">Location Services</string>
-    <string name="pref_location_summary">Allow websites to access your location.</string>
+    <string name="pref_location_summary">Allow websites to access your location</string>
 
     <string name="pref_zoom">Enable Zooming</string>
-    <string name="pref_zoom_summary">Allows websites to be zoomed in and out using the pinch gesture.</string>
+    <string name="pref_zoom_summary">Allows websites to be zoomed in and out using the pinch gesture</string>
 
-    <string name="pref_header_browser">Browser Settings</string>
+    <string name="pref_header_about">About Colombo</string>
 
     <string name="search_engines">Change the Search Engine</string>
-    <string name="search_engines_summary">Changes the search engine used if the browser input isn\'t a url.</string>
+    <string name="search_engines_summary">Changes the search engine used if the browser input isn\'t a url</string>
+
+    <string name="pref_light_icons">Dark statusbar icons</string>
+    <string name="pref_light_icons_summary">Default enabled, disable if you prefer old color theming and wish to have white icons on status bar</string>
+
+    <string name="pref_header_report_summary">Send an email to me</string>
+    <string name="pref_header_about_summary">Learn how to use Colombo</string>
+
+    <string name="pref_header_report">Report bugs</string>
+    <string name="pref_header_intro">Guide</string>
+
+    <string name="pref_swipe_to_refresh">Swipe to refresh</string>
+    <string name="pref_swipe_to_refresh_summary">Enable or Disable swipe to refresh if you don\'t like it or you have problems with it</string>
+
+    <string name="pref_circle_progress">Circle progress</string>
+    <string name="pref_circle_progress_summary">Enable or Disable circle progress if you don\'t like it</string>
+
+    <string name="search_open_dialog">Open Outside</string>
+    <string name="search_open_dialog_summary">Change open bottomsheet parameters</string>
+
+    <string name="pref_cookies">Enable Cookies</string>
+    <string name="pref_cookies_summary">Cookies are used by the servers to keep in memory your login</string>
+
+    <string name="homepage">Homepage</string>
+    <string name="homepage_sumamry">Changes the initial page loaded when the browser is opened. Leave blank to load the default search engine instead.</string>
+
+    <string name="home_bookmarks">Home with Bookmarks</string>
+    <string name="home_bookmarks_description">Launch the bookmark screen on start, instead of homepage</string>
 
     <string-array name="search_engines_titles">
         <item>Google</item>
@@ -66,76 +78,61 @@
         <item>3</item>
     </string-array>
 
-    <string name="homepage">Homepage</string>
-    <string name="homepage_sumamry">Changes the initial page loaded when the browser is opened. Leave blank to load the default search engine instead.</string>
+    <string-array name="search_open_dialog_titles">
+        <item>Open Always</item>
+        <item>Open App (if avaliable)</item>
+        <item>Open Link</item>
+    </string-array>
 
-    <string name="suggestions">Show Suggestions</string>
-    <string name="suggestions_summary">Choose whether to suggest queries in the search bar.</string>
+    <string-array name="search_open_dialog_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
-    <string name="clear_history">Clear History</string>
-    <string name="clear_history_summary">Select \'clear app data\' on the next screen to clear all recent queries.</string>
-
-    <string name="title_1">Welcome to Colombo</string>
-    <string name="description_1">Colombo is a lightweight, fast and beautifully designed Browser!</string>
-    <string name="pref_header_intro">Guide</string>
-    <string name="title_2">How to navigate?</string>
-    <string name="description_2">Press the Search Icon on the SearchBar to find what you want! You can use http/www/normal search</string>
-    <string name="title_3">Incognito Mode</string>
-    <string name="description_3">If you want privacy and prefer not to save stuff like cache and cookies on your device, enable this mode in the menu!</string>
-    <string name="title_storage">Downloads in Colombo</string>
-    <string name="description_storage">Colombo has a built-in Download Manager, for downloading stuff on your device Colombo must have access to your storage to write the files! (SKIP THIS IF ALREADY GRANTED)</string>
-    <string name="title_gps">Location in Colombo</string>
-    <string name="description_gps">Colombo has built-in GPS location capabilities. To use webapps that require location Colombo must have access to your GPS. (SKIP THIS IF ALREADY GRANTED)</string>
-    <string name="menu_new">New Tab</string>
-    <string name="pref_header_about">About Colombo</string>
-    <string name="menu_dekstop">Desktop View</string>
-    <string name="menu_add">Add to home</string>
-    <string name="gestures">Gestures</string>
-    <string name="gestures_description">Disable or Enable Gestures, like swiping from left to right</string>
-    <string name="pref_dark">Dark Mode</string>
-    <string name="pref_dark_summary">Use dark theme instead of white.</string>
-    <string name="menu_search_words">Find in page</string>
-    <string name="title_activity_bookmarks">BookmarksActivity</string>
-    <string name="menu_bookmark">Bookmarks</string>
-    <string name="app_name_incognito">Colombo Incognito</string>
-    <string name="pref_header_permissions">Check Permissions</string>
-    <string name="pref_light_icons">Dark statusbar icons</string>
-    <string name="pref_light_icons_summary">Default enabled, disable if you prefer old color theming and wish to have white icons on status bar.</string>
-    <string name="no_connection">For continue using Colombo you must have Internet</string>
-    <string name="menu_rename">Rename</string>
-    <string name="menu_delete">Delete</string>
-    <string name="menu_continue">Continue</string>
-    <string name="menu_open">Open</string>
-    <string name="menu_back">Return to previous app</string>
-    <string name="search">Search</string>
-    <string name="tutorial">You want to see the tutorial?</string>
-    <string name="home_bookmarks">Home with Bookmarks</string>
-    <string name="home_bookmarks_description">Launch the bookmark screen on start, instead of homepage.</string>
-    <string name="description_about">A fast, light and</string>
-    <string name="description_about_2">beautiful browser</string>
-    <string name="team_text">The Team</string>
-    <string name="libs_text">Libraries</string>
-    <string name="links_text">More</string>
-    <string name="erro_action_view">Colombo can\'t open this app outside</string>
     <string name="menu_open_new">Open in new tab</string>
     <string name="menu_open_new_link">Open this link in new tab</string>
     <string name="menu_open_save_bookmark">Add to bookmarks</string>
     <string name="menu_save_image">Save image</string>
     <string name="menu_open_copy_link">Copy link</string>
-    <string name="menu_save_image_link">Copy image link</string>
     <string name="menu_open_share_link">Share link</string>
-    <string name="pref_header_report">Report bugs</string>
-    <string name="pref_swipe_to_refresh">Swipe to refresh</string>
-    <string name="pref_swipe_to_refresh_summary">Enable or Disable swipe to refresh if you don\'t like it or you have problems with it.</string>
-    <string name="pref_circle_progress">Circle progress</string>
-    <string name="pref_circle_progress_summary">Enable or Disable circle progress if you don\'t like it.</string>
+
+    <string name="menu_rename">Rename</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_continue">Continue</string>
+    <string name="menu_open">Open</string>
+    <string name="menu_new">New Tab</string>
+    <string name="menu_dekstop">Desktop View</string>
+    <string name="menu_add">Add to home</string>
+
     <string name="general_2_title">Search</string>
     <string name="general_3_title">Others</string>
-    <string name="pref_header_report_summary">Send Colombo issues on GitHub</string>
-    <string name="pref_header_about_summary">Tutorial is in WIP</string>
     <string name="pref_header_general">General</string>
     <string name="general_1_title">Website</string>
     <string name="appearence_1_title">UI</string>
     <string name="appearence_2_title">UX</string>
+
+    <string name="title_1">Gestures</string>
+    <string name="description_1">Go back and forward with a simple horizontal swipe</string>
+
+    <string name="title_2">Your favorites</string>
+    <string name="description_2">Long press the searchbar to save a bookmark</string>
+    <string name="title_3">Content</string>
+    <string name="description_3">Long press a link or image and select the action you want</string>
+
+    <string name="gestures">Gestures</string>
+    <string name="gestures_description">Disable or Enable Gestures, like swiping from left to right</string>
+
+    <string name="menu_search_words">Find in page</string>
+
+    <string name="menu_bookmark">Bookmarks</string>
+    <string name="app_name_incognito">Colombo Incognito</string>
+    <string name="no_connection">For continue using Colombo you must have Internet</string>
+    <string name="tutorial">You want to see the tutorial?</string>
+    <string name="description_about">A fast, light and</string>
+    <string name="description_about_2">beautiful browser</string>
+    <string name="team_text">The Team</string>
+    <string name="libs_text">Libraries</string>
+    <string name="links_text">More</string>
 
 </resources>

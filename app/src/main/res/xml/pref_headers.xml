@@ -9,7 +9,8 @@
         android:title="@string/pref_header_appearance" />
 
     <header
-        android:title="@string/pref_header_intro">
+        android:title="@string/pref_header_intro"
+        android:summary="@string/pref_header_about_summary">
         <intent
             android:targetPackage="com.riccardobusetti.colombo"
             android:targetClass="com.riccardobusetti.colombo.activities.MainIntroActivity" />
@@ -24,8 +25,7 @@
     </header>
 
     <header
-        android:title="@string/pref_header_about"
-        android:summary="@string/pref_header_about_summary">
+        android:title="@string/pref_header_about">
         <intent
             android:targetPackage="com.riccardobusetti.colombo"
             android:targetClass="com.riccardobusetti.colombo.activities.AboutActivity" />
