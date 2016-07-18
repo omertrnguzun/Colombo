@@ -3,10 +3,8 @@ package com.riccardobusetti.colombo.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.riccardobusetti.colombo.R;
 
@@ -20,6 +18,9 @@ public class FeedbackActivity extends AppCompatActivity {
         setContentView(R.layout.activity_feedback);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle(R.string.title_activity_feedback);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         s = "Debug-infos:";
         s += "\n OS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")";
@@ -40,13 +41,7 @@ public class FeedbackActivity extends AppCompatActivity {
         s += "\n USER: " + android.os.Build.USER;
         s += "\n HOST: " + android.os.Build.HOST;
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                composeEmail("riccardo.busetti.apps@gmail.com", "Colombo Feedback", s);
-            }
-        });
+        //composeEmail("riccardo.busetti.apps@gmail.com", "Colombo Feedback", s);
     }
 
     public void composeEmail(String addresse, String subject, String text) {
