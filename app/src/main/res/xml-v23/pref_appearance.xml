@@ -23,8 +23,8 @@
 
     <PreferenceCategory android:title="@string/appearence_2_title">
         <SwitchPreference
-            android:defaultValue="false"
-            android:key="sticky_header"
+            android:defaultValue="true"
+            android:key="hide_search"
             android:title="@string/pref_sticky_header"
             android:summary="@string/pref_sticky_header_summary" />
 

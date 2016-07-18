@@ -12,6 +12,7 @@ import android.support.v7.widget.SearchView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
@@ -70,6 +71,8 @@ public class ObservableWebView extends WebView {
         searchView = (SearchView) getRootView().findViewById(R.id.action_search);
         swipeRefreshLayout = (SwipeRefreshLayout) getRootView().findViewById(R.id.swipe_layout);
 
+        InputMethodManager imm = (InputMethodManager)   getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
         if (prefs.getBoolean("swipe_to_refresh", true)) {
             if (t == 0 && webView.getScrollY() == 0) {
                 swipeRefreshLayout.setEnabled(true);
@@ -84,6 +87,10 @@ public class ObservableWebView extends WebView {
             searchView.setIconified(false);
             searchView.setVisibility(View.GONE);
             searchView.clearFocus();
+        }
+
+        if (t > 0 && imm.isAcceptingText()) {
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         }
     }
 
@@ -117,8 +124,7 @@ public class ObservableWebView extends WebView {
             case MotionEvent.ACTION_MOVE:
                 float deltaY = startY - eventY;
 
-                if (prefs.getBoolean("sticky_header", true)) {
-                } else {
+                if (prefs.getBoolean("hide_search", true)) {
                     if (dispatchNestedPreScroll(0, (int) deltaY, scrollConsumed, scrollOffset)) {
                         deltaY -= scrollConsumed[1];
                         startY = eventY - scrollOffset[1];
@@ -145,9 +151,15 @@ public class ObservableWebView extends WebView {
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
-                startY = eventY;
-                startX = event.getX();
-                startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+                if (prefs.getBoolean("hide_search", true)) {
+                    startY = eventY;
+                    startX = event.getX();
+                    startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+                } else {
+                    startY = eventY;
+                    startX = event.getX();
+                    startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+                }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
