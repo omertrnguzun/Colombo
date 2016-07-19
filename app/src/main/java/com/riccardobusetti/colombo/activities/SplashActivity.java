@@ -22,8 +22,8 @@ import com.riccardobusetti.colombo.util.AppStatus;
 
 public class SplashActivity extends Activity {
 
-    private static final int SPLASH_DISPLAY_LENGTH = 600;
-    private static final int SPLASH_IMAGE_LENGHT = 400;
+    private static final int SPLASH_DISPLAY_LENGTH = 400;
+    private static final int SPLASH_IMAGE_LENGHT = 300;
     private ImageView icon, text;
     private CoordinatorLayout coordi;
     private SharedPreferences prefs;
@@ -54,7 +54,7 @@ public class SplashActivity extends Activity {
                     Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 } else {
                     Snackbar snackbar = Snackbar.make(coordi, R.string.no_connection, Snackbar.LENGTH_INDEFINITE);
                     snackbar.setAction("PROCEED", new View.OnClickListener() {
@@ -63,7 +63,7 @@ public class SplashActivity extends Activity {
                             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
-                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         }
                     });
                     snackbar.show();

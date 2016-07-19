@@ -34,6 +34,7 @@ public class AboutActivity extends AppCompatActivity {
         setTitle("About");
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordi_about);
         rate = (TextView) findViewById(R.id.rate);

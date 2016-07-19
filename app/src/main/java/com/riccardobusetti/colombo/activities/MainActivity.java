@@ -685,8 +685,8 @@ public class MainActivity extends AppCompatActivity {
                 createShortCut();
                 break;
             case R.id.action_settings:
-                Intent intentsettings = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivityForResult(intentsettings, 0);
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -954,6 +954,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 

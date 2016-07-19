@@ -31,6 +31,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     @Override
