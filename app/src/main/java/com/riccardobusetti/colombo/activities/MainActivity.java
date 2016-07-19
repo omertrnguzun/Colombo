@@ -401,7 +401,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Snackbar.make(coordinatorLayout, R.string.msg_upload_failed, Snackbar.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
@@ -731,6 +730,7 @@ public class MainActivity extends AppCompatActivity {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
         }
 
+        setUpPrefs();
         checkInternet();
     }
 
@@ -1067,6 +1067,14 @@ public class MainActivity extends AppCompatActivity {
             snackbar.show();
             prefs.edit().putBoolean("first_time", false).apply();
         }
+    }
+
+    /** Setup the preferences */
+    private void setUpPrefs() {
+        setUpLightIcons();
+        webView.getSettings().setJavaScriptEnabled(prefs.getBoolean("javascript", true));
+        webView.getSettings().setGeolocationEnabled(prefs.getBoolean("location_services", true));
+        webView.getSettings().setBuiltInZoomControls(prefs.getBoolean("zooming", true));
     }
 
     /**
