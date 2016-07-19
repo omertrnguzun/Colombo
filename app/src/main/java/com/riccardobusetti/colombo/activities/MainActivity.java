@@ -234,9 +234,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setFocusable(true);
         webView.setFocusableInTouchMode(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
-        }
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
 
         webView.setWebViewClient(new WebClient());
         webView.setDownloadListener(new DownloadListener() {
@@ -708,8 +706,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
-        Toast.makeText(MainActivity.this, "Orientation changed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -1376,7 +1372,9 @@ public class MainActivity extends AppCompatActivity {
             webView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+                    if (webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE
+                            || webView.getHitTestResult().getType() == WebView.HitTestResult.IMAGE_ANCHOR_TYPE
+                            || webView.getHitTestResult().getType() == WebView.HitTestResult.IMAGE_TYPE) {
                         MenuSheetView menuSheetView1 =
                                 new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, getFilenameFromURL(webView.getHitTestResult().getExtra()), new MenuSheetView.OnMenuItemClickListener() {
                                     @Override
@@ -1392,23 +1390,29 @@ public class MainActivity extends AppCompatActivity {
                                                     if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                                                     } else {
+                                                        try {
                                                             DownloadManager downloadManager = (DownloadManager) MainActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
                                                             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageUrl));
                                                             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
                                                             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
                                                             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                                                             downloadManager.enqueue(request);
+                                                            Toast.makeText(MainActivity.this, "Downloading: " + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
+                                                        } catch (Exception ex) {
+                                                            Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
+                                                        }
                                                     }
                                                 } else {
-                                                    if (imageUrl.contains("http") && imageUrl.contains("https")) {
+                                                    try {
                                                         DownloadManager downloadManager = (DownloadManager) MainActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
                                                         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageUrl));
                                                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
                                                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
                                                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                                                         downloadManager.enqueue(request);
-                                                    } else {
-                                                        Toast.makeText(MainActivity.this, "Download can't download this image :(", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MainActivity.this, "Downloading: " + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
+                                                    } catch (Exception ex) {
+                                                        Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                                 break;
@@ -1424,9 +1428,7 @@ public class MainActivity extends AppCompatActivity {
                         bottomSheet.showWithSheetView(menuSheetView1);
                         return true;
                     } else if (webView.getHitTestResult().getType() == WebView.HitTestResult.ANCHOR_TYPE
-                            || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE
-                            || webView.getHitTestResult().getType() == WebView.HitTestResult.IMAGE_TYPE
-                            || webView.getHitTestResult().getType() == WebView.HitTestResult.UNKNOWN_TYPE) {
+                            || webView.getHitTestResult().getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE) {
                         MenuSheetView menuSheetView =
                                 new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, webView.getHitTestResult().getExtra(), new MenuSheetView.OnMenuItemClickListener() {
                                     @Override
@@ -1434,10 +1436,14 @@ public class MainActivity extends AppCompatActivity {
                                         switch (item.getItemId()) {
                                             case R.id.action_open_new_link:
                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                                                    intent.setData(Uri.parse(webView.getHitTestResult().getExtra()));
-                                                    startActivity(intent);
+                                                    try {
+                                                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                                        intent.setData(Uri.parse(webView.getHitTestResult().getExtra()));
+                                                        startActivity(intent);
+                                                    } catch (Exception ex){
+                                                        Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
+                                                    }
                                                     break;
                                                 } else {
                                                     Toast.makeText(MainActivity.this, "Tabs aren't avaliable for Android KitKat or <", Toast.LENGTH_SHORT).show();

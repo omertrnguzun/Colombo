@@ -83,7 +83,7 @@ public class ObservableWebView extends WebView {
             swipeRefreshLayout.setEnabled(false);
         }
 
-        if (t > 0 && searchView.getVisibility() == View.VISIBLE) {
+        if (searchView.getVisibility() == View.VISIBLE) {
             searchView.setIconified(false);
             searchView.setVisibility(View.GONE);
             searchView.clearFocus();
