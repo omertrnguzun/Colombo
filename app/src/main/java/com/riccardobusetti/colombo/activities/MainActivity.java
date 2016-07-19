@@ -400,8 +400,10 @@ public class MainActivity extends AppCompatActivity {
             Uri result = intent == null || resultCode != MainActivity.RESULT_OK ? null : intent.getData();
             uploadMessagePreLollipop.onReceiveValue(result);
             uploadMessagePreLollipop = null;
-        } else
+        } else {
             Snackbar.make(coordinatorLayout, R.string.msg_upload_failed, Snackbar.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -683,7 +685,8 @@ public class MainActivity extends AppCompatActivity {
                 createShortCut();
                 break;
             case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                Intent intentsettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivityForResult(intentsettings, 0);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -706,9 +709,7 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        searchView.setVisibility(View.GONE);
-        searchView.setIconified(false);
-        searchView.clearFocus();
+        Toast.makeText(MainActivity.this, "Orientation changed", Toast.LENGTH_SHORT).show();
     }
 
     @Override

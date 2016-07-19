@@ -51,7 +51,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="16dp"
                                 android:layout_marginRight="16dp"
-                                android:gravity="center_vertical"
+                                android:layout_centerVertical="true"
                                 android:text="@string/app_name"
                                 android:textColor="@color/colorTextDarkBlue"
                                 android:textSize="38sp" />
@@ -63,7 +63,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="16dp"
+                                android:padding="16dp"
                                 android:clickable="true"
                                 app:srcCompat="@drawable/ic_settings_title" />
 
