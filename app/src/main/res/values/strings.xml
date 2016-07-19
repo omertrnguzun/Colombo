@@ -229,5 +229,7 @@
     <string name="pref_sticky_header">Hide search</string>
     <string name="pref_sticky_header_summary">Hide or stick searchbar on scroll</string>
     <string name="menu_immersive">Immersive navigation</string>
+    <string name="pref_adblock">AdBlock</string>
+    <string name="pref_adblock_summary">Block annoying ads and automatic links, disable if you are a good person</string>
 
 </resources>

@@ -46,7 +46,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -60,6 +59,7 @@ import android.webkit.GeolocationPermissions;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -76,6 +76,7 @@ import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
 import com.riccardobusetti.colombo.database.DBAdapter;
 import com.riccardobusetti.colombo.holder.MyHolder;
+import com.riccardobusetti.colombo.util.AdBlocker;
 import com.riccardobusetti.colombo.util.AppStatus;
 import com.riccardobusetti.colombo.util.ItemClickListener;
 import com.riccardobusetti.colombo.util.ItemLongClickListener;
@@ -86,6 +87,8 @@ import com.riccardobusetti.colombo.view.ObservableWebView;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -131,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private RecyclerView rv;
     private MyAdapter adapter;
-    private OrientationEventListener mOrientationListener;
 
     /**
      * UI Elements
@@ -186,6 +188,10 @@ public class MainActivity extends AppCompatActivity {
         setUpLightIcons();
 
         handleUrlLoading();
+
+        if (prefs.getBoolean("adblock", true)) {
+            AdBlocker.init(this);
+        }
 
         handleLocation();
 
@@ -1294,7 +1300,26 @@ public class MainActivity extends AppCompatActivity {
     /**
      * SetUp WebClient
      */
-    private class WebClient extends WebViewClient {
+    public class WebClient extends WebViewClient {
+        private Map<String, Boolean> loadedUrls = new HashMap<>();
+
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            if (prefs.getBoolean("adblock", true)) {
+                boolean ad;
+                if (!loadedUrls.containsKey(url)) {
+                    ad = AdBlocker.isAd(url);
+                    loadedUrls.put(url, ad);
+                } else {
+                    ad = loadedUrls.get(url);
+                }
+                return ad ? AdBlocker.createEmptyResource() :
+                        super.shouldInterceptRequest(view, url);
+            }
+            return super.shouldInterceptRequest(view, url);
+        }
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, final String url) {
             if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")

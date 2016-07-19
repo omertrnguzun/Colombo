@@ -33,5 +33,7 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.8.6.1'
     compile 'com.flipboard:bottomsheet-core:1.5.1'
     compile 'com.flipboard:bottomsheet-commons:1.5.1'
+    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
     testCompile 'junit:junit:4.12'
 }

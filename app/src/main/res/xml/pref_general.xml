@@ -4,6 +4,12 @@
     <PreferenceCategory android:title="@string/general_1_title">
         <SwitchPreference
             android:defaultValue="true"
+            android:key="adblock"
+            android:title="@string/pref_adblock"
+            android:summary="@string/pref_adblock_summary" />
+
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="javascript"
             android:title="@string/pref_javascript"
             android:summary="@string/pref_javascript_summary" />
