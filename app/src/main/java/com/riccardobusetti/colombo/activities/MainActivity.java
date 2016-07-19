@@ -1078,6 +1078,9 @@ public class MainActivity extends AppCompatActivity {
     /** Setup the preferences */
     private void setUpPrefs() {
         setUpLightIcons();
+        if (prefs.getBoolean("adblock", true)) {
+            AdBlocker.init(this);
+        }
         webView.getSettings().setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webView.getSettings().setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webView.getSettings().setBuiltInZoomControls(prefs.getBoolean("zooming", true));
