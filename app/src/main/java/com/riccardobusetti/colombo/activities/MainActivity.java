@@ -217,8 +217,10 @@ public class MainActivity extends AppCompatActivity {
         /** Cache Settings */
         webSettings.setAppCacheEnabled(true);
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         if (AppStatus.getInstance(this).isOnline()) {
+            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
+            webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        } else {
             webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
 
@@ -1031,13 +1033,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkInternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            if (frameError.getVisibility() == View.VISIBLE) {
-                frameError.setVisibility(View.GONE);
-            }
+            // TODO Fare settings della cache
         } else {
             Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
             snackbar.show();
-            frameError.setVisibility(View.VISIBLE);
         }
     }
 
