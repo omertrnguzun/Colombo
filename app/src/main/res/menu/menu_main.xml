@@ -41,12 +41,6 @@
                 app:showAsAction="never" />
 
             <item
-                android:id="@+id/action_immersive"
-                android:title="@string/menu_immersive"
-                app:showAsAction="never"
-                android:checkable="true"/>
-
-            <item
                 android:id="@+id/action_bookmark"
                 android:title="@string/menu_bookmark"
                 app:showAsAction="never" />

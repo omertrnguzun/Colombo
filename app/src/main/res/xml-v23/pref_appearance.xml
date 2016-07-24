@@ -19,6 +19,13 @@
             android:key="light_icons"
             android:title="@string/pref_light_icons"
             android:summary="@string/pref_light_icons_summary" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="font"
+            android:summary="@string/pref_font_summary"
+            android:title="@string/pref_font" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/appearence_2_title">

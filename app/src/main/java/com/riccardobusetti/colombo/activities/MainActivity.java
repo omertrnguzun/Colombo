@@ -445,7 +445,17 @@ public class MainActivity extends AppCompatActivity {
 
         this.menu = menu;
 
-        menu.findItem(R.id.action_immersive).setVisible(false);
+        menu.findItem(R.id.action_new).setIcon(R.drawable.menu_new);
+        menu.findItem(R.id.action_home).setIcon(R.drawable.menu_home);
+        menu.findItem(R.id.action_refresh).setIcon(R.drawable.menu_refresh);
+        menu.findItem(R.id.action_search_words).setIcon(R.drawable.menu_search_words);
+        menu.findItem(R.id.action_dekstop).setIcon(R.drawable.menu_dekstop);
+        menu.findItem(R.id.action_bookmark).setIcon(R.drawable.menu_bookmark);
+        menu.findItem(R.id.action_incognito).setIcon(R.drawable.menu_incognito);
+        menu.findItem(R.id.action_add).setIcon(R.drawable.menu_add);
+        menu.findItem(R.id.action_share).setIcon(R.drawable.menu_share);
+        menu.findItem(R.id.action_settings).setIcon(R.drawable.menu_settings);
+
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             menu.findItem(R.id.action_new).setVisible(false);
@@ -608,20 +618,6 @@ public class MainActivity extends AppCompatActivity {
                     desktop = true;
                 }
                 break;
-            case R.id.action_immersive:
-                if (item.isChecked()) {
-                    item.setChecked(false);
-                } else {
-                    item.setChecked(true);
-                }
-                if (immersive) {
-
-                    immersive = false;
-                } else {
-
-                    immersive = true;
-                }
-                break;
             case R.id.action_incognito:
                 isIncognito = !isIncognito;
                 item.setChecked(isIncognito);
@@ -711,7 +707,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+        SharedPreferences preferences;
+        preferences = PreferenceManager.getDefaultSharedPreferences(newBase);
+        if (preferences.getBoolean("font", true)) {
+            super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+        }  else {
+            super.attachBaseContext(newBase);
+        }
     }
 
     @Override

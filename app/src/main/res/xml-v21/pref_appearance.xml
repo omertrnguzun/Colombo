@@ -12,6 +12,13 @@
             android:key="navbar_tint"
             android:title="@string/navbar_tint"
             android:summary="@string/navbar_tint_summary" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="font"
+            android:summary="@string/pref_font_summary"
+            android:title="@string/pref_font" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/appearence_2_title">
