@@ -4,26 +4,26 @@
 
     <item
         android:id="@+id/action_open_new_link"
+        android:icon="@drawable/ic_open"
         android:title="@string/menu_open_new_link"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_open"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_open_save_bookmark"
+        android:icon="@drawable/ic_add_bookmark_menu"
         android:title="@string/menu_open_save_bookmark"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_add_bookmark_menu"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_copy_link"
+        android:icon="@drawable/ic_copy_link"
         android:title="@string/menu_open_copy_link"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_copy_link"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_share_link"
+        android:icon="@drawable/ic_share_bookmark"
         android:title="@string/menu_open_share_link"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_share_bookmark"/>
+        app:showAsAction="never" />
 
 </menu>

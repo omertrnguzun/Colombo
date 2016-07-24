@@ -2,10 +2,10 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordi_about"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:id="@+id/coordi_about"
     tools:context="com.riccardobusetti.colombo.activities.AboutActivity">
 
     <ScrollView
@@ -84,12 +84,12 @@
                 android:layout_marginStart="72dp">
 
                 <TextView
-                    android:layout_marginTop="36dp"
                     android:id="@+id/title_2"
                     style="@style/TextViewCustomFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="42dp"
+                    android:layout_marginTop="36dp"
                     android:text="@string/team_text"
                     android:textColor="@color/colorTextDarkGrey"
                     android:textSize="38sp" />
@@ -104,9 +104,9 @@
                         android:id="@+id/image_me"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
+                        android:layout_centerVertical="true"
                         android:layout_marginEnd="38dp"
-                        android:src="@drawable/ic_me"
-                        android:layout_centerVertical="true"/>
+                        android:src="@drawable/ic_me" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -155,9 +155,9 @@
                         android:id="@+id/image_gabriel"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
+                        android:layout_centerVertical="true"
                         android:layout_marginEnd="38dp"
-                        android:src="@drawable/ic_gabriel"
-                        android:layout_centerVertical="true"/>
+                        android:src="@drawable/ic_gabriel" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -205,9 +205,9 @@
                         android:id="@+id/image_james"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
+                        android:layout_centerVertical="true"
                         android:layout_marginEnd="38dp"
-                        android:src="@drawable/ic_james"
-                        android:layout_centerVertical="true"/>
+                        android:src="@drawable/ic_james" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -241,22 +241,22 @@
             </RelativeLayout>
 
             <TextView
-                android:layout_below="@+id/layoutJames"
-                android:layout_marginTop="36dp"
-                android:layout_marginStart="72dp"
                 android:id="@+id/title_3"
                 style="@style/TextViewCustomFont"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutJames"
                 android:layout_marginBottom="42dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="36dp"
                 android:text="@string/libs_text"
                 android:textColor="@color/colorTextDarkGrey"
                 android:textSize="38sp" />
 
             <RelativeLayout
-                android:layout_below="@+id/title_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/title_3"
                 android:layout_marginStart="72dp">
 
                 <RelativeLayout
@@ -265,32 +265,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="42dp">
 
-                <TextView
-                    android:id="@+id/lib_1"
-                    style="@style/TextViewCustomFontBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Material Dialogs"
-                    android:textColor="@color/colorTextDarkGrey"
-                    android:textSize="20sp" />
+                    <TextView
+                        android:id="@+id/lib_1"
+                        style="@style/TextViewCustomFontBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Material Dialogs"
+                        android:textColor="@color/colorTextDarkGrey"
+                        android:textSize="20sp" />
 
-                <TextView
-                    style="@style/TextViewCustomFont"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lib_1"
-                    android:layout_marginTop="16dp"
-                    android:text="Aidan Follestad"
-                    android:textColor="@color/colorTextGrey"
-                    android:textSize="16sp" />
+                    <TextView
+                        style="@style/TextViewCustomFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lib_1"
+                        android:layout_marginTop="16dp"
+                        android:text="Aidan Follestad"
+                        android:textColor="@color/colorTextGrey"
+                        android:textSize="16sp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_below="@+id/layoutLib1"
                     android:id="@+id/layoutLib2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/layoutLib1"
                     android:layout_marginBottom="42dp">
 
                     <TextView
@@ -315,10 +315,10 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_below="@+id/layoutLib2"
                     android:id="@+id/layoutLib3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/layoutLib2"
                     android:layout_marginBottom="42dp">
 
                     <TextView
@@ -343,10 +343,10 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_below="@+id/layoutLib3"
                     android:id="@+id/layoutLib4"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layoutLib3">
 
                     <TextView
                         android:id="@+id/lib_4"
@@ -370,11 +370,11 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_marginTop="42dp"
-                    android:layout_below="@+id/layoutLib4"
                     android:id="@+id/layoutLib5"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layoutLib4"
+                    android:layout_marginTop="42dp">
 
                     <TextView
                         android:id="@+id/lib_5"
@@ -398,37 +398,37 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:layout_below="@+id/layoutLib5"
-                    android:layout_marginTop="36dp"
                     android:id="@+id/title_4"
                     style="@style/TextViewCustomFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/layoutLib5"
                     android:layout_marginBottom="42dp"
+                    android:layout_marginTop="36dp"
                     android:text="@string/links_text"
                     android:textColor="@color/colorTextDarkGrey"
                     android:textSize="38sp" />
 
                 <TextView
-                    android:foreground="?attr/selectableItemBackground"
                     android:id="@+id/rate"
-                    android:layout_below="@+id/title_4"
                     style="@style/TextViewCustomFontBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_4"
                     android:layout_marginBottom="42dp"
+                    android:foreground="?attr/selectableItemBackground"
                     android:text="Rate the app"
                     android:textColor="@color/colorTextDarkGrey"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:foreground="?attr/selectableItemBackground"
-                    android:layout_marginBottom="36dp"
                     android:id="@+id/github"
-                    android:layout_below="@+id/rate"
                     style="@style/TextViewCustomFontBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/rate"
+                    android:layout_marginBottom="36dp"
+                    android:foreground="?attr/selectableItemBackground"
                     android:text="See on GitHub"
                     android:textColor="@color/colorTextDarkGrey"
                     android:textSize="20sp" />

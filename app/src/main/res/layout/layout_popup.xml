@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorAccent"
+    android:orientation="vertical"
     android:padding="12dp">
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:text="New Text"
-        android:id="@+id/title"
-        android:textSize="20sp"
         android:textColor="#FFFFFF"
-        android:layout_margin="4dp" />
+        android:textSize="20sp" />
 
     <TextView
+        android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:text="New Text"
-        android:id="@+id/content"
-        android:textColor="#B3FFFFFF"
-        android:layout_margin="4dp" />
+        android:textColor="#B3FFFFFF" />
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/inputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/inputLayout"
-        android:textColorHint="#FFFFFF"
         android:layout_margin="4dp"
+        android:textColorHint="#FFFFFF"
         android:visibility="gone">
 
         <EditText
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
             android:inputType="text"
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="#FFFFFF"
             android:textColorHint="#B3FFFFFF"
-            android:backgroundTint="#FFFFFF"
-            android:textCursorDrawable="@null"/>
+            android:textCursorDrawable="@null" />
 
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <android.support.v7.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_cancel"
             android:id="@+id/cancel"
-            android:layout_margin="4dp" />
-
-        <android.support.v7.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dialog_ok"
+            android:layout_margin="4dp"
+            android:text="@string/dialog_cancel" />
+
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/confirm"
-            android:layout_margin="4dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="@string/dialog_ok" />
 
     </LinearLayout>
 

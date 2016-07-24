@@ -71,7 +71,7 @@ public class ObservableWebView extends WebView {
         searchView = (SearchView) getRootView().findViewById(R.id.action_search);
         swipeRefreshLayout = (SwipeRefreshLayout) getRootView().findViewById(R.id.swipe_layout);
 
-        InputMethodManager imm = (InputMethodManager)   getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (prefs.getBoolean("swipe_to_refresh", true)) {
             if (t == 0 && webView.getScrollY() == 0) {
@@ -164,7 +164,7 @@ public class ObservableWebView extends WebView {
 
                 if (prefs.getBoolean("gestures", true)) {
                     if (startX - endX > 700 && canGoForward()) goForward();
-                    else if (startX - endX < - 700 && canGoBack()) goBack();
+                    else if (startX - endX < -700 && canGoBack()) goBack();
                 }
 
                 stopNestedScroll();

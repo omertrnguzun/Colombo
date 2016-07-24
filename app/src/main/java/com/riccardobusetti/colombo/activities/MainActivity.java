@@ -217,8 +217,10 @@ public class MainActivity extends AppCompatActivity {
         /** Cache Settings */
         webSettings.setAppCacheEnabled(true);
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        if (AppStatus.getInstance(this).isOnline()) {
+            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        }
 
         /** Cookie Settings */
         if (prefs.getBoolean("cookies", true)) {
@@ -276,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
                                     intent.setType("*/*");
 
                                     Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
-                                } catch (Exception exc){
+                                } catch (Exception exc) {
                                     Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -297,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.setType("*/*");
 
                                 Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
-                            } catch (Exception exc){
+                            } catch (Exception exc) {
                                 Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -599,7 +601,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_search_words:
                 webView.showFindDialog(null, true);
-                InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 break;
             case R.id.action_dekstop:
@@ -711,7 +713,7 @@ public class MainActivity extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(newBase);
         if (preferences.getBoolean("font", true)) {
             super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-        }  else {
+        } else {
             super.attachBaseContext(newBase);
         }
     }
@@ -1078,6 +1080,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void copyToClipBoard(String text) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(null, text);
+        clipboard.setPrimaryClip(clip);
+    }
+
     /**
      * SetUp first time snackbar for tutorial
      */
@@ -1097,7 +1105,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Setup the preferences */
+    /**
+     * Setup the preferences
+     */
     private void setUpPrefs() {
         setUpLightIcons();
         if (prefs.getBoolean("adblock", true)) {
@@ -1499,7 +1509,7 @@ public class MainActivity extends AppCompatActivity {
                                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                                                         intent.setData(Uri.parse(webView.getHitTestResult().getExtra()));
                                                         startActivity(intent);
-                                                    } catch (Exception ex){
+                                                    } catch (Exception ex) {
                                                         Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
                                                     }
                                                     break;
@@ -1521,9 +1531,12 @@ public class MainActivity extends AppCompatActivity {
                                                         }).show();
                                                 break;
                                             case R.id.action_copy_link:
-                                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                                ClipData clip = ClipData.newPlainText(null, webView.getUrl());
-                                                clipboard.setPrimaryClip(clip);
+                                                try {
+                                                    copyToClipBoard(webView.getUrl());
+                                                    Toast.makeText(MainActivity.this, "Copied to clipboard", Toast.LENGTH_SHORT).show();
+                                                } catch (Exception exc) {
+                                                    Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
+                                                }
                                                 break;
                                             case R.id.action_share_link:
                                                 String shareBody = webView.getHitTestResult().getExtra();

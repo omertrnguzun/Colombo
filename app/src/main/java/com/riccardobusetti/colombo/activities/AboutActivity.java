@@ -41,14 +41,14 @@ public class AboutActivity extends AppCompatActivity {
         github = (TextView) findViewById(R.id.github);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                coordinatorLayout.setSystemUiVisibility(coordinatorLayout.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            coordinatorLayout.setSystemUiVisibility(coordinatorLayout.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         setUpClick();
 
     }
 
-   private void setUpClick() {
+    private void setUpClick() {
 
         rate.setOnClickListener(new View.OnClickListener() {
             @Override

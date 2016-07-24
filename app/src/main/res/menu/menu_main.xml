@@ -8,16 +8,16 @@
         app:showAsAction="always" />
 
     <item
-        android:title=""
         android:id="@+id/action_menu"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_menu">
+        android:icon="@drawable/ic_menu"
+        android:title=""
+        app:showAsAction="always">
 
         <menu>
             <item
                 android:id="@+id/action_new"
                 android:title="@string/menu_new"
-                app:showAsAction="never"/>
+                app:showAsAction="never" />
 
             <item
                 android:id="@+id/action_home"
@@ -36,8 +36,8 @@
 
             <item
                 android:id="@+id/action_dekstop"
-                android:title="@string/menu_dekstop"
                 android:checkable="true"
+                android:title="@string/menu_dekstop"
                 app:showAsAction="never" />
 
             <item
@@ -47,8 +47,8 @@
 
             <item
                 android:id="@+id/action_incognito"
-                android:title="@string/menu_incognito"
                 android:checkable="true"
+                android:title="@string/menu_incognito"
                 app:showAsAction="never" />
 
             <item

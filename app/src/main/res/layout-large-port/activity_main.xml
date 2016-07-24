@@ -49,22 +49,22 @@
                                 style="@style/TextViewCustomFont"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
                                 android:layout_marginLeft="16dp"
                                 android:layout_marginRight="16dp"
-                                android:layout_centerVertical="true"
                                 android:text="@string/app_name"
                                 android:textColor="@color/colorTextDarkBlue"
                                 android:textSize="38sp" />
 
                             <ImageView
-                                android:foreground="?attr/selectableItemBackgroundBorderless"
                                 android:id="@+id/settings"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:padding="16dp"
                                 android:clickable="true"
+                                android:foreground="?attr/selectableItemBackgroundBorderless"
+                                android:padding="16dp"
                                 app:srcCompat="@drawable/ic_settings_title" />
 
                         </RelativeLayout>
@@ -124,10 +124,10 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <FrameLayout
-                android:background="@color/colorCyanLight"
                 android:id="@+id/webviewContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/colorCyanLight">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -150,19 +150,19 @@
                         android:textSize="16dp" />
 
                     <android.support.v7.widget.RecyclerView
-                        android:layout_margin="2dp"
                         android:id="@+id/recyclerViewer"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/backround_bookmarks"
+                        android:layout_margin="2dp"
                         android:scrollbars="vertical" />
 
                     <FrameLayout
                         android:id="@+id/frameNoBookmarks"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true">
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -170,17 +170,17 @@
 
                             <ImageView
                                 android:id="@+id/image_no_bookmarks"
-                                android:layout_centerHorizontal="true"
                                 android:layout_width="150dp"
                                 android:layout_height="150dp"
-                                android:src="@drawable/ic_no_bookmarks"/>
+                                android:layout_centerHorizontal="true"
+                                android:src="@drawable/ic_no_bookmarks" />
 
                             <TextView
-                                android:layout_below="@+id/image_no_bookmarks"
                                 android:id="@+id/text_no_bookmarks"
                                 style="@style/TextViewCustomFontBold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_below="@+id/image_no_bookmarks"
                                 android:layout_margin="16dp"
                                 android:text="You have no bookmarks"
                                 android:textColor="@color/colorTextDarkBlue"
@@ -198,11 +198,11 @@
                         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
                     <FrameLayout
-                        android:visibility="gone"
                         android:id="@+id/frameError"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/colorCyanLight">
+                        android:background="@color/colorCyanLight"
+                        android:visibility="gone">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -210,37 +210,37 @@
 
                             <ImageView
                                 android:id="@+id/image_error"
-                                android:layout_centerHorizontal="true"
-                                android:layout_centerVertical="true"
                                 android:layout_width="150dp"
                                 android:layout_height="150dp"
-                                android:src="@drawable/ic_webview_error"/>
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_webview_error" />
 
                             <TextView
-                                android:layout_centerHorizontal="true"
-                                android:layout_below="@+id/image_error"
                                 android:id="@+id/title_error"
                                 style="@style/TextViewCustomFontBold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Colombo Error"
+                                android:layout_below="@+id/image_error"
+                                android:layout_centerHorizontal="true"
                                 android:layout_marginTop="10dp"
+                                android:text="Colombo Error"
                                 android:textColor="@color/colorTextDarkBlue"
                                 android:textSize="16dp" />
 
                             <TextView
-                                android:layout_centerHorizontal="true"
-                                android:layout_below="@+id/title_error"
                                 android:id="@+id/text_error"
                                 style="@style/TextViewCustomFontBold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_below="@+id/title_error"
+                                android:layout_centerHorizontal="true"
                                 android:layout_margin="16dp"
-                                android:text="No connection :/"
-                                android:textColor="@color/colorTextDarkBlue"
-                                android:layout_marginLeft="16dp"
                                 android:layout_marginBottom="16dp"
-                                android:layout_marginRight="16dp"/>
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginRight="16dp"
+                                android:text="No connection :/"
+                                android:textColor="@color/colorTextDarkBlue" />
 
                         </RelativeLayout>
 

@@ -6,5 +6,4 @@ package com.riccardobusetti.colombo.adapter;
 public class HistoryAdapter {
 
 
-
 }

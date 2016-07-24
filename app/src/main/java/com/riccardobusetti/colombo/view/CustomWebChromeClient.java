@@ -42,8 +42,7 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
         isVideoFullscreen = false;
     }
 
-    public boolean isVideoFullscreen()
-    {
+    public boolean isVideoFullscreen() {
         return isVideoFullscreen;
     }
 
@@ -57,7 +56,8 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
             this.videoViewContainer = frameLayout;
             this.videoViewCallback = callback;
 
-            if (customViewDialog != null && customViewDialog.isShowing()) customViewDialog.dismiss();
+            if (customViewDialog != null && customViewDialog.isShowing())
+                customViewDialog.dismiss();
 
             customViewDialog = new AlertDialog.Builder(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen).setView(videoViewContainer).setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -66,7 +66,8 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
                     attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
                     attrs.flags &= ~WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
                     activity.getWindow().setAttributes(attrs);
-                    if (Build.VERSION.SDK_INT >= 14) activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                    if (Build.VERSION.SDK_INT >= 14)
+                        activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
                 }
             }).create();
             customViewDialog.show();
@@ -75,7 +76,8 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
             attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
             attrs.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
             activity.getWindow().setAttributes(attrs);
-            if (Build.VERSION.SDK_INT >= 14) activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+            if (Build.VERSION.SDK_INT >= 14)
+                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
             if (focusedChild instanceof VideoView) {
                 VideoView videoView = (VideoView) focusedChild;
@@ -87,7 +89,8 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
         }
     }
 
-    @Override @SuppressWarnings("deprecation")
+    @Override
+    @SuppressWarnings("deprecation")
     public void onShowCustomView(View view, int requestedOrientation, CustomViewCallback callback) {
         onShowCustomView(view, callback);
     }
@@ -95,7 +98,8 @@ public class CustomWebChromeClient extends WebChromeClient implements MediaPlaye
     @Override
     public void onHideCustomView() {
         if (isVideoFullscreen) {
-            if (customViewDialog != null && customViewDialog.isShowing()) customViewDialog.dismiss();
+            if (customViewDialog != null && customViewDialog.isShowing())
+                customViewDialog.dismiss();
 
             if (videoViewCallback != null && !videoViewCallback.getClass().getName().contains(".chromium.")) {
                 videoViewCallback.onCustomViewHidden();

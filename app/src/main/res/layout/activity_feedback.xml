@@ -7,10 +7,10 @@
     tools:context="com.riccardobusetti.colombo.activities.FeedbackActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:elevation="0dp"
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:elevation="0dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -20,12 +20,12 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"/>
+                app:layout_collapseMode="pin" />
 
             <ImageView
-                android:layout_below="@+id/toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/toolbar"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_feedback" />
 

@@ -4,14 +4,14 @@
 
     <item
         android:id="@+id/action_open"
+        android:icon="@drawable/ic_open"
         android:title="@string/menu_open"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_open"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_continue"
+        android:icon="@drawable/ic_continue"
         android:title="@string/menu_continue"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_continue"/>
+        app:showAsAction="never" />
 
 </menu>
