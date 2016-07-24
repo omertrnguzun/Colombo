@@ -7,6 +7,8 @@ import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -248,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDownloadStart(final String url, String userAgent, final String contentDisposition, final String mimeType, long contentLength) {
                 final String filename1 = URLUtil.guessFileName(url, contentDisposition, mimeType);
 
-                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Download " + filename1 + "?", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Download " + filename1 + "?", Snackbar.LENGTH_INDEFINITE);
                 snackbar.setActionTextColor(Color.parseColor("#1DE9B6"));
                 snackbar.setAction("DOWNLOAD", new View.OnClickListener() {
                     @Override
@@ -258,6 +260,28 @@ public class MainActivity extends AppCompatActivity {
                             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                             } else {
+                                try {
+                                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+
+                                    String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
+
+                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+                                    DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                                    dm.enqueue(request);
+
+                                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                    intent.setType("*/*");
+
+                                    Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
+                                } catch (Exception exc){
+                                    Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else {
+                            try {
                                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
                                 String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
@@ -273,23 +297,9 @@ public class MainActivity extends AppCompatActivity {
                                 intent.setType("*/*");
 
                                 Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
+                            } catch (Exception exc){
+                                Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-
-                            String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
-
-                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-
-                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                            dm.enqueue(request);
-
-                            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                            intent.addCategory(Intent.CATEGORY_OPENABLE);
-                            intent.setType("*/*");
-
-                            Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -439,10 +449,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             menu.findItem(R.id.action_new).setVisible(false);
-        }
-
-        if (prefs.getBoolean("swipe_to_refresh", true)) {
-            menu.findItem(R.id.action_refresh).setVisible(false);
         }
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
@@ -834,6 +840,20 @@ public class MainActivity extends AppCompatActivity {
             webView.loadUrl(getHomepage());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                            webView.setVisibility(View.VISIBLE);
+                            titleFrame.setVisibility(View.GONE);
+                            searchView.setIconified(false);
+                            searchView.setVisibility(View.VISIBLE);
+                        } else {
+                            searchView.setIconified(false);
+                            searchView.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
             }
         }
     }
@@ -1499,10 +1519,9 @@ public class MainActivity extends AppCompatActivity {
                                                         }).show();
                                                 break;
                                             case R.id.action_copy_link:
-                                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Link", webView.getHitTestResult().getExtra());
+                                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                                ClipData clip = ClipData.newPlainText(null, webView.getUrl());
                                                 clipboard.setPrimaryClip(clip);
-                                                Toast.makeText(MainActivity.this, "Link Copied", Toast.LENGTH_SHORT).show();
                                                 break;
                                             case R.id.action_share_link:
                                                 String shareBody = webView.getHitTestResult().getExtra();

@@ -88,10 +88,6 @@ public class ObservableWebView extends WebView {
             searchView.setVisibility(View.GONE);
             searchView.clearFocus();
         }
-
-        if (t > 0 && imm.isAcceptingText()) {
-            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-        }
     }
 
     @SuppressWarnings("unused")
