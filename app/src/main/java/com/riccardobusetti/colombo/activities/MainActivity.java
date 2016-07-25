@@ -1114,6 +1114,9 @@ public class MainActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webView.getSettings().setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webView.getSettings().setBuiltInZoomControls(prefs.getBoolean("zooming", true));
+        if (prefs.getBoolean("plugins", true)) {
+            webView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        }
     }
 
     /**
