@@ -148,7 +148,6 @@
 
     <string name="add_bookmark_title">Aggiungi preferito?</string>
     <string name="add_bookmark_content">Dai un nome al preferito!</string>
-    <string name="downloading">Scaricamento: </string>
     <string name="tabs_error"><![CDATA[Le schede sono disponibili solo per Android Lollipop o >]]></string>
     <string name="rename_bookmark_title">Rinomina preferito?</string>
     <string name="rename_bookmark_content">Rinomina questo preferito con un nome più bello!</string>
@@ -159,5 +158,6 @@
     <string name="url_search_summary">Mostra il testo che hai cercato invece dell\'url della pagina</string>
     <string name="url_search">Testo cercato nella barra di ricerca</string>
     <string name="restart_colombo">Riavvia Colombo per applicare i cambiamenti</string>
+    <string name="link_error">Colombo non capisce questo url</string>
 
 </resources>

@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                                     intent.setType("*/*");
 
-                                    Toast.makeText(MainActivity.this, R.string.downloading + filename, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
                                 } catch (Exception exc) {
                                     Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
                                 }
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                                 intent.setType("*/*");
 
-                                Toast.makeText(MainActivity.this, R.string.downloading + filename, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
                             } catch (Exception exc) {
                                 Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
                             }
@@ -1355,7 +1355,8 @@ public class MainActivity extends AppCompatActivity {
             if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
                     || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
                     || url.startsWith("mailto:") || url.startsWith("intent://")
-                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
+                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")
+                    || url.startsWith("https://www.google.com/maps")) {
                 switch (Integer.parseInt(prefs.getString("show_open_dialog", "0"))) {
                     case OPEN_ALWAYS:
                         MenuSheetView menuSheetView =
@@ -1369,7 +1370,7 @@ public class MainActivity extends AppCompatActivity {
                                                     intent.setData(Uri.parse(url));
                                                     startActivity(intent);
                                                 } catch (Exception exc) {
-                                                    Toast.makeText(MainActivity.this, "Colombo didn't know this link :_(", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MainActivity.this, R.string.link_error, Toast.LENGTH_SHORT).show();
                                                 }
                                                 break;
                                             case R.id.action_continue:
@@ -1393,7 +1394,7 @@ public class MainActivity extends AppCompatActivity {
                             intent.setData(Uri.parse(url));
                             startActivity(intent);
                         } catch (Exception exc) {
-                            Toast.makeText(MainActivity.this, "Colombo didn't know this link :_(", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.link_error, Toast.LENGTH_SHORT).show();
                         }
                         return true;
                     case OPEN_LINK:
@@ -1411,7 +1412,7 @@ public class MainActivity extends AppCompatActivity {
                                                     intent.setData(Uri.parse(url));
                                                     startActivity(intent);
                                                 } catch (Exception exc) {
-                                                    Toast.makeText(MainActivity.this, "Colombo didn't know this link :_(", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MainActivity.this, R.string.link_error, Toast.LENGTH_SHORT).show();
                                                 }
                                                 break;
                                             case R.id.action_continue:
@@ -1460,7 +1461,7 @@ public class MainActivity extends AppCompatActivity {
                                                             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
                                                             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                                                             downloadManager.enqueue(request);
-                                                            Toast.makeText(MainActivity.this, R.string.downloading + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(MainActivity.this, "Downloading: " + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
                                                         } catch (Exception ex) {
                                                             Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
                                                         }
@@ -1473,7 +1474,7 @@ public class MainActivity extends AppCompatActivity {
                                                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
                                                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                                                         downloadManager.enqueue(request);
-                                                        Toast.makeText(MainActivity.this, R.string.downloading + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MainActivity.this, "Downloading: " + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
                                                     } catch (Exception ex) {
                                                         Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
                                                     }

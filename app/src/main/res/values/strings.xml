@@ -147,7 +147,6 @@
 
     <string name="add_bookmark_title">Add bookmark?</string>
     <string name="add_bookmark_content">Give to your bookmark a name!</string>
-    <string name="downloading">Downloading: </string>
     <string name="tabs_error"><![CDATA[Tabs are available for Lollipop or >]]></string>
     <string name="rename_bookmark_title">Rename bookmark?</string>
     <string name="rename_bookmark_content">Rename this bookmark with a cool name!</string>
@@ -158,5 +157,6 @@
     <string name="url_search_summary">Show your searched text instead of URL</string>
     <string name="url_search">Searched Text</string>
     <string name="restart_colombo">Restart Colombo for apply changes</string>
+    <string name="link_error">Colombo can\'t understand this url :/</string>
 
 </resources>
