@@ -69,6 +69,13 @@
             android:key="gestures"
             android:summary="@string/gestures_description"
             android:title="@string/gestures" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="title_search"
+            android:summary="@string/url_search_summary"
+            android:title="@string/url_search" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                                     intent.setType("*/*");
 
-                                    Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, R.string.downloading + filename, Toast.LENGTH_SHORT).show();
                                 } catch (Exception exc) {
                                     Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
                                 }
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                                 intent.setType("*/*");
 
-                                Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, R.string.downloading + filename, Toast.LENGTH_SHORT).show();
                             } catch (Exception exc) {
                                 Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
                             }
@@ -964,8 +964,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View view) {
                 new MaterialDialog.Builder(MainActivity.this)
-                        .title("Add Bookmark?")
-                        .content("Give to your bookmark a name!")
+                        .title(R.string.add_bookmark_title)
+                        .content(R.string.add_bookmark_content)
                         .inputType(InputType.TYPE_CLASS_TEXT)
                         .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
                             @Override
@@ -1013,8 +1013,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     new MaterialDialog.Builder(MainActivity.this)
-                            .title("Add Bookmark?")
-                            .content("Give to your bookmark a name!")
+                            .title(R.string.add_bookmark_title)
+                            .content(R.string.add_bookmark_content)
                             .inputType(InputType.TYPE_CLASS_TEXT)
                             .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
                                 @Override
@@ -1464,7 +1464,7 @@ public class MainActivity extends AppCompatActivity {
                                                             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
                                                             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                                                             downloadManager.enqueue(request);
-                                                            Toast.makeText(MainActivity.this, "Downloading: " + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(MainActivity.this, R.string.downloading + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
                                                         } catch (Exception ex) {
                                                             Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
                                                         }
@@ -1477,7 +1477,7 @@ public class MainActivity extends AppCompatActivity {
                                                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getFilenameFromURL(imageUrl));
                                                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                                                         downloadManager.enqueue(request);
-                                                        Toast.makeText(MainActivity.this, "Downloading: " + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MainActivity.this, R.string.downloading + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
                                                     } catch (Exception ex) {
                                                         Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
                                                     }
@@ -1589,7 +1589,12 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setEnabled(false);
             }
 
-            title.setText(webView.getTitle());
+            if (prefs.getBoolean("title_search", true)) {
+                title.setText(webView.getTitle());
+            } else {
+                searchView.setQuery(webView.getUrl(), false);
+                title.setText(webView.getUrl());
+            }
 
         }
     }
@@ -1641,7 +1646,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemLongClick(View v, final int pos) {
                     MenuSheetView menuSheetView =
-                            new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, "Bookmark " + cardData.get(pos).getName() + " options:", new MenuSheetView.OnMenuItemClickListener() {
+                            new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, cardData.get(pos).getName(), new MenuSheetView.OnMenuItemClickListener() {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem item) {
                                     switch (item.getItemId()) {
@@ -1652,7 +1657,7 @@ public class MainActivity extends AppCompatActivity {
                                                 intent.setData(Uri.parse(cardData.get(pos).getCode()));
                                                 startActivity(intent);
                                             } else {
-                                                Toast.makeText(c, "Tabs aren't avaliable for Android KitKat or <", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(c, R.string.tabs_error, Toast.LENGTH_SHORT).show();
                                             }
                                             break;
                                         case R.id.action_share_bookmark:
@@ -1666,8 +1671,8 @@ public class MainActivity extends AppCompatActivity {
                                             break;
                                         case R.id.action_rename_bookmark:
                                             new MaterialDialog.Builder(MainActivity.this)
-                                                    .title("Rename Bookmark")
-                                                    .content("Give to this bookmark a new name!")
+                                                    .title(R.string.rename_bookmark_title)
+                                                    .content(R.string.rename_bookmark_content)
                                                     .inputType(InputType.TYPE_CLASS_TEXT)
                                                     .input("Bookmark name", cardData.get(position).getName(), new MaterialDialog.InputCallback() {
                                                         @Override
@@ -1679,9 +1684,9 @@ public class MainActivity extends AppCompatActivity {
                                             break;
                                         case R.id.action_delete_bookmark:
                                             new MaterialDialog.Builder(MainActivity.this)
-                                                    .title("Delete Bookmark?")
-                                                    .content("You want to delete: " + cardData.get(pos).getName() + "?")
-                                                    .positiveText("Yes")
+                                                    .title(R.string.delete_bookmark_title)
+                                                    .content(R.string.delete_bookmark_content + cardData.get(pos).getName() + "?")
+                                                    .positiveText(R.string.delete_bookmark_positive)
                                                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                                                         @Override
                                                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -1689,7 +1694,7 @@ public class MainActivity extends AppCompatActivity {
                                                             dialog.dismiss();
                                                         }
                                                     })
-                                                    .negativeText("No")
+                                                    .negativeText(R.string.delete_bookmark_negative)
                                                     .onNegative(new MaterialDialog.SingleButtonCallback() {
                                                         @Override
                                                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {

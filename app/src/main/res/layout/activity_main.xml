@@ -104,7 +104,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:maxLines="1"
-                                android:text="Search"
+                                android:text="@string/general_2_title"
                                 android:textColor="#B2B2B2" />
 
                         </android.support.v7.widget.Toolbar>

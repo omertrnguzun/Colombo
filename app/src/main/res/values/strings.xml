@@ -67,7 +67,7 @@
     <string name="pref_sticky_header">Hide search</string>
     <string name="pref_sticky_header_summary">Hide search on scroll of the page for more immersive experience</string>
 
-    <string name="pref_adblock">AdBlock</string>
+    <string name="pref_adblock">AdBlock [BETA]</string>
     <string name="pref_adblock_summary">Block ADS for better navigation but you are not a good person</string>
 
     <string name="pref_font_summary">Use Space Mono Font instead of Roboto</string>
@@ -144,5 +144,18 @@
     <string name="libs_text">Libraries</string>
     <string name="links_text">More</string>
     <string name="title_activity_feedback">Feedback</string>
+
+    <string name="add_bookmark_title">Add bookmark?</string>
+    <string name="add_bookmark_content">Give to your bookmark a name!</string>
+    <string name="downloading">Downloading: </string>
+    <string name="tabs_error"><![CDATA[Tabs are available for Lollipop or >]]></string>
+    <string name="rename_bookmark_title">Rename bookmark?</string>
+    <string name="rename_bookmark_content">Rename this bookmark with a cool name!</string>
+    <string name="delete_bookmark_title">Delete bookmark?</string>
+    <string name="delete_bookmark_content">Delete this: </string>
+    <string name="delete_bookmark_positive">DELETE</string>
+    <string name="delete_bookmark_negative">CANCEL</string>
+    <string name="url_search_summary">Show your searched text instead of URL</string>
+    <string name="url_search">Searched Text</string>
 
 </resources>
