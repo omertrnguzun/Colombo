@@ -247,6 +247,9 @@ public class MainActivity extends AppCompatActivity {
         webView.setFocusableInTouchMode(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+        if (prefs.getBoolean("plugins", true)) {
+            webSettings.setPluginState(WebSettings.PluginState.ON);
+        }
 
         webView.setWebViewClient(new WebClient());
         webView.setDownloadListener(new DownloadListener() {

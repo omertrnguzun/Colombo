@@ -31,6 +31,12 @@
             android:key="cookies"
             android:summary="@string/pref_cookies_summary"
             android:title="@string/pref_cookies" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="plugins"
+            android:summary="@string/pref_plugins_summary"
+            android:title="@string/pref_plugins" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/general_2_title">

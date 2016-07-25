@@ -159,5 +159,7 @@
     <string name="url_search">Testo cercato nella barra di ricerca</string>
     <string name="restart_colombo">Riavvia Colombo per applicare i cambiamenti</string>
     <string name="link_error">Colombo non capisce questo url</string>
+    <string name="pref_plugins">Plugins</string>
+    <string name="pref_plugins_summary">I plugins sono richiesti da certi siti per poter funzionare</string>
 
 </resources>
