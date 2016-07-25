@@ -157,5 +157,6 @@
     <string name="delete_bookmark_negative">CANCEL</string>
     <string name="url_search_summary">Show your searched text instead of URL</string>
     <string name="url_search">Searched Text</string>
+    <string name="restart_colombo">Restart Colombo for apply changes</string>
 
 </resources>

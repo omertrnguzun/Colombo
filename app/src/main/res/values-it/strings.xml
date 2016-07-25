@@ -158,5 +158,6 @@
     <string name="delete_bookmark_negative">ANNULLA</string>
     <string name="url_search_summary">Mostra il testo che hai cercato invece dell\'url della pagina</string>
     <string name="url_search">Testo cercato nella barra di ricerca</string>
+    <string name="restart_colombo">Riavvia Colombo per applicare i cambiamenti</string>
 
 </resources>
