@@ -1032,7 +1032,6 @@ public class MainActivity extends AppCompatActivity {
                 setTheme(R.style.AppThemeDark);
             } else {
                 setTheme(R.style.AppTheme);
-                Toast.makeText(MainActivity.this, "Light Theme", Toast.LENGTH_SHORT).show();
             }
         } else {
             setTheme(R.style.AppTheme);
