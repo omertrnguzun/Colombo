@@ -171,13 +171,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setUpFirstTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
         setUpElements();
+
+        setUpUiTheme();
 
         setUpBookmarksStructure();
 
@@ -186,8 +188,6 @@ public class MainActivity extends AppCompatActivity {
         setUpUiAnimations();
 
         setUpClickListeners();
-
-        setUpLightIcons();
 
         handleUrlLoading();
 
@@ -656,7 +656,7 @@ public class MainActivity extends AppCompatActivity {
                         toolbar.setNavigationIcon(R.drawable.ic_search_toolbar);
                     }
 
-                    setUpLightIcons();
+                    setUpUiTheme();
                 } else {
                     //When enter in incognito
                     appTitle.setText(R.string.app_name_incognito);
@@ -676,7 +676,6 @@ public class MainActivity extends AppCompatActivity {
                     if (prefs.getBoolean("light_icons", true)) {
                     } else {
                         setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryIncognito));
-                        setTheme(R.style.AppThemeNoActionBar);
                         appTitle.setTextColor(Color.parseColor("#FAFAFA"));
                         Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
                         settings.setImageDrawable(drawable_light);
@@ -761,7 +760,6 @@ public class MainActivity extends AppCompatActivity {
      * SetUp the UI elements importing them
      */
     private void setUpElements() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         urlIntent = getIntent().getDataString();
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
@@ -804,22 +802,6 @@ public class MainActivity extends AppCompatActivity {
         frameNoBookmarks.setVisibility(View.GONE);
         frameError = (FrameLayout) findViewById(R.id.frameError);
         no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
-
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
-            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-            Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
-            settings.setImageDrawable(drawable_light);
-            if (isTablet(this)) {
-                Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
-                back.setImageDrawable(drawable_back_white);
-
-                Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
-                forward.setImageDrawable(drawable_forward_white);
-
-                Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
-                bookmark.setImageDrawable(drawable_bookmark_white);
-            }
-        }
     }
 
     /**
@@ -1040,12 +1022,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * SetUp white theme
+     * SetUp themes first
      */
-    private void setUpLightIcons() {
+    private void setUpFirstTheme() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (Build.VERSION.SDK_INT >= M) {
             if (prefs.getBoolean("light_icons", true)) {
-                coordinatorLayout.setSystemUiVisibility(coordinatorLayout.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                //coordinatorLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                setTheme(R.style.AppThemeDark);
+            } else {
+                setTheme(R.style.AppTheme);
+                Toast.makeText(MainActivity.this, "Light Theme", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            setTheme(R.style.AppTheme);
+        }
+    }
+
+    /**
+     * SetUp white theme
+     */
+    private void setUpUiTheme() {
+        if (Build.VERSION.SDK_INT >= M) {
+            if (prefs.getBoolean("light_icons", true)) {
                 appTitle.setTextColor(Color.parseColor("#233B3F"));
                 Drawable drawable_black = getResources().getDrawable(R.drawable.ic_settings_title);
                 settings.setImageDrawable(drawable_black);
@@ -1060,7 +1059,6 @@ public class MainActivity extends AppCompatActivity {
                     bookmark.setImageDrawable(drawable_bookmark_black);
                 }
             } else {
-                setTheme(R.style.AppThemeNoActionBar);
                 appTitle.setTextColor(Color.parseColor("#FAFAFA"));
                 Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
                 settings.setImageDrawable(drawable_light);
@@ -1074,6 +1072,20 @@ public class MainActivity extends AppCompatActivity {
                     Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
                     bookmark.setImageDrawable(drawable_bookmark_white);
                 }
+            }
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
+            settings.setImageDrawable(drawable_light);
+            if (isTablet(this)) {
+                Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
+                back.setImageDrawable(drawable_back_white);
+
+                Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
+                forward.setImageDrawable(drawable_forward_white);
+
+                Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
+                bookmark.setImageDrawable(drawable_bookmark_white);
             }
         }
     }
@@ -1107,7 +1119,7 @@ public class MainActivity extends AppCompatActivity {
      * Setup the preferences
      */
     private void setUpPrefs() {
-        setUpLightIcons();
+        setUpUiTheme();
         if (prefs.getBoolean("adblock", true)) {
             AdBlocker.init(this);
         }
