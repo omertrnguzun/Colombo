@@ -40,10 +40,8 @@
     <string name="pref_light_icons">Dark statusbar icons</string>
     <string name="pref_light_icons_summary">The icons on status bar will be dark and the colors of color theming will be light</string>
 
-    <string name="pref_header_report_summary">Send an email to me</string>
     <string name="pref_header_about_summary">Learn how to use Colombo</string>
 
-    <string name="pref_header_report">Report bugs</string>
     <string name="pref_header_intro">Guide</string>
 
     <string name="pref_swipe_to_refresh">Swipe to refresh</string>

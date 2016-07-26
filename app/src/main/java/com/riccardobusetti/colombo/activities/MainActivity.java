@@ -350,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void onGenerated(Palette palette) {
                                     setColor(palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
+                                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle() + " with Colombo", webView.getFavicon(), palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                                     }
                                 }
                             });
@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void onGenerated(Palette palette) {
                                     setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
+                                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle() + " with Colombo", webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                                     }
                                 }
                             });
@@ -371,14 +371,14 @@ public class MainActivity extends AppCompatActivity {
                             public void onGenerated(Palette palette) {
                                 setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
+                                    setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle() + " with Colombo", webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                                 }
                             }
                         });
                     }
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle(), webView.getFavicon(), Color.parseColor("#80DEEA")));
+                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle() + " with Colombo", webView.getFavicon(), Color.parseColor("#80DEEA")));
                     }
                 }
             }

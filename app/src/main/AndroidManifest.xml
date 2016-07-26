@@ -68,13 +68,6 @@
                 android:value=".activities.SettingsActivity" />
         </activity>
         <activity
-            android:name=".activities.SplashActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:hardwareAccelerated="true"
-            android:label="@string/app_name"
-            >
-        </activity>
-        <activity
             android:name=".activities.FeedbackActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:hardwareAccelerated="true"

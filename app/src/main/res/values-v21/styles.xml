@@ -10,7 +10,7 @@
     <!-- Splash Theme -->
     <style name="AppTheme.BrandedLaunch" parent="AppTheme">
         <item name="android:windowBackground">@drawable/launch_screen</item>
-        <item name="android:statusBarColor">#E0E0E0</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDarkSplash</item>
     </style>
 
     <!-- App Theme for other sections -->
