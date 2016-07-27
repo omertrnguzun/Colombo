@@ -2,9 +2,11 @@ package com.riccardobusetti.colombo.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,14 +24,18 @@ public class AboutActivity extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     private TextView rate, github;
     private Toolbar toolbar;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppThemeDark);
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("hw_acceleration", true)) {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        }
         setContentView(R.layout.activity_about);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setTitle("About");

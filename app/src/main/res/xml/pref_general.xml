@@ -64,6 +64,13 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/general_3_title">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="hw_acceleration"
+            android:summary="@string/home_hw_description"
+            android:title="@string/home_hw" />
+
         <SwitchPreference
             android:defaultValue="true"
             android:key="home_bookmarks"

@@ -174,8 +174,6 @@ public class MainActivity extends AppCompatActivity {
         setUpFirstTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
         setUpElements();
 
@@ -201,8 +199,11 @@ public class MainActivity extends AppCompatActivity {
 
         /** Set Webview params */
         //webView.setNavigationViews(findViewById(R.id.previous), findViewById(R.id.next));
-        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        if (prefs.getBoolean("hw_acceleration", true)) {
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        }
+
         WebSettings webSettings = webView.getSettings();
 
         /** Editable settings */
@@ -727,9 +728,24 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        webView.saveState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        webView.restoreState(savedInstanceState);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
+        webView.onPause();
+        webView.pauseTimers();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null) {
@@ -740,6 +756,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        webView.onResume();
+        webView.resumeTimers();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null) {
@@ -929,7 +947,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                /*if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
                     titleFrame.setVisibility(View.GONE);
                     searchView.setIconified(false);
@@ -937,7 +955,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     searchView.setIconified(false);
                     searchView.setVisibility(View.VISIBLE);
-                }
+                }*/
+                searchView.setIconified(false);
+                searchView.setVisibility(View.VISIBLE);
             }
         });
 

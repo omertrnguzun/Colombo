@@ -3,11 +3,13 @@ package com.riccardobusetti.colombo.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -23,13 +25,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
 
+    private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppThemeGeneric);
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("hw_acceleration", true)) {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
