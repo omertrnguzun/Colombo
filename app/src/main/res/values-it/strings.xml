@@ -161,5 +161,8 @@
     <string name="pref_plugins_summary">I plugins sono richiesti da certi siti per poter funzionare</string>
     <string name="home_hw_description">L\'accelerazione hardware migliorerà le performance ma ridurrà la durata della batteria</string>
     <string name="home_hw">Accelerazione Hardware</string>
+    <string name="menu_clear">ELIMINA TUTTO</string>
+    <string name="menu_history">Cronologia</string>
+    <string name="title_activity_history">Cronologia</string>
 
 </resources>

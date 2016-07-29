@@ -51,9 +51,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
@@ -92,8 +90,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static android.os.Build.VERSION_CODES.M;
@@ -463,6 +462,7 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.action_incognito).setIcon(R.drawable.menu_incognito);
         menu.findItem(R.id.action_add).setIcon(R.drawable.menu_add);
         menu.findItem(R.id.action_share).setIcon(R.drawable.menu_share);
+        menu.findItem(R.id.action_history).setIcon(R.drawable.menu_history);
         menu.findItem(R.id.action_settings).setIcon(R.drawable.menu_settings);
 
 
@@ -587,8 +587,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_refresh:
-                //webView.reload();
-                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                webView.reload();
                 break;
             case R.id.action_share:
                 String shareBody = webView.getUrl();
@@ -597,6 +596,9 @@ public class MainActivity extends AppCompatActivity {
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, webView.getTitle());
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share link"));
+                break;
+            case R.id.action_history:
+                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
                 break;
             case R.id.action_bookmark:
                 if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
@@ -902,10 +904,12 @@ public class MainActivity extends AppCompatActivity {
     private void setUpBookmarksStructure() {
         gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
         rv = (RecyclerView) findViewById(R.id.recyclerViewer);
-        rv.setHasFixedSize(true);
+        rv.hasFixedSize();
+        rv.setItemAnimator(new SlideInLeftAnimator());
         rv.setLayoutManager(gridLayoutManager);
         adapter = new MyAdapter(this, cardDatas);
-        rv.setAdapter(adapter);
+        ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(adapter);
+        rv.setAdapter(alphaAdapter);
         retrieve();
     }
 
@@ -1357,15 +1361,6 @@ public class MainActivity extends AppCompatActivity {
 
         long result = db.add(title, link);
 
-        if (result > 0) {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark added successfully!", Snackbar.LENGTH_SHORT);
-            snackbar.show();
-            retrieve();
-        } else {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Impossible to save Bookmark :_(", Snackbar.LENGTH_SHORT);
-            snackbar.show();
-        }
-
         db.closeDB();
     }
 
@@ -1656,7 +1651,9 @@ public class MainActivity extends AppCompatActivity {
                 title.setText(webView.getUrl());
             }
 
-            saveHistory(webView.getTitle(), webView.getUrl());
+            if (!isIncognito) {
+                saveHistory(webView.getTitle(), webView.getUrl());
+            }
         }
     }
 
@@ -1776,19 +1773,6 @@ public class MainActivity extends AppCompatActivity {
                     bottomSheet.showWithSheetView(menuSheetView);
                 }
             });
-
-            setAnimation(holder.itemView, position);
-
-        }
-
-        private void setAnimation(View viewToAnimate, int position) {
-            // If the bound view wasn't previously displayed on screen, it's animated
-            if (position > lastPosition) {
-                ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                anim.setDuration(new Random().nextInt(501));//to make duration random number between [0,501)
-                viewToAnimate.startAnimation(anim);
-                lastPosition = position;
-            }
         }
 
         @Override

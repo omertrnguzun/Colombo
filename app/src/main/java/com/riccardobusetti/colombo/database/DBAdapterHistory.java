@@ -93,9 +93,18 @@ public class DBAdapterHistory {
     }
 
     //Eliminare ID
-    public long Delete(int id) {
+    public long delete(int id) {
         try {
             return db.delete(ContantsHistory.TB_NAME_H, ContantsHistory.ROW_H + " =?", new String[]{String.valueOf(id)});
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public long deleteAll() {
+        try {
+            return db.delete(ContantsHistory.TB_NAME_H, null, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }
