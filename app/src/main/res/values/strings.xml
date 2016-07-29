@@ -160,5 +160,6 @@
     <string name="pref_plugins_summary">Plugins are needed in some websites to work properly</string>
     <string name="home_hw_description">Hardware Acceleration can improve performance but reduce the battery life</string>
     <string name="home_hw">Hardware Acceleration</string>
+    <string name="title_activity_history">HistoryActivity</string>
 
 </resources>

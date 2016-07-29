@@ -159,5 +159,7 @@
     <string name="link_error">Colombo non capisce questo url</string>
     <string name="pref_plugins">Plugins</string>
     <string name="pref_plugins_summary">I plugins sono richiesti da certi siti per poter funzionare</string>
+    <string name="home_hw_description">L\'accelerazione hardware migliorerà le performance ma ridurrà la durata della batteria</string>
+    <string name="home_hw">Accelerazione Hardware</string>
 
 </resources>

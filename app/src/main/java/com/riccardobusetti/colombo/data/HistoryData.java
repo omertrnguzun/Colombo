@@ -5,21 +5,21 @@ package com.riccardobusetti.colombo.data;
  */
 public class HistoryData {
 
-    private int id;
+    private int identifier;
     private String title, link;
 
-    public HistoryData(int id, String title, String link) {
-        this.id = id;
+    public HistoryData(int identifier, String title, String link) {
+        this.identifier = identifier;
         this.title = title;
         this.link = link;
     }
 
-    public int getId() {
-        return id;
+    public int getIdentifier() {
+        return identifier;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.identifier = id;
     }
 
     public String getTitle() {

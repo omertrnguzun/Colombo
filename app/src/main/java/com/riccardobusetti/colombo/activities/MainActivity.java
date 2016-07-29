@@ -77,6 +77,7 @@ import com.flipboard.bottomsheet.commons.MenuSheetView;
 import com.riccardobusetti.colombo.R;
 import com.riccardobusetti.colombo.data.CardData;
 import com.riccardobusetti.colombo.database.DBAdapter;
+import com.riccardobusetti.colombo.database.DBAdapterHistory;
 import com.riccardobusetti.colombo.holder.MyHolder;
 import com.riccardobusetti.colombo.util.AdBlocker;
 import com.riccardobusetti.colombo.util.AppStatus;
@@ -586,7 +587,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_refresh:
-                webView.reload();
+                //webView.reload();
+                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
                 break;
             case R.id.action_share:
                 String shareBody = webView.getUrl();
@@ -1346,6 +1348,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Save data in DB
+     */
+    private void saveHistory(String title, String link) {
+
+        DBAdapterHistory db = new DBAdapterHistory(this);
+        db.openDB();
+
+        long result = db.add(title, link);
+
+        if (result > 0) {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark added successfully!", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+            retrieve();
+        } else {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Impossible to save Bookmark :_(", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
+
+        db.closeDB();
+    }
+
+    /**
      * Another method to get image file name
      */
     protected String getFilenameFromURL(URL url) {
@@ -1629,6 +1653,8 @@ public class MainActivity extends AppCompatActivity {
                 searchView.setQuery(webView.getUrl(), false);
                 title.setText(webView.getUrl());
             }
+
+            saveHistory(webView.getTitle(), webView.getUrl());
 
         }
     }

@@ -160,11 +160,11 @@ public class ObservableWebView extends WebView {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 endX = event.getX();
-                animate().x(0).setDuration(50).start();
+                animate().x(0).setDuration(0).start();
 
                 if (prefs.getBoolean("gestures", true)) {
-                    if (startX - endX > 700 && canGoForward()) goForward();
-                    else if (startX - endX < -700 && canGoBack()) goBack();
+                    if (startX - endX > 600 && canGoForward()) goForward();
+                    else if (startX - endX < -600 && canGoBack()) goBack();
                 }
 
                 stopNestedScroll();

@@ -53,15 +53,15 @@ public class DBAdapterHistory {
     }
 
     //Inserimento
-    public long add(String name, String code) {
+    public long add(String title, String link) {
 
         try {
 
             ContentValues cv = new ContentValues();
-            cv.put(Contants.NAME_H, name);
-            cv.put(Contants.CODE_H, code);
+            cv.put(ContantsHistory.TITLE, title);
+            cv.put(ContantsHistory.LINK, link);
 
-            return db.insert(Contants.TB_NAME_H, Contants.ROW_ID_H, cv);
+            return db.insert(ContantsHistory.TB_NAME_H, ContantsHistory.ROW_H, cv);
 
         } catch (SQLException e) {
 
@@ -75,17 +75,17 @@ public class DBAdapterHistory {
     //Prendere
     public Cursor getAllData() {
 
-        String[] colums = {Contants.ROW_ID_H, Contants.NAME_H, Contants.CODE_H};
+        String[] colums = {ContantsHistory.ROW_H, ContantsHistory.TITLE, ContantsHistory.LINK};
 
-        return db.query(Contants.TB_NAME_H, colums, null, null, null, null, null);
+        return db.query(ContantsHistory.TB_NAME_H, colums, null, null, null, null, null);
     }
 
     //Aggiornare DB
-    public long UPDATE(int id, String name) {
+    public long UPDATE(int id, String title) {
         try {
             ContentValues cv = new ContentValues();
-            cv.put(Contants.NAME_H, name);
-            return db.update(Contants.TB_NAME_H, cv, Contants.ROW_ID_H + " =?", new String[]{String.valueOf(id)});
+            cv.put(Contants.NAME, title);
+            return db.update(ContantsHistory.TB_NAME_H, cv, ContantsHistory.ROW_H + " =?", new String[]{String.valueOf(id)});
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -95,10 +95,11 @@ public class DBAdapterHistory {
     //Eliminare ID
     public long Delete(int id) {
         try {
-            return db.delete(Contants.TB_NAME_H, Contants.ROW_ID_H + " =?", new String[]{String.valueOf(id)});
+            return db.delete(ContantsHistory.TB_NAME_H, ContantsHistory.ROW_H + " =?", new String[]{String.valueOf(id)});
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
     }
+
 }

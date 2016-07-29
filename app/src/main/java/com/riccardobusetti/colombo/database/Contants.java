@@ -11,10 +11,6 @@ public class Contants {
     static final String NAME = "name";
     static final String CODE = "code";
 
-    static final String ROW_ID_H = "idh";
-    static final String NAME_H = "title";
-    static final String CODE_H = "link";
-
     //Proprietà DB
     static final String DB_NAME = "d_DB";
     static final String TB_NAME = "d_TB";
@@ -26,6 +22,4 @@ public class Contants {
 
     //Creazione DB
     static final String CREATE_TB = "CREATE TABLE d_TB(id INTEGER PRIMARY KEY AUTOINCREMENT," + "name TEXT NOT NULL,code TEXT NOT NULL);";
-
-    static final String CREATE_TB_H = "CREATE TABLE d_TB_H(id INTEGER PRIMARY KEY AUTOINCREMENT," + "name TEXT NOT NULL,code TEXT NOT NULL);";
 }

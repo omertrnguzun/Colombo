@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelperHistory extends SQLiteOpenHelper {
 
     public DBHelperHistory(Context context) {
-        super(context, Contants.DB_NAME_H, null, Contants.DB_VERSION_H);
+        super(context, ContantsHistory.DB_NAME_H, null, ContantsHistory.DB_VERSION_H);
     }
 
     //Creazione Table
@@ -19,7 +19,7 @@ public class DBHelperHistory extends SQLiteOpenHelper {
 
         try {
 
-            db.execSQL(Contants.CREATE_TB_H);
+            db.execSQL(ContantsHistory.CREATE_H_TABLE);
 
         } catch (Exception ex) {
 
@@ -33,7 +33,7 @@ public class DBHelperHistory extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("DROP TABLE IF EXISTS " + Contants.TB_NAME_H);
+        db.execSQL("DROP TABLE IF EXISTS " + ContantsHistory.TB_NAME_H);
 
         onCreate(db);
 
