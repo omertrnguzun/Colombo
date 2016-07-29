@@ -1638,6 +1638,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             checkInternet();
+
+
         }
 
         @Override
@@ -1655,7 +1657,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             saveHistory(webView.getTitle(), webView.getUrl());
-
         }
     }
 

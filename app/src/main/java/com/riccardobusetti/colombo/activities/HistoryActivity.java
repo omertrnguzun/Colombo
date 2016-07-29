@@ -3,6 +3,7 @@ package com.riccardobusetti.colombo.activities;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
@@ -18,7 +19,6 @@ public class HistoryActivity extends AppCompatActivity {
     private RecyclerView rv;
     private HistoryAdapter adapter;
     private ArrayList<HistoryData> historyDatas = new ArrayList<>();
-    private RecyclerView.LayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +29,9 @@ public class HistoryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         rv = (RecyclerView) findViewById(R.id.recyclerViewerHistory);
-        rv.setLayoutManager(linearLayoutManager);
+        rv.setLayoutManager(new LinearLayoutManager(this));
         rv.hasFixedSize();
         adapter = new HistoryAdapter(this, historyDatas);
-
-
 
         retrieve();
 
