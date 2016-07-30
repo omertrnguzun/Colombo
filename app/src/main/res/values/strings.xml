@@ -163,5 +163,7 @@
     <string name="title_activity_history">History</string>
     <string name="menu_clear">CLEAR ALL</string>
     <string name="menu_history">History</string>
+    <string name="title_activity_donation">Donations</string>
+    <string name="pref_header_donation">Donate me</string>
 
 </resources>

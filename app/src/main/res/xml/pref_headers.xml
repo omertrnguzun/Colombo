@@ -30,4 +30,10 @@
             android:targetPackage="com.riccardobusetti.colombo" />
     </header>
 
+    <!--<header android:title="@string/pref_header_donation">
+        <intent
+            android:targetClass="com.riccardobusetti.colombo.activities.DonationActivity"
+            android:targetPackage="com.riccardobusetti.colombo" />
+    </header>-->
+
 </preference-headers>

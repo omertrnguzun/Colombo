@@ -164,5 +164,7 @@
     <string name="menu_clear">ELIMINA TUTTO</string>
     <string name="menu_history">Cronologia</string>
     <string name="title_activity_history">Cronologia</string>
+    <string name="pref_header_donation">Donami</string>
+    <string name="title_activity_donation">Donazioni</string>
 
 </resources>
