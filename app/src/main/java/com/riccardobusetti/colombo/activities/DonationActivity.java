@@ -15,6 +15,13 @@ public class DonationActivity extends AppCompatActivity implements BillingProces
 
     private BillingProcessor bp;
     private Toolbar toolbar;
+    private static final String PRODUCT_ID_1 = "com.riccardobusetti.colombo.coke";
+    private static final String PRODUCT_ID_2 = "com.riccardobusetti.colombo.brioches";
+    private static final String PRODUCT_ID_3 = "com.riccardobusetti.colombo.kebab";
+    private static final String PRODUCT_ID_4 = "com.riccardobusetti.colombo.kingmeal";
+    private static final String PRODUCT_ID_5 = "com.riccardobusetti.colombo.present";
+    private static final String PRODUCT_ID_6 = "com.riccardobusetti.colombo.computer";
+    private static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqZtUFo4j56eXaLF9eUq0wBgAkmN5AcAn7rkt2laVFIj607r/5xhrb9fG+eEZqyuqB7eNuqn96mM64BUCR4uqBNuzfBribzPqPWLM1P7jxMaOY4/CKUtQX/Asaf/Vc+n94nT563s+eEe+Yg4sydHX+qh1bcSrbgRsDJqfSP3HRjfb6Xa2Bq3Xg9L+rzX4dBczYO0ik7asZ98WNRFH/OLb61unjTe37T7tmyi1R5uCriJoMgJmvZG+OaPTqWZkBaRSmPZIfc37mA/W0Ueih6bkZHwzSbFT1hW8Z7Ld8vVQgF41E3OFIrv/TMgR7R7tO1JgvCkLPmE+jVzPUMotP7S8FQIDAQAB";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +38,13 @@ public class DonationActivity extends AppCompatActivity implements BillingProces
             }
         });
 
-        bp = new BillingProcessor(this, "YOUR LICENSE KEY FROM GOOGLE PLAY CONSOLE HERE", this);
+        bp = new BillingProcessor(this, LICENSE_KEY, this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bp.purchase(DonationActivity.this, "YOUR PRODUCT ID FROM GOOGLE PLAY CONSOLE HERE");
+                bp.purchase(DonationActivity.this, PRODUCT_ID_1);
             }
         });
     }
