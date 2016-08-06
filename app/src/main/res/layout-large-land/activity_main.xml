@@ -190,7 +190,7 @@
                         android:layout_margin="16dp"
                         android:text="Bookmarks"
                         android:textColor="@color/colorTextDarkBlue"
-                        android:textSize="16dp" />
+                        android:textSize="16sp" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerViewer"
@@ -229,7 +229,7 @@
                                 android:layout_margin="16dp"
                                 android:text="You have no bookmarks"
                                 android:textColor="@color/colorTextDarkBlue"
-                                android:textSize="16dp" />
+                                android:textSize="16sp" />
 
                         </RelativeLayout>
 
@@ -271,7 +271,7 @@
                                 android:layout_marginTop="10dp"
                                 android:text="Colombo Error"
                                 android:textColor="@color/colorTextDarkBlue"
-                                android:textSize="16dp" />
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/text_error"

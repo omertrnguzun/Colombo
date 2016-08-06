@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void onGenerated(Palette palette) {
                                     setColor(palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle() + " with Colombo", webView.getFavicon(), palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
+                                        setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                                     }
                                 }
                             });
@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void onGenerated(Palette palette) {
                                     setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle() + " with Colombo", webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
+                                        setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                                     }
                                 }
                             });
@@ -372,14 +372,14 @@ public class MainActivity extends AppCompatActivity {
                             public void onGenerated(Palette palette) {
                                 setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle() + " with Colombo", webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
+                                    setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                                 }
                             }
                         });
                     }
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        setTaskDescription(new ActivityManager.TaskDescription(webView.getTitle() + " with Colombo", webView.getFavicon(), Color.parseColor("#80DEEA")));
+                        setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), Color.parseColor("#80DEEA")));
                     }
                 }
             }
@@ -1692,10 +1692,12 @@ public class MainActivity extends AppCompatActivity {
             holder.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onItemClick(View v, int pos) {
-                    webView.loadUrl(cardData.get(pos).getCode());
                     if (webView.getVisibility() == View.GONE) {
                         webView.setVisibility(View.VISIBLE);
                         titleFrame.setVisibility(View.GONE);
+                    }
+                    if (!webView.getUrl().equals(cardData.get(pos).getCode())) {
+                        webView.loadUrl(cardData.get(pos).getCode());
                     }
                 }
             });

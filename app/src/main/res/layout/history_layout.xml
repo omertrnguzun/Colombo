@@ -13,7 +13,7 @@
         android:padding="16dp"
         android:src="@drawable/ic_cancel_history"/>
 
-    <TextView
+    <com.riccardobusetti.colombo.view.ScrollingTextView
         android:id="@+id/history_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,6 +21,13 @@
         android:textColor="@color/colorTextDarkGrey"
         android:text="History"
         android:layout_toEndOf="@+id/history_cancel"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:lines="1"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
 
 </RelativeLayout>

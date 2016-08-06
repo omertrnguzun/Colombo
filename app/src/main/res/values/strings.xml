@@ -40,7 +40,7 @@
     <string name="pref_light_icons">Dark statusbar icons</string>
     <string name="pref_light_icons_summary">The icons on status bar will be dark and the colors of color theming will be light</string>
 
-    <string name="pref_header_about_summary">Learn how to use Colombo</string>
+    <string name="pref_header_tutorial_summary">Learn how to use Colombo</string>
 
     <string name="pref_header_intro">Guide</string>
 
@@ -165,5 +165,15 @@
     <string name="menu_history">History</string>
     <string name="title_activity_donation">Donations</string>
     <string name="pref_header_donation">Donate me</string>
+    <string name="donations_coke">Buy me a Coke</string>
+    <string name="donations_brioches">Buy me a Brioches</string>
+    <string name="donations_kebab">Buy me a Kebab</string>
+    <string name="donations_king">Buy me a King Meal</string>
+    <string name="donations_present">Buy me a Present</string>
+    <string name="donations_pc">Buy me a New Computer</string>
+
+    <string name="title_activity_about" translatable="false">About</string>
+    <string name="pref_header_general_summary">General options for sites and more</string>
+    <string name="pref_header_appearance_summary">Give a Colombo a better look</string>
 
 </resources>

@@ -58,23 +58,22 @@
         <activity
             android:name=".activities.AboutActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_about"
             android:parentActivityName=".activities.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SettingsActivity" />
         </activity>
         <activity
-            android:name=".activities.FeedbackActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:label="@string/app_name" />
-        <activity
             android:name=".activities.HistoryActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:label="@string/title_activity_history" />
         <activity
             android:name=".activities.DonationActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:label="@string/title_activity_donation"
-            android:theme="@style/AppTheme.BrandedLaunch"></activity>
+            android:theme="@style/AppTheme.BrandedLaunch"/>
+
     </application>
 
 </manifest>

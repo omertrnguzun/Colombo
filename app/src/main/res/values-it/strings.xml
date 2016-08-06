@@ -41,7 +41,7 @@
     <string name="pref_light_icons">Icone scure nella barra di stato</string>
     <string name="pref_light_icons_summary">Le icone scure garantiscono una esperienza unica con un color theming molto particolare</string>
 
-    <string name="pref_header_about_summary">Impara ad usare Colombo</string>
+    <string name="pref_header_tutorial_summary">Impara ad usare Colombo</string>
 
     <string name="pref_header_intro">Guida</string>
 
@@ -166,5 +166,14 @@
     <string name="title_activity_history">Cronologia</string>
     <string name="pref_header_donation">Donami</string>
     <string name="title_activity_donation">Donazioni</string>
+    <string name="donations_brioches">Offrimi una Coca Cola</string>
+    <string name="donations_coke">Offrimi una Coca Cola</string>
+    <string name="donations_kebab">Offrimi un Kebab</string>
+    <string name="donations_king">Offrimi un Buon Pranzo</string>
+    <string name="donations_pc">Regalami un Computer</string>
+    <string name="donations_present">Fammi una Sorpresa</string>
+    <string name="pref_header_appearance_summary">Dai un look migliore a Colombo</string>
+    <string name="title_activity_about"></string>
+    <string name="pref_header_general_summary">Opzioni generiche per siti e altro</string>
 
 </resources>

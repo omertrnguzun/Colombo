@@ -17,6 +17,6 @@
         android:layout_margin="16dp"
         android:text="Site Name"
         android:textColor="@color/colorTextBlack"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
 </RelativeLayout>

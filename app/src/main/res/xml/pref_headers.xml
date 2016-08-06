@@ -2,29 +2,24 @@
 
     <header
         android:fragment="com.riccardobusetti.colombo.activities.SettingsActivity$GeneralPreferenceFragment"
+        android:summary="@string/pref_header_general_summary"
         android:title="@string/pref_header_general" />
 
     <header
         android:fragment="com.riccardobusetti.colombo.activities.SettingsActivity$AppearancePreferenceFragment"
+        android:summary="@string/pref_header_appearance_summary"
         android:title="@string/pref_header_appearance" />
 
     <header
-        android:summary="@string/pref_header_about_summary"
+        android:summary="@string/pref_header_tutorial_summary"
         android:title="@string/pref_header_intro">
         <intent
             android:targetClass="com.riccardobusetti.colombo.activities.MainIntroActivity"
             android:targetPackage="com.riccardobusetti.colombo" />
     </header>
 
-    <!-- <header
-        android:summary="@string/pref_header_report_summary"
-        android:title="@string/pref_header_report">
-        <intent
-            android:targetClass="com.riccardobusetti.colombo.activities.FeedbackActivity"
-            android:targetPackage="com.riccardobusetti.colombo" />
-    </header> -->
-
-    <header android:title="@string/pref_header_about">
+    <header
+        android:title="@string/pref_header_about">
         <intent
             android:targetClass="com.riccardobusetti.colombo.activities.AboutActivity"
             android:targetPackage="com.riccardobusetti.colombo" />
