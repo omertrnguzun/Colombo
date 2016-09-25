@@ -142,7 +142,6 @@
     <string name="team_text">Il team</string>
     <string name="libs_text">Librerie</string>
     <string name="links_text">Altro</string>
-    <string name="title_activity_feedback">Feedback</string>
 
     <string name="add_bookmark_title">Aggiungi preferito?</string>
     <string name="add_bookmark_content">Dai un nome al preferito!</string>

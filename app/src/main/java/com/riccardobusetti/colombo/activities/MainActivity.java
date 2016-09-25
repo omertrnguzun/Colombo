@@ -162,11 +162,8 @@ public class MainActivity extends AppCompatActivity {
      * Detect if running on tablet screen
      */
     private static Boolean isTablet(Context context) {
-        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
-                && context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            return true;
-        }
-        return false;
+        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
+                && context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     @Override

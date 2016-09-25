@@ -141,7 +141,6 @@
     <string name="team_text">The Team</string>
     <string name="libs_text">Libraries</string>
     <string name="links_text">More</string>
-    <string name="title_activity_feedback">Feedback</string>
 
     <string name="add_bookmark_title">Add bookmark?</string>
     <string name="add_bookmark_content">Give to your bookmark a name!</string>
