@@ -42,6 +42,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -65,6 +66,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +86,7 @@ import com.synthform.colombo.util.ItemLongClickListener;
 import com.synthform.colombo.util.StaticUtils;
 import com.synthform.colombo.view.CustomWebChromeClient;
 import com.synthform.colombo.view.ObservableWebView;
+import com.synthform.colombo.view.ViewAnimationUtils;
 
 import java.io.File;
 import java.net.URL;
@@ -147,12 +150,13 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
     private TextView title, appTitle;
-    private FrameLayout titleFrame, webviewContainer, frameNoBookmarks, frameError;
+    private FrameLayout webviewContainer, frameNoBookmarks, frameError;
+    private RelativeLayout titleFrame;
     private CardView cardSearch;
     private BottomSheetLayout bottomSheet;
     private View search;
     private ImageView settings;
-    private GridLayoutManager gridLayoutManager;
+    private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private View backround_bookmark_text;
     private TextView bookmark_text, no_bookmark_text;
     private ImageView back, forward, bookmark;
@@ -477,7 +481,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
-                    titleFrame.setVisibility(View.GONE);
+                    //titleFrame.setVisibility(View.GONE);
+                    ViewAnimationUtils.collapse(titleFrame);
                 }
 
                 if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
@@ -594,10 +599,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_bookmark:
                 if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
                     webView.setVisibility(View.GONE);
-                    titleFrame.setVisibility(View.VISIBLE);
+                    titleFrame.setVisibility(View.GONE);
+                    ViewAnimationUtils.expand(titleFrame);
                 } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
-                    titleFrame.setVisibility(View.GONE);
+                    //titleFrame.setVisibility(View.GONE);
+                    ViewAnimationUtils.collapse(titleFrame);
                 }
                 break;
             case R.id.action_search_words:
@@ -783,7 +790,7 @@ public class MainActivity extends AppCompatActivity {
 
         title = (TextView) findViewById(R.id.toolbar_title); // SearchBar Title
         appTitle = (TextView) findViewById(R.id.app_title); // Big Colombo TextView
-        titleFrame = (FrameLayout) findViewById(R.id.big_title); // FrameLayout with Big Colombo TextView
+        titleFrame = (RelativeLayout) findViewById(R.id.big_title); // FrameLayout with Big Colombo TextView
 
         cardSearch = (CardView) findViewById(R.id.card_search); // CardView with SearchView
         search = findViewById(R.id.search); // FrameLayout of cardSearch
@@ -801,7 +808,8 @@ public class MainActivity extends AppCompatActivity {
                 webView.setVisibility(View.GONE);
             } else {
                 webView.setVisibility(View.VISIBLE);
-                titleFrame.setVisibility(View.GONE);
+                //titleFrame.setVisibility(View.GONE);
+                ViewAnimationUtils.collapse(titleFrame);
             }
         }
 
@@ -824,7 +832,8 @@ public class MainActivity extends AppCompatActivity {
         if (urlIntent != null) {
             webView.loadUrl(urlIntent);
             webView.setVisibility(View.VISIBLE);
-            titleFrame.setVisibility(View.GONE);
+            //titleFrame.setVisibility(View.GONE);
+            ViewAnimationUtils.collapse(titleFrame);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -845,7 +854,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                             webView.setVisibility(View.VISIBLE);
-                            titleFrame.setVisibility(View.GONE);
+                            //titleFrame.setVisibility(View.GONE);
+                            ViewAnimationUtils.collapse(titleFrame);
                             searchView.setIconified(false);
                             searchView.setVisibility(View.VISIBLE);
                         } else {
@@ -893,11 +903,11 @@ public class MainActivity extends AppCompatActivity {
      * Handle Bookmark elements
      */
     private void setUpBookmarksStructure() {
-        gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, 1);
         rv = (RecyclerView) findViewById(R.id.recyclerViewer);
         rv.hasFixedSize();
         rv.setItemAnimator(new SlideInLeftAnimator());
-        rv.setLayoutManager(gridLayoutManager);
+        rv.setLayoutManager(staggeredGridLayoutManager);
         adapter = new MyAdapter(this, cardDatas);
         ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(adapter);
         rv.setAdapter(alphaAdapter);
@@ -1588,7 +1598,7 @@ public class MainActivity extends AppCompatActivity {
                                                 break;
                                             case R.id.action_copy_link:
                                                 try {
-                                                    copyToClipBoard(webView.getUrl());
+                                                    copyToClipBoard(webView.getHitTestResult().getExtra());
                                                     Toast.makeText(MainActivity.this, "Copied to clipboard", Toast.LENGTH_SHORT).show();
                                                 } catch (Exception exc) {
                                                     Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
@@ -1694,7 +1704,11 @@ public class MainActivity extends AppCompatActivity {
                 public void onItemClick(View v, int pos) {
                     if (webView.getVisibility() == View.GONE) {
                         webView.setVisibility(View.VISIBLE);
-                        titleFrame.setVisibility(View.GONE);
+                        //titleFrame.setVisibility(View.GONE);
+                        ViewAnimationUtils.collapse(titleFrame);
+                        searchView.setIconified(false);
+                        searchView.setVisibility(View.GONE);
+                        searchView.clearFocus();
                     }
                     if (!webView.getUrl().equals(cardData.get(pos).getCode())) {
                         webView.loadUrl(cardData.get(pos).getCode());
