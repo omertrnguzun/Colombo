@@ -13,7 +13,7 @@
         android:padding="16dp"
         android:src="@drawable/ic_cancel_history"/>
 
-    <com.riccardobusetti.colombo.view.ScrollingTextView
+    <com.synthform.colombo.view.ScrollingTextView
         android:id="@+id/history_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
