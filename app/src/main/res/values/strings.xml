@@ -35,7 +35,7 @@
     <string name="pref_header_about">About Colombo</string>
 
     <string name="search_engines">Change the Search Engine</string>
-    <string name="search_engines_summary">Changes the search engine used if the browser input isn\'t a url</string>
+    <string name="search_engines_summary">Changes the search engine that is used if the browser input isn\'t a url</string>
 
     <string name="pref_light_icons">Dark statusbar icons</string>
     <string name="pref_light_icons_summary">The icons on status bar will be dark and the colors of color theming will be light</string>
@@ -48,27 +48,27 @@
     <string name="pref_swipe_to_refresh_summary">With a simple swipe on the top of the page you can refresh it</string>
 
     <string name="pref_circle_progress">Circle progress</string>
-    <string name="pref_circle_progress_summary">A loading circle will appear for know when the page is loading</string>
+    <string name="pref_circle_progress_summary">A loading circle will appear to indicate when the page is loading</string>
 
     <string name="search_open_dialog">Open Outside</string>
-    <string name="search_open_dialog_summary">Change how famous links are handled</string>
+    <string name="search_open_dialog_summary">Change how links which can be opened with other apps are handled</string>
 
     <string name="pref_cookies">Cookies</string>
-    <string name="pref_cookies_summary">Cookies are used by the servers to keep in memory your login</string>
+    <string name="pref_cookies_summary">Cookies are used by servers to remember your login</string>
 
     <string name="homepage">Homepage</string>
     <string name="homepage_sumamry">Changes the initial page loaded when the browser is opened. Leave blank to load the default search engine instead.</string>
 
-    <string name="home_bookmarks">Home with Bookmarks</string>
-    <string name="home_bookmarks_description">Launch the bookmark screen on start, instead of homepage</string>
+    <string name="home_bookmarks">Bookmarks home page</string>
+    <string name="home_bookmarks_description">Launch the bookmark screen on start, as the homepage</string>
 
     <string name="pref_sticky_header">Hide search</string>
-    <string name="pref_sticky_header_summary">Hide search on scroll of the page for more immersive experience</string>
+    <string name="pref_sticky_header_summary">Hide search when the page is scrolled down for a more immersive browsing experience</string>
 
     <string name="pref_adblock">AdBlock [BETA]</string>
-    <string name="pref_adblock_summary">Block ADS for better navigation but you are not a good person</string>
+    <string name="pref_adblock_summary">Block advertisements for better navigation but you are not a good person</string>
 
-    <string name="pref_font_summary">Use Space Mono Font instead of Roboto</string>
+    <string name="pref_font_summary">Use the Space Mono Font instead of Roboto</string>
     <string name="pref_font">Custom Font</string>
 
     <string-array name="search_engines_titles">
@@ -86,7 +86,7 @@
     </string-array>
 
     <string-array name="search_open_dialog_titles">
-        <item>Open Always</item>
+        <item>Open always</item>
         <item>Open App (if avaliable)</item>
         <item>Open Link</item>
     </string-array>
@@ -97,8 +97,8 @@
         <item>2</item>
     </string-array>
 
-    <string name="menu_open_new">Open in new tab</string>
-    <string name="menu_open_new_link">Open this link in new tab</string>
+    <string name="menu_open_new">Open in a new tab</string>
+    <string name="menu_open_new_link">Open this link in a new tab</string>
     <string name="menu_open_save_bookmark">Add to bookmarks</string>
     <string name="menu_save_image">Save image</string>
     <string name="menu_open_copy_link">Copy link</string>
@@ -120,12 +120,12 @@
     <string name="appearence_2_title">UX</string>
 
     <string name="title_1">Gestures</string>
-    <string name="description_1">Go back and forward in your page with an horizontal swipe</string>
+    <string name="description_1">Go back and forward in your browsing history by swiping horizontally</string>
 
     <string name="title_2">Your favorites</string>
-    <string name="description_2">Long press the searchbar to save a bookmark</string>
+    <string name="description_2">Long press the search bar to save a bookmark</string>
     <string name="title_3">Content</string>
-    <string name="description_3">Long press a link or image and select the action you want</string>
+    <string name="description_3">Long press a link or image to select the action you want</string>
 
     <string name="gestures">Gestures</string>
     <string name="gestures_description">With a swipe to left to right or inverse you can navigate in your history</string>
@@ -134,36 +134,36 @@
 
     <string name="menu_bookmark">Bookmarks</string>
     <string name="app_name_incognito">Colombo Incognito</string>
-    <string name="no_connection">For continue using Colombo you must have Internet</string>
-    <string name="tutorial">You want to see the tutorial?</string>
+    <string name="no_connection"You must have an Internet connection to use Colombo</string>
+    <string name="tutorial"Do you want to go through the tutorial?</string>
     <string name="description_about">A fast, light and</string>
     <string name="description_about_2">beautiful browser</string>
     <string name="team_text">The Team</string>
     <string name="libs_text">Libraries</string>
     <string name="links_text">More</string>
 
-    <string name="add_bookmark_title">Add bookmark?</string>
-    <string name="add_bookmark_content">Give to your bookmark a name!</string>
+    <string name="add_bookmark_title">Add a bookmark?</string>
+    <string name="add_bookmark_content"Name your bookmark!</string>
     <string name="tabs_error"><![CDATA[Tabs are available for Lollipop or >]]></string>
     <string name="rename_bookmark_title">Rename bookmark?</string>
-    <string name="rename_bookmark_content">Rename this bookmark with a cool name!</string>
+    <string name="rename_bookmark_content">Give this bookmark with a new name!</string>
     <string name="delete_bookmark_title">Delete bookmark?</string>
-    <string name="delete_bookmark_content">Delete this: </string>
+    <string name="delete_bookmark_content">Do you really want to delete this bookmark: </string>
     <string name="delete_bookmark_positive">DELETE</string>
     <string name="delete_bookmark_negative">CANCEL</string>
-    <string name="url_search_summary">Show your searched text instead of URL</string>
+    <string name="url_search_summary">Show your searched text instead of the page/'s URL</string>
     <string name="url_search">Searched Text</string>
-    <string name="restart_colombo">Restart Colombo for apply changes</string>
+    <string name="restart_colombo">Restart Colombo to apply changes</string>
     <string name="link_error">Colombo can\'t understand this url :/</string>
     <string name="pref_plugins">Plugins</string>
-    <string name="pref_plugins_summary">Plugins are needed in some websites to work properly</string>
-    <string name="home_hw_description">Hardware Acceleration can improve performance but reduce the battery life</string>
+    <string name="pref_plugins_summary">Plugins are needed for some websites to work properly</string>
+    <string name="home_hw_description">Hardware Acceleration can improve performance but reduce battery life</string>
     <string name="home_hw">Hardware Acceleration</string>
     <string name="title_activity_history">History</string>
     <string name="menu_clear">CLEAR ALL</string>
     <string name="menu_history">History</string>
     <string name="title_activity_donation">Donations</string>
-    <string name="pref_header_donation">Donate me</string>
+    <string name="pref_header_donation">Donate to me</string>
     <string name="donations_coke">Buy me a Coke</string>
     <string name="donations_brioches">Buy me a Brioches</string>
     <string name="donations_kebab">Buy me a Kebab</string>
