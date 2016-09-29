@@ -257,7 +257,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDownloadStart(final String url, String userAgent, final String contentDisposition, final String mimeType, long contentLength) {
                 final String filename1 = URLUtil.guessFileName(url, contentDisposition, mimeType);
-
                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Download " + filename1 + "?", Snackbar.LENGTH_INDEFINITE);
                 snackbar.setActionTextColor(Color.parseColor("#1DE9B6"));
                 snackbar.setAction("DOWNLOAD", new View.OnClickListener() {
@@ -269,42 +268,14 @@ public class MainActivity extends AppCompatActivity {
                                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                             } else {
                                 try {
-                                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-
-                                    String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
-
-                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-
-                                    DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                                    dm.enqueue(request);
-
-                                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                                    intent.setType("*/*");
-
-                                    Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
+                                    downloadFile(url, contentDisposition, mimeType);
                                 } catch (Exception exc) {
                                     Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         } else {
                             try {
-                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-
-                                String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
-
-                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-
-                                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                                dm.enqueue(request);
-
-                                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                                intent.setType("*/*");
-
-                                Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
+                                downloadFile(url, contentDisposition, mimeType);
                             } catch (Exception exc) {
                                 Toast.makeText(MainActivity.this, exc.toString(), Toast.LENGTH_SHORT).show();
                             }
@@ -1396,6 +1367,25 @@ public class MainActivity extends AppCompatActivity {
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         downloadManager.enqueue(request);
         Toast.makeText(MainActivity.this, "Downloading: " + getFilenameFromURL(imageUrl), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     *
+     * @param url
+     * @param contentDisposition
+     * @param mimeType
+     */
+    private void downloadFile(String url, String contentDisposition, String mimeType) {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        String filename = URLUtil.guessFileName(url, contentDisposition, mimeType);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        dm.enqueue(request);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        Toast.makeText(MainActivity.this, "Downloading: " + filename, Toast.LENGTH_SHORT).show();
     }
 
     /**
