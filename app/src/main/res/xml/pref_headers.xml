@@ -25,10 +25,4 @@
             android:targetPackage="com.synthform.colombo" />
     </header>
 
-    <header android:title="@string/pref_header_donation">
-        <intent
-            android:targetClass="com.synthform.colombo.activities.DonationActivity"
-            android:targetPackage="com.synthform.colombo" />
-    </header>
-
 </preference-headers>

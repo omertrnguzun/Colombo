@@ -93,6 +93,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
@@ -1681,6 +1682,11 @@ public class MainActivity extends AppCompatActivity {
         //Inizialiazzione Bind
         @Override
         public void onBindViewHolder(final MyHolder holder, final int position) {
+
+            int[] androidColors = getResources().getIntArray(R.array.bookmarkColors);
+            int randomBookmarkColor = androidColors[new Random().nextInt(androidColors.length)];
+
+            holder.bookmarkContainer.setBackgroundColor(randomBookmarkColor);
 
             holder.name.setText(cardData.get(position).getName());
 

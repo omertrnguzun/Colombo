@@ -575,40 +575,12 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/layoutLib5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/layoutLib4"
-                    android:layout_marginTop="42dp">
-
-                    <TextView
-                        android:id="@+id/lib_5"
-                        style="@style/TextViewCustomFontBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Gitty Reporter"
-                        android:textColor="@color/colorTextDarkGrey"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        style="@style/TextViewCustomFont"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/lib_5"
-                        android:layout_marginTop="16dp"
-                        android:text="Paolo Rotolo"
-                        android:textColor="@color/colorTextGrey"
-                        android:textSize="16sp" />
-
-                </RelativeLayout>
-
                 <TextView
                     android:id="@+id/title_4"
                     style="@style/TextViewCustomFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/layoutLib5"
+                    android:layout_below="@+id/layoutLib4"
                     android:layout_marginBottom="42dp"
                     android:layout_marginTop="36dp"
                     android:text="@string/links_text"

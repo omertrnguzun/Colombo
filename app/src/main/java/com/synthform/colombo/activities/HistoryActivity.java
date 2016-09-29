@@ -178,10 +178,10 @@ public class HistoryActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(MyHolderHistory holder, final int position) {
-            holder.name.setText(historyDatas.get(position).getLink());
-
-            if (historyDatas.get(position).getTitle().equals("")) {
+            if (historyDatas.get(position).getTitle().length() == 0) {
                 holder.name.setText(historyDatas.get(position).getLink());
+            } else {
+                holder.name.setText(historyDatas.get(position).getTitle() + " | " + historyDatas.get(position).getLink());
             }
 
             holder.setItemClickListener(new ItemClickListener() {

@@ -2,6 +2,7 @@ package com.synthform.colombo.holder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.synthform.colombo.R;
@@ -17,11 +18,13 @@ public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickLis
     public TextView name;
     private ItemClickListener itemClickListener;
     private ItemLongClickListener itemLongClickListener;
+    public RelativeLayout bookmarkContainer;
 
     public MyHolder(View itemView) {
         super(itemView);
 
         name = (TextView) itemView.findViewById(R.id.name);
+        bookmarkContainer = (RelativeLayout) itemView.findViewById(R.id.bookmarkContainer);
 
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);

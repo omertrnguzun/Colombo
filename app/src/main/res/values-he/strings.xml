@@ -141,7 +141,6 @@
     <string name="team_text">הקבוצה</string>
     <string name="libs_text">ספריות</string>
     <string name="links_text">עוד</string>
-    <string name="title_activity_feedback">משוב</string>
 
     <string name="add_bookmark_title">הוסף סימניה</string>
     <string name="add_bookmark_content">נא לתת לסימניה שם</string>
@@ -163,8 +162,7 @@
     <string name="title_activity_history">היסטוריה</string>
     <string name="menu_clear">נקה הכל</string>
     <string name="menu_history">היסטוריה</string>
-    <string name="title_activity_donation">תרומות</string>
-    <string name="pref_header_donation">תרמו לי</string>
+    <string name="donate">דון</string>
     <string name="donations_coke">קנו לי קולה</string>
     <string name="donations_brioches">קנו לי בריוש</string>
     <string name="donations_kebab">קנו לי קבב</string>
