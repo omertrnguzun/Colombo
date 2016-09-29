@@ -8,79 +8,285 @@
     android:fitsSystemWindows="true"
     tools:context="com.synthform.colombo.activities.AboutActivity">
 
-    <ScrollView
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="snap|scroll|enterAlwaysCollapsed" />
 
         <RelativeLayout
+            android:id="@+id/shape"
+            android:layout_width="match_parent"
+            android:layout_height="268dp"
+            android:layout_below="@+id/app_bar"
+            app:layout_scrollFlags="snap|scroll|enterAlwaysCollapsed">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="72dp">
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:textSize="38sp" />
+
+                <TextView
+                    android:id="@+id/subtitle"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title"
+                    android:layout_marginTop="32dp"
+                    android:text="@string/description_about"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/subtitle2"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/subtitle"
+                    android:text="@string/description_about_2"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:textSize="20sp" />
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:id="@+id/donate"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="#FFC107"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/donate"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_below="@+id/subtitle2" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/donateContainer"
+            app:layout_scrollFlags="snap|scroll|enterAlwaysCollapsed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.design.widget.AppBarLayout
-                android:id="@+id/app_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:elevation="0dp">
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary" />
-
-            </android.support.design.widget.AppBarLayout>
-
             <RelativeLayout
-                android:id="@+id/shape"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginEnd="16dp"
+                android:id="@+id/layoutCoke"
                 android:layout_width="match_parent"
-                android:layout_height="268dp"
-                android:layout_below="@+id/app_bar"
-                android:background="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
+                <TextView
+                    style="@style/TextViewCustomFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="@string/donations_coke"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="1$"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="72dp">
-
-                    <TextView
-                        android:id="@+id/title"
-                        style="@style/TextViewCustomFont"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_name"
-                        android:textColor="@color/colorTextDarkBlue"
-                        android:textSize="38sp" />
-
-                    <TextView
-                        android:id="@+id/subtitle"
-                        style="@style/TextViewCustomFont"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/title"
-                        android:layout_marginTop="32dp"
-                        android:text="@string/description_about"
-                        android:textColor="@color/colorTextDarkBlue"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        style="@style/TextViewCustomFont"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/subtitle"
-                        android:text="@string/description_about_2"
-                        android:textColor="@color/colorTextDarkBlue"
-                        android:textSize="20sp" />
-
-                </RelativeLayout>
+                    android:layout_alignParentEnd="true"/>
 
             </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/layoutCoke"
+                android:id="@+id/layoutBrioches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="@string/donations_brioches"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/textView" />
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="2$"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/layoutBrioches"
+                android:id="@+id/layoutKebab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="@string/donations_kebab"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="5$"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/layoutKebab"
+                android:id="@+id/layoutKing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="@string/donations_king"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="15$"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/layoutKing"
+                android:id="@+id/layoutPresent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="@string/donations_present"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="20$"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/layoutPresent"
+                android:id="@+id/layoutPC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="@string/donations_pc"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorTextDarkBlue"
+                    android:text="50$"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/layoutMe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/shape"
                 android:layout_marginStart="72dp">
 
                 <TextView
@@ -435,8 +641,8 @@
 
             </RelativeLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

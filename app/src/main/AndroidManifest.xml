@@ -68,12 +68,6 @@
             android:name=".activities.HistoryActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:label="@string/title_activity_history" />
-        <activity
-            android:name=".activities.DonationActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:label="@string/title_activity_donation"
-            android:theme="@style/AppTheme.BrandedLaunch"/>
-
     </application>
 
 </manifest>

@@ -1646,7 +1646,7 @@ public class MainActivity extends AppCompatActivity {
                 title.setText(webView.getUrl());
             }
 
-            if (!isIncognito) {
+            if (!isIncognito && webView.getTitle() != null && webView.getUrl() != null) {
                 saveHistory(webView.getTitle(), webView.getUrl());
             }
         }
