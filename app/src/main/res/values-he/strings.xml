@@ -172,7 +172,7 @@
     <string name="donations_present">קנו לי מתנה</string>
     <string name="donations_pc">קנו לי מחשב חדש</string>
 
-    <string name="title_activity_about" translatable="false">אודות</string>
+    <string name="title_activity_about">אודות</string>
     <string name="pref_header_general_summary">אפשרויות כלליות לאתרים ועוד</string>
     <string name="pref_header_appearance_summary">הענקת מראה משופר לדפדפן</string>
 

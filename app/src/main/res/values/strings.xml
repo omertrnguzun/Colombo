@@ -134,8 +134,8 @@
 
     <string name="menu_bookmark">Bookmarks</string>
     <string name="app_name_incognito">Colombo Incognito</string>
-    <string name="no_connection"You must have an Internet connection to use Colombo</string>
-    <string name="tutorial"Do you want to go through the tutorial?</string>
+    <string name="no_connection">You must have an Internet connection to use Colombo</string>
+    <string name="tutorial">Do you want to go through the tutorial?</string>
     <string name="description_about">A fast, light and</string>
     <string name="description_about_2">beautiful browser</string>
     <string name="team_text">The Team</string>
@@ -143,7 +143,7 @@
     <string name="links_text">More</string>
 
     <string name="add_bookmark_title">Add a bookmark?</string>
-    <string name="add_bookmark_content"Name your bookmark!</string>
+    <string name="add_bookmark_content">Name your bookmark!</string>
     <string name="tabs_error"><![CDATA[Tabs are available for Lollipop or >]]></string>
     <string name="rename_bookmark_title">Rename bookmark?</string>
     <string name="rename_bookmark_content">Give this bookmark with a new name!</string>
@@ -151,7 +151,7 @@
     <string name="delete_bookmark_content">Do you really want to delete this bookmark: </string>
     <string name="delete_bookmark_positive">DELETE</string>
     <string name="delete_bookmark_negative">CANCEL</string>
-    <string name="url_search_summary">Show your searched text instead of the page/'s URL</string>
+    <string name="url_search_summary">Show your searched text instead of the page\'s URL</string>
     <string name="url_search">Searched Text</string>
     <string name="restart_colombo">Restart Colombo to apply changes</string>
     <string name="link_error">Colombo can\'t understand this url :/</string>

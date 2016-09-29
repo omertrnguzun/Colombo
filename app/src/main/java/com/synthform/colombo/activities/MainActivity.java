@@ -682,6 +682,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+            webView.loadUrl(intent.getDataString());
+        }
         super.onNewIntent(intent);
     }
 
@@ -823,16 +826,8 @@ public class MainActivity extends AppCompatActivity {
                 toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                            webView.setVisibility(View.VISIBLE);
-                            //titleFrame.setVisibility(View.GONE);
-                            ViewAnimationUtils.collapse(titleFrame);
-                            searchView.setIconified(false);
-                            searchView.setVisibility(View.VISIBLE);
-                        } else {
-                            searchView.setIconified(false);
-                            searchView.setVisibility(View.VISIBLE);
-                        }
+                        searchView.setIconified(false);
+                        searchView.setVisibility(View.VISIBLE);
                     }
                 });
             }
