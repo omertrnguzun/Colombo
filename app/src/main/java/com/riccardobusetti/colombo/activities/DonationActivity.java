@@ -18,13 +18,13 @@ public class DonationActivity extends AppCompatActivity implements BillingProces
 
     private BillingProcessor bp;
     private Toolbar toolbar;
-    private static final String PRODUCT_ID_1 = "com.riccardobusetti.colombo.coke";
-    private static final String PRODUCT_ID_2 = "com.riccardobusetti.colombo.brioches";
-    private static final String PRODUCT_ID_3 = "com.riccardobusetti.colombo.kebab";
-    private static final String PRODUCT_ID_4 = "com.riccardobusetti.colombo.kingmeal";
-    private static final String PRODUCT_ID_5 = "com.riccardobusetti.colombo.present";
-    private static final String PRODUCT_ID_6 = "com.riccardobusetti.colombo.computer";
-    private static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqZtUFo4j56eXaLF9eUq0wBgAkmN5AcAn7rkt2laVFIj607r/5xhrb9fG+eEZqyuqB7eNuqn96mM64BUCR4uqBNuzfBribzPqPWLM1P7jxMaOY4/CKUtQX/Asaf/Vc+n94nT563s+eEe+Yg4sydHX+qh1bcSrbgRsDJqfSP3HRjfb6Xa2Bq3Xg9L+rzX4dBczYO0ik7asZ98WNRFH/OLb61unjTe37T7tmyi1R5uCriJoMgJmvZG+OaPTqWZkBaRSmPZIfc37mA/W0Ueih6bkZHwzSbFT1hW8Z7Ld8vVQgF41E3OFIrv/TMgR7R7tO1JgvCkLPmE+jVzPUMotP7S8FQIDAQAB";
+    private static final String PRODUCT_ID_1 = "colombo.coke";
+    private static final String PRODUCT_ID_2 = "colombo.brioches";
+    private static final String PRODUCT_ID_3 = "colombo.kebab";
+    private static final String PRODUCT_ID_4 = "colombo.kingmeal";
+    private static final String PRODUCT_ID_5 = "colombo.present";
+    private static final String PRODUCT_ID_6 = "colombo.computer";
+    private static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi1ml9iQBihL7CYuSU3xREwxN2AlYQciQgYnCK90X22siw5J2IT65iCr4YQwQL8Y1Kq/ApNcgUQ1wZluJU3KcUMTFkPF+h0Gn0cMAFCWPh7gm1T1P75Aul3B9azYFDGn+x3wfiTi4qYNF+eT/5xZM6vIaN5L4Hr0Mn3tWn6ZSx5ZJtBg/gMu1x/7PLtNrez39RmW9ngXlndpoJM4Cv+xDRUS+o8BX4szOBa2rk/n4LeOjplVJl8FvLYR83ShkGaEbMeb8bCp+D5PnC+zQ0pktFjuARpVpmMDfzOB3gj3+p7y6mb0FtIXhF3RPzyNJtBlAaUVA1CmobM8mJBqPiBbTrQIDAQAB";
 
     private RelativeLayout coke, brioches, kebab, kingMeal, present, computer;
 

@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "com.riccardobusetti.colombo"
+        applicationId "com.synthform.colombo"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 22
-        versionName "2.5"
+        versionCode 24
+        versionName "2.5.0"
         vectorDrawables.useSupportLibrary = true
     }
 
