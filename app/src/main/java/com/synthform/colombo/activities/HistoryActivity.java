@@ -1,10 +1,13 @@
 package com.synthform.colombo.activities;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +25,7 @@ import com.synthform.colombo.data.HistoryData;
 import com.synthform.colombo.database.DBAdapterHistory;
 import com.synthform.colombo.holder.MyHolderHistory;
 import com.synthform.colombo.util.ItemClickListener;
+import com.synthform.colombo.util.ItemLongClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,7 +96,6 @@ public class HistoryActivity extends AppCompatActivity {
      * Get data from DB
      */
     private void retrieve() {
-
         DBAdapterHistory db = new DBAdapterHistory(this);
         db.openDB();
 
@@ -122,7 +125,6 @@ public class HistoryActivity extends AppCompatActivity {
      * Delete data from DB
      */
     private void delete(int id) {
-
         DBAdapterHistory db = new DBAdapterHistory(HistoryActivity.this);
         db.openDB();
 
@@ -142,7 +144,6 @@ public class HistoryActivity extends AppCompatActivity {
      * Delete data from DB
      */
     private void deleteAll() {
-
         DBAdapterHistory db = new DBAdapterHistory(HistoryActivity.this);
         db.openDB();
 
@@ -184,6 +185,13 @@ public class HistoryActivity extends AppCompatActivity {
                 holder.name.setText(historyDatas.get(position).getTitle() + " | " + historyDatas.get(position).getLink());
             }
 
+            holder.setItemLongClickListener(new ItemLongClickListener() {
+                @Override
+                public void onItemLongClick(View v, int pos) {
+                    copyToClipBoard(historyDatas.get(pos).getLink());
+                }
+            });
+
             holder.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onItemClick(View v, int pos) {
@@ -206,5 +214,16 @@ public class HistoryActivity extends AppCompatActivity {
             return historyDatas.size();
         }
 
+    }
+
+    /**
+     * Copy to clipboard text
+     * @param text
+     */
+    private void copyToClipBoard(String text) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(null, text);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(this, "Link copied to clipboard", Toast.LENGTH_SHORT).show();
     }
 }

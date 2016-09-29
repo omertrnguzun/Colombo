@@ -55,6 +55,7 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
 import android.webkit.URLUtil;
@@ -74,6 +75,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
+import com.synthform.colombo.BuildConfig;
 import com.synthform.colombo.R;
 import com.synthform.colombo.data.CardData;
 import com.synthform.colombo.database.DBAdapter;
@@ -219,21 +221,22 @@ public class MainActivity extends AppCompatActivity {
         /** Cache Settings */
         webSettings.setAppCacheEnabled(true);
         webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        if (AppStatus.getInstance(this).isOnline()) {
-            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
-            webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        } else {
-            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        }
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
         /** Cookie Settings */
         if (prefs.getBoolean("cookies", true)) {
-            CookieManager.getInstance().setAcceptCookie(true);
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+                CookieManager.getInstance().setAcceptCookie(true);
+            } else {
+                CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+            }
+            CookieSyncManager.createInstance(MainActivity.this);
+            CookieSyncManager.getInstance().startSync();
         }
 
         /** Database support */
         webSettings.setDatabaseEnabled(true);
-        webSettings.setDatabasePath(this.getFilesDir().getPath() + getPackageName() + "/databases/");
         webSettings.setDomStorageEnabled(true);
 
         /** File settings */
@@ -783,8 +786,7 @@ public class MainActivity extends AppCompatActivity {
                 webView.setVisibility(View.GONE);
             } else {
                 webView.setVisibility(View.VISIBLE);
-                //titleFrame.setVisibility(View.GONE);
-                ViewAnimationUtils.collapse(titleFrame);
+                titleFrame.setVisibility(View.GONE);
             }
         }
 
@@ -1209,7 +1211,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         colorAnimation.start();
-
 
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
     }

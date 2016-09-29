@@ -22,7 +22,7 @@ import okio.Okio;
  * Created by riccardobusetti on 19/07/16.
  */
 public class AdBlocker {
-    private static final String AD_HOSTS_FILE = "pgl.yoyo.org.txt";
+    private static final String AD_HOSTS_FILE = "blocked.sites.txt";
     private static final Set<String> AD_HOSTS = new HashSet<>();
 
     public static void init(final Context context) {
