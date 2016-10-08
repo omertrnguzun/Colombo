@@ -51,7 +51,7 @@
     <string name="pref_circle_progress">Indicatore Progresso</string>
     <string name="pref_circle_progress_summary">Un cerchio che gira verrà mostrato quando una pagina viene caricata</string>
 
-    <string name="search_open_dialog">Apetura all\'esterno</string>
+    <string name="search_open_dialog">Apertura all\'esterno</string>
     <string name="search_open_dialog_summary">Cabia come i link famosi vengono gestiti</string>
 
     <string name="pref_cookies">Cookies</string>
