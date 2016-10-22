@@ -142,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
      * Intent vars
      */
     private String urlIntent = null;
-    private int shortcutId;
+    private String shortcutNew;
+    private String shortcutIncognito;
+    private String shortcutSettings;
 
     /**
      * Other Elements
@@ -770,6 +772,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setUpElements() {
         urlIntent = getIntent().getDataString();
+        shortcutNew = getIntent().getStringExtra("shortCutNew");
 
         /*Intent openNewIntent = new Intent(Intent.ACTION_VIEW);
         openNewIntent.putExtra("shortcutNew", 1);
@@ -846,6 +849,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+        } else if (shortcutNew != null && shortcutNew.equals("1")) {
+            Toast.makeText(this, "New tab", Toast.LENGTH_SHORT).show();
         } else {
             webView.loadUrl(getHomepage());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -9,7 +9,8 @@
         <intent
             android:action="android.intent.action.ACTION_VIEW"
             android:targetPackage="com.synthform.colombo"
-            android:targetClass="com.synthform.colombo.activities.MainActivity" />
+            android:targetClass="com.synthform.colombo.activities.MainActivity"/>
+        <extra android:key="shortcutNew" android:value="1"/>
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
@@ -23,7 +24,7 @@
         <intent
             android:action="android.intent.action.ACTION_VIEW"
             android:targetPackage="com.synthform.colombo"
-            android:targetClass="com.synthform.colombo.activities.MainActivity" />
+            android:targetClass="com.synthform.colombo.activities.MainActivity"/>
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
@@ -37,7 +38,7 @@
         <intent
             android:action="android.intent.action.ACTION_VIEW"
             android:targetPackage="com.synthform.colombo"
-            android:targetClass="com.synthform.colombo.activities.SettingsActivity" />
+            android:targetClass="com.synthform.colombo.activities.SettingsActivity"/>
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 </shortcuts>
