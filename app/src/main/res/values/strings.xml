@@ -178,4 +178,6 @@
     <string name="new_incognito_tab">New Incognito Tab</string>
     <string name="shortcut_disabled">Shortcut not avaliable</string>
 
+    <string name="shortcut_settings">Settings</string>
+
 </resources>

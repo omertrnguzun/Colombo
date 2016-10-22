@@ -2,7 +2,7 @@
     <shortcut
         android:shortcutId="new"
         android:enabled="true"
-        android:icon="@drawable/ic_shortcut_col"
+        android:icon="@drawable/ic_shortcut_new"
         android:shortcutShortLabel="@string/new_tab"
         android:shortcutLongLabel="@string/new_tab"
         android:shortcutDisabledMessage="@string/shortcut_disabled">
@@ -10,11 +10,35 @@
             android:action="android.intent.action.ACTION_VIEW"
             android:targetPackage="com.synthform.colombo"
             android:targetClass="com.synthform.colombo.activities.MainActivity" />
-        <!-- If your shortcut is associated with multiple intents, include them
-             here. The last intent in the list is what the user sees when they
-             launch this shortcut. -->
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
-    <!-- Specify more shortcuts here. -->
+
+    <shortcut
+        android:shortcutId="incognito"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_new_incognito"
+        android:shortcutShortLabel="@string/new_incognito_tab"
+        android:shortcutLongLabel="@string/new_incognito_tab"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="android.intent.action.ACTION_VIEW"
+            android:targetPackage="com.synthform.colombo"
+            android:targetClass="com.synthform.colombo.activities.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_settings"
+        android:shortcutShortLabel="@string/shortcut_settings"
+        android:shortcutLongLabel="@string/shortcut_settings"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="android.intent.action.ACTION_VIEW"
+            android:targetPackage="com.synthform.colombo"
+            android:targetClass="com.synthform.colombo.activities.SettingsActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
 </shortcuts>
 

@@ -94,8 +94,10 @@ import com.synthform.colombo.view.ObservableWebView;
 import com.synthform.colombo.view.ViewAnimationUtils;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -117,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 5678;
     private static final int SEARCH_GOOGLE = 0, SEARCH_YAHOO = 1, SEARCH_DUCKDUCKGO = 2, SEARCH_BING = 3;
     private static final int OPEN_ALWAYS = 0, OPEN_APP = 1, OPEN_LINK = 2;
+    private static final String GOOGLE = "https://www.google.com/";
+    private static final String YAHOO = "https://www.yahoo.com/";
+    private static final String DUCKDUCKGO = "https://www.duckduckgo.com/";
+    private static final String BING = "https://www.bing.com/";
 
     /**
      * Array Vars
@@ -133,9 +139,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean immersive = true;
 
     /**
-     * Strings Vars
+     * Intent vars
      */
     private String urlIntent = null;
+    private int shortcutId;
 
     /**
      * Other Elements
@@ -167,6 +174,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView bookmark_text, no_bookmark_text;
     private ImageView back, forward, bookmark;
     private Menu menu;
+    private ShortcutManager shortcutManager;
+    private ShortcutInfo shortcutInfo;
 
     /**
      * Detect if running on tablet screen
@@ -545,7 +554,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -763,6 +771,18 @@ public class MainActivity extends AppCompatActivity {
     private void setUpElements() {
         urlIntent = getIntent().getDataString();
 
+        /*Intent openNewIntent = new Intent(Intent.ACTION_VIEW);
+        openNewIntent.putExtra("shortcutNew", 1);
+        if (getHomepage().equals(GOOGLE)) {
+            openNewIntent.setData(Uri.parse(GOOGLE));
+        } else if (getHomepage().equals(YAHOO)) {
+            openNewIntent.setData(Uri.parse(YAHOO));
+        } else if (getHomepage().equals(DUCKDUCKGO)) {
+            openNewIntent.setData(Uri.parse(DUCKDUCKGO));
+        } else if (getHomepage().equals(BING)) {
+            openNewIntent.setData(Uri.parse(BING));
+        }*/
+
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -817,11 +837,12 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
-                toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back_toolbar));
+                toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
                 toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        finish();
+                        searchView.setIconified(false);
+                        searchView.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -926,15 +947,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                    webView.setVisibility(View.VISIBLE);
-                    titleFrame.setVisibility(View.GONE);
-                    searchView.setIconified(false);
-                    searchView.setVisibility(View.VISIBLE);
-                } else {
-                    searchView.setIconified(false);
-                    searchView.setVisibility(View.VISIBLE);
-                }*/
                 searchView.setIconified(false);
                 searchView.setVisibility(View.VISIBLE);
             }
@@ -1143,15 +1155,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             switch (Integer.parseInt(prefs.getString("search_engine", "0"))) {
                 case SEARCH_GOOGLE:
-                    return "https://google.com";
+                    return GOOGLE;
                 case SEARCH_YAHOO:
-                    return "https://www.yahoo.com/";
+                    return YAHOO;
                 case SEARCH_DUCKDUCKGO:
-                    return "https://duckduckgo.com/";
+                    return DUCKDUCKGO;
                 case SEARCH_BING:
-                    return "https://www.bing.com/";
+                    return BING;
                 default:
-                    return "https://www.google.com/";
+                    return GOOGLE;
             }
         }
     }
