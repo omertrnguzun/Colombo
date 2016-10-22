@@ -174,4 +174,8 @@
     <string name="pref_header_general_summary">General options for sites and more</string>
     <string name="pref_header_appearance_summary">Give a Colombo a better look</string>
 
+    <string name="new_tab">New Tab</string>
+    <string name="new_incognito_tab">New Incognito Tab</string>
+    <string name="shortcut_disabled">Shortcut not avaliable</string>
+
 </resources>
