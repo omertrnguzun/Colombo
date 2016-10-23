@@ -9,8 +9,9 @@
         <intent
             android:action="android.intent.action.ACTION_VIEW"
             android:targetPackage="com.synthform.colombo"
-            android:targetClass="com.synthform.colombo.activities.MainActivity"/>
-        <extra android:key="shortcutNew" android:value="1"/>
+            android:targetClass="com.synthform.colombo.activities.MainActivity">
+        <extra android:name="shortcut_new" android:value="yes" />
+        </intent>
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
@@ -24,7 +25,9 @@
         <intent
             android:action="android.intent.action.ACTION_VIEW"
             android:targetPackage="com.synthform.colombo"
-            android:targetClass="com.synthform.colombo.activities.MainActivity"/>
+            android:targetClass="com.synthform.colombo.activities.MainActivity">
+            <extra android:name="shortcut_incognito" android:value="yes" />
+        </intent>
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
@@ -36,10 +39,11 @@
         android:shortcutLongLabel="@string/shortcut_settings"
         android:shortcutDisabledMessage="@string/shortcut_disabled">
         <intent
-            android:action="android.intent.action.ACTION_VIEW"
+            android:action="android.intent.action.VIEW"
             android:targetPackage="com.synthform.colombo"
-            android:targetClass="com.synthform.colombo.activities.SettingsActivity"/>
-        <categories android:name="android.shortcut.conversation" />
+            android:targetClass="com.synthform.colombo.activities.MainActivity">
+            <extra android:name="shortcut_settings" android:value="yes" />
+        </intent>
     </shortcut>
 </shortcuts>
 

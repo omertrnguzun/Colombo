@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private boolean isIncognito;
     private boolean desktop = true;
-    private boolean immersive = true;
 
     /**
      * Intent vars
@@ -144,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     private String urlIntent = null;
     private String shortcutNew;
     private String shortcutIncognito;
-    private String shortcutSettings;
+    private String shortcutIncognitoComing;
 
     /**
      * Other Elements
@@ -176,8 +175,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView bookmark_text, no_bookmark_text;
     private ImageView back, forward, bookmark;
     private Menu menu;
-    private ShortcutManager shortcutManager;
-    private ShortcutInfo shortcutInfo;
 
     /**
      * Detect if running on tablet screen
@@ -631,56 +628,29 @@ public class MainActivity extends AppCompatActivity {
                 webView.isPrivateBrowsingEnabled();
 
                 if (!isIncognito) {
-                    //When exit from incognito
-                    appTitle.setText(R.string.app_name);
-                    cardSearch.setCardBackgroundColor(Color.parseColor("#FAFAFA"));
-                    title.setTextColor(Color.parseColor("#B2B2B2"));
-                    setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                    rv.setBackgroundColor(Color.parseColor("#E0F7FA"));
-                    webviewContainer.setBackgroundColor(Color.parseColor("#E0F7FA"));
-                    bookmark_text.setTextColor(Color.parseColor("#233B3F"));
-                    backround_bookmark_text.setBackgroundColor(Color.parseColor("#B2EBF2"));
-                    no_bookmark_text.setTextColor(Color.parseColor("#233B3F"));
-
+                    //Exiting incognito
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu));
                         toolbar.setNavigationIcon(R.drawable.ic_search_toolbar);
                     }
 
+                    changeColorsIncognitoExit(R.string.app_name, Color.parseColor("#FAFAFA"), Color.parseColor("#B2B2B2"),
+                                            Color.parseColor("#E0F7FA"), Color.parseColor("#E0F7FA"), Color.parseColor("#233B3F"),
+                                            Color.parseColor("#B2EBF2"), Color.parseColor("#233B3F"), R.color.colorPrimary);
+
                     setUpUiTheme();
                 } else {
-                    //When enter in incognito
-                    appTitle.setText(R.string.app_name_incognito);
-                    cardSearch.setCardBackgroundColor(Color.parseColor("#455A64"));
-                    title.setTextColor(Color.parseColor("#FAFAFA"));
-                    rv.setBackgroundColor(Color.parseColor("#263238"));
-                    webviewContainer.setBackgroundColor(Color.parseColor("#263238"));
-                    bookmark_text.setTextColor(Color.parseColor("#FAFAFA"));
-                    backround_bookmark_text.setBackgroundColor(Color.parseColor("#37474F"));
-                    no_bookmark_text.setTextColor(Color.parseColor("#FAFAFA"));
-
+                    //Entering incognito
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu_white));
                         toolbar.setNavigationIcon(R.drawable.ic_search_toolbar_white);
                     }
 
-                    if (prefs.getBoolean("light_icons", true)) {
-                    } else {
-                        setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryIncognito));
-                        appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-                        Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
-                        settings.setImageDrawable(drawable_light);
-                        if (isTablet(this)) {
-                            Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
-                            back.setImageDrawable(drawable_back_white);
-
-                            Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
-                            forward.setImageDrawable(drawable_forward_white);
-
-                            Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
-                            bookmark.setImageDrawable(drawable_bookmark_white);
-                        }
-                    }
+                    changeColorsIncognitoEnter(R.string.app_name_incognito, Color.parseColor("#455A64"), Color.parseColor("#FAFAFA"),
+                                                    Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"),
+                                                    Color.parseColor("#37474F"), Color.parseColor("#233B3F"), R.color.colorPrimaryIncognito,
+                                                    Color.parseColor("#FAFAFA"), R.drawable.ic_settings_title_white, R.drawable.ic_back_title_white,
+                                                    R.drawable.ic_forward_title_white, R.drawable.ic_bookmark_title_white);
                 }
                 break;
             case R.id.action_add:
@@ -735,6 +705,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.putBoolean("active", true);
+        ed.apply();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         webView.onPause();
@@ -765,6 +748,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         webView.destroy();
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.putBoolean("active", false);
+        ed.apply();
     }
 
     /**
@@ -772,19 +758,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setUpElements() {
         urlIntent = getIntent().getDataString();
-        shortcutNew = getIntent().getStringExtra("shortCutNew");
-
-        /*Intent openNewIntent = new Intent(Intent.ACTION_VIEW);
-        openNewIntent.putExtra("shortcutNew", 1);
-        if (getHomepage().equals(GOOGLE)) {
-            openNewIntent.setData(Uri.parse(GOOGLE));
-        } else if (getHomepage().equals(YAHOO)) {
-            openNewIntent.setData(Uri.parse(YAHOO));
-        } else if (getHomepage().equals(DUCKDUCKGO)) {
-            openNewIntent.setData(Uri.parse(DUCKDUCKGO));
-        } else if (getHomepage().equals(BING)) {
-            openNewIntent.setData(Uri.parse(BING));
-        }*/
+        shortcutNew = getIntent().getStringExtra("shortcut_new");
+        shortcutIncognito = getIntent().getStringExtra("shortcut_incognito");
+        shortcutIncognitoComing = getIntent().getStringExtra("shortcut_incognito_coming");
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -806,6 +782,13 @@ public class MainActivity extends AppCompatActivity {
         bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
         settings = (ImageView) findViewById(R.id.settings);
 
+        rv = (RecyclerView) findViewById(R.id.recyclerViewer);
+
+        frameNoBookmarks = (FrameLayout) findViewById(R.id.frameNoBookmarks);
+        frameNoBookmarks.setVisibility(View.GONE);
+        frameError = (FrameLayout) findViewById(R.id.frameError);
+        no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
+
         webView = (ObservableWebView) findViewById(R.id.webview);
         if (urlIntent == null) {
             if (prefs.getBoolean("home_bookmarks", true)) {
@@ -822,20 +805,23 @@ public class MainActivity extends AppCompatActivity {
             bookmark = (ImageView) findViewById(R.id.bookmark);
         }
 
-        frameNoBookmarks = (FrameLayout) findViewById(R.id.frameNoBookmarks);
-        frameNoBookmarks.setVisibility(View.GONE);
-        frameError = (FrameLayout) findViewById(R.id.frameError);
-        no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
+        if (shortcutIncognitoComing != null && shortcutIncognitoComing.equals("yes")) {
+            //TODO Gestire cambio colore e modalità
+            changeColorsIncognitoEnter(R.string.app_name_incognito, Color.parseColor("#455A64"), Color.parseColor("#FAFAFA"),
+                    Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"),
+                    Color.parseColor("#37474F"), Color.parseColor("#233B3F"), R.color.colorPrimaryIncognito,
+                    Color.parseColor("#FAFAFA"), R.drawable.ic_settings_title_white, R.drawable.ic_back_title_white,
+                    R.drawable.ic_forward_title_white, R.drawable.ic_bookmark_title_white);
+        }
     }
 
     /**
      * Load the url based on actions
      */
     private void handleUrlLoading() {
-        if (urlIntent != null) {
+        if (urlIntent != null && shortcutNew == null && shortcutIncognito == null) {
             webView.loadUrl(urlIntent);
             webView.setVisibility(View.VISIBLE);
-            //titleFrame.setVisibility(View.GONE);
             ViewAnimationUtils.collapse(titleFrame);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -849,8 +835,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        } else if (shortcutNew != null && shortcutNew.equals("1")) {
-            Toast.makeText(this, "New tab", Toast.LENGTH_SHORT).show();
+        } else if (shortcutNew != null && shortcutNew.equals("yes")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            intent.setData(Uri.parse(getHomepage()));
+            startActivity(intent);
+        } else if (shortcutIncognito != null && shortcutIncognito.equals("yes")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            intent.setData(Uri.parse(getHomepage()));
+            intent.putExtra("shortcut_incognito_coming", "yes");
+            startActivity(intent);
         } else {
             webView.loadUrl(getHomepage());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -898,11 +893,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Change UI colors when entering incognito mode
+     */
+    private void changeColorsIncognitoEnter(int appTitleText, int cardBackround, int titleTextColor, int rvBg, int webviewBg,
+                                       int bookmarkTextColor, int bookmarkTextBg, int noBookmarkTextColor, int mainColor,
+                                       int appTitleTextColor, int settingsIcon, int backIcon, int forwardIcon, int bookmarkIcon) {
+        appTitle.setText(appTitleText);
+        cardSearch.setCardBackgroundColor(cardBackround);
+        title.setTextColor(titleTextColor);
+        rv.setBackgroundColor(rvBg);
+        webviewContainer.setBackgroundColor(webviewBg);
+        bookmark_text.setTextColor(bookmarkTextColor);
+        backround_bookmark_text.setBackgroundColor(bookmarkTextBg);
+        no_bookmark_text.setTextColor(noBookmarkTextColor);
+
+        if (prefs.getBoolean("light_icons", true)) {
+        } else {
+            setColor(ContextCompat.getColor(MainActivity.this, mainColor));
+            appTitle.setTextColor(appTitleTextColor);
+            Drawable drawable_light = getResources().getDrawable(settingsIcon);
+            settings.setImageDrawable(drawable_light);
+            if (isTablet(this)) {
+                Drawable drawable_back_white = getResources().getDrawable(backIcon);
+                back.setImageDrawable(drawable_back_white);
+
+                Drawable drawable_forward_white = getResources().getDrawable(forwardIcon);
+                forward.setImageDrawable(drawable_forward_white);
+
+                Drawable drawable_bookmark_white = getResources().getDrawable(bookmarkIcon);
+                bookmark.setImageDrawable(drawable_bookmark_white);
+            }
+        }
+    }
+
+    /**
+     * Change UI colors when exiting incognito mode
+     */
+    private void changeColorsIncognitoExit(int appTitleText, int cardBackround, int titleTextColor, int rvBg, int webviewBg,
+                                       int bookmarkTextColor, int bookmarkTextBg, int noBookmarkTextColor, int mainColor) {
+        appTitle.setText(appTitleText);
+        cardSearch.setCardBackgroundColor(cardBackround);
+        title.setTextColor(titleTextColor);
+        rv.setBackgroundColor(rvBg);
+        webviewContainer.setBackgroundColor(webviewBg);
+        bookmark_text.setTextColor(bookmarkTextColor);
+        backround_bookmark_text.setBackgroundColor(bookmarkTextBg);
+        no_bookmark_text.setTextColor(noBookmarkTextColor);
+
+        if (prefs.getBoolean("light_icons", true)) {
+        } else {
+            setColor(ContextCompat.getColor(MainActivity.this, mainColor));
+        }
+    }
+
+    /**
      * Handle Bookmark elements
      */
     private void setUpBookmarksStructure() {
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, 1);
-        rv = (RecyclerView) findViewById(R.id.recyclerViewer);
         rv.hasFixedSize();
         rv.setItemAnimator(new SlideInLeftAnimator());
         rv.setLayoutManager(staggeredGridLayoutManager);
