@@ -1392,7 +1392,6 @@ public class MainActivity extends AppCompatActivity {
      * Save data in DB
      */
     private void saveHistory(String title, String link) {
-
         DBAdapterHistory db = new DBAdapterHistory(this);
         db.openDB();
 
@@ -1435,7 +1434,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Download file
      * @param url
      * @param contentDisposition
      * @param mimeType
@@ -1513,7 +1512,6 @@ public class MainActivity extends AppCompatActivity {
                                             case R.id.action_continue:
                                                 webView.loadUrl(url);
                                                 break;
-
                                         }
                                         bottomSheet.setUseHardwareLayerWhileAnimating(true);
                                         if (bottomSheet.isSheetShowing()) {
@@ -1698,8 +1696,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             checkInternet();
-
-
         }
 
         @Override
@@ -1726,7 +1722,6 @@ public class MainActivity extends AppCompatActivity {
      * Adapter recyclerviewer
      */
     public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
-
         Context c;
         ArrayList<CardData> cardData;
         private int lastPosition = -1;
@@ -1739,12 +1734,8 @@ public class MainActivity extends AppCompatActivity {
         //Inzializzazione ViewHolder
         @Override
         public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            //Creazione View Object
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_layout, parent, false);
-
-            //Creazione Holder
             MyHolder holder = new MyHolder(v);
-
             return holder;
         }
 
@@ -1851,6 +1842,5 @@ public class MainActivity extends AppCompatActivity {
         public int getItemCount() {
             return cardData.size();
         }
-
     }
 }
