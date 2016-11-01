@@ -266,6 +266,8 @@ public class MainActivity extends AppCompatActivity {
         if (prefs.getBoolean("plugins", true)) {
             webSettings.setPluginState(WebSettings.PluginState.ON);
         }
+        webView.getSettings().setSavePassword(true);
+        webView.getSettings().setSaveFormData(true);
 
         webView.setWebViewClient(new WebClient());
         webView.setDownloadListener(new DownloadListener() {
@@ -455,6 +457,19 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.action_new).setVisible(false);
         }
 
+        if (isIncognito) {
+            menu.findItem(R.id.action_incognito).setChecked(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu_white));
+                toolbar.setNavigationIcon(R.drawable.ic_search_toolbar_white);
+            }
+            changeColorsIncognitoEnter(R.string.app_name_incognito, Color.parseColor("#455A64"), Color.parseColor("#FAFAFA"),
+                    Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"),
+                    Color.parseColor("#37474F"), Color.parseColor("#233B3F"), R.color.colorPrimaryIncognito,
+                    Color.parseColor("#FAFAFA"), R.drawable.ic_settings_title_white, R.drawable.ic_back_title_white,
+                    R.drawable.ic_forward_title_white, R.drawable.ic_bookmark_title_white);
+        }
+
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
         searchView.setQueryHint("");
@@ -467,7 +482,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
-                    //titleFrame.setVisibility(View.GONE);
                     ViewAnimationUtils.collapse(titleFrame);
                 }
 
@@ -588,7 +602,6 @@ public class MainActivity extends AppCompatActivity {
                     ViewAnimationUtils.expand(titleFrame);
                 } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
-                    //titleFrame.setVisibility(View.GONE);
                     ViewAnimationUtils.collapse(titleFrame);
                 }
                 break;
@@ -635,8 +648,8 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     changeColorsIncognitoExit(R.string.app_name, Color.parseColor("#FAFAFA"), Color.parseColor("#B2B2B2"),
-                                            Color.parseColor("#E0F7FA"), Color.parseColor("#E0F7FA"), Color.parseColor("#233B3F"),
-                                            Color.parseColor("#B2EBF2"), Color.parseColor("#233B3F"), R.color.colorPrimary);
+                            Color.parseColor("#E0F7FA"), Color.parseColor("#E0F7FA"), Color.parseColor("#233B3F"),
+                            Color.parseColor("#B2EBF2"), Color.parseColor("#233B3F"), R.color.colorPrimary);
 
                     setUpUiTheme();
                 } else {
@@ -647,10 +660,10 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     changeColorsIncognitoEnter(R.string.app_name_incognito, Color.parseColor("#455A64"), Color.parseColor("#FAFAFA"),
-                                                    Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"),
-                                                    Color.parseColor("#37474F"), Color.parseColor("#233B3F"), R.color.colorPrimaryIncognito,
-                                                    Color.parseColor("#FAFAFA"), R.drawable.ic_settings_title_white, R.drawable.ic_back_title_white,
-                                                    R.drawable.ic_forward_title_white, R.drawable.ic_bookmark_title_white);
+                            Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"),
+                            Color.parseColor("#37474F"), Color.parseColor("#233B3F"), R.color.colorPrimaryIncognito,
+                            Color.parseColor("#FAFAFA"), R.drawable.ic_settings_title_white, R.drawable.ic_back_title_white,
+                            R.drawable.ic_forward_title_white, R.drawable.ic_bookmark_title_white);
                 }
                 break;
             case R.id.action_add:
@@ -807,11 +820,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (shortcutIncognitoComing != null && shortcutIncognitoComing.equals("yes")) {
             //TODO Gestire cambio colore e modalità
-            changeColorsIncognitoEnter(R.string.app_name_incognito, Color.parseColor("#455A64"), Color.parseColor("#FAFAFA"),
-                    Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"),
-                    Color.parseColor("#37474F"), Color.parseColor("#233B3F"), R.color.colorPrimaryIncognito,
-                    Color.parseColor("#FAFAFA"), R.drawable.ic_settings_title_white, R.drawable.ic_back_title_white,
-                    R.drawable.ic_forward_title_white, R.drawable.ic_bookmark_title_white);
+            isIncognito = true;
         }
     }
 

@@ -31,7 +31,7 @@
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
-    <shortcut
+    <!--<shortcut
         android:shortcutId="settings"
         android:enabled="true"
         android:icon="@drawable/ic_shortcut_settings"
@@ -44,6 +44,6 @@
             android:targetClass="com.synthform.colombo.activities.SettingsActivity">
             <extra android:name="shortcut_settings" android:value="yes" />
         </intent>
-    </shortcut>
+    </shortcut>-->
 </shortcuts>
 
