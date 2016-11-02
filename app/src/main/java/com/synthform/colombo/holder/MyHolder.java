@@ -16,9 +16,9 @@ import com.synthform.colombo.util.ItemLongClickListener;
 public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
     public TextView name;
+    public RelativeLayout bookmarkContainer;
     private ItemClickListener itemClickListener;
     private ItemLongClickListener itemLongClickListener;
-    public RelativeLayout bookmarkContainer;
 
     public MyHolder(View itemView) {
         super(itemView);

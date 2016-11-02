@@ -44,12 +44,6 @@
 
     <string name="pref_header_intro">Guide</string>
 
-    <string name="pref_swipe_to_refresh">Swipe to refresh</string>
-    <string name="pref_swipe_to_refresh_summary">With a simple swipe on the top of the page you can refresh it</string>
-
-    <string name="pref_circle_progress">Circle progress</string>
-    <string name="pref_circle_progress_summary">A loading circle will appear to indicate when the page is loading</string>
-
     <string name="search_open_dialog">Open Outside</string>
     <string name="search_open_dialog_summary">Change how links which can be opened with other apps are handled</string>
 
@@ -146,9 +140,7 @@
     <string name="add_bookmark_content">Name your bookmark!</string>
     <string name="tabs_error"><![CDATA[Tabs are available for Lollipop or >]]></string>
     <string name="rename_bookmark_title">Rename bookmark?</string>
-    <string name="rename_bookmark_content">Give this bookmark with a new name!</string>
     <string name="delete_bookmark_title">Delete bookmark?</string>
-    <string name="delete_bookmark_content">Do you really want to delete this bookmark: </string>
     <string name="delete_bookmark_positive">DELETE</string>
     <string name="delete_bookmark_negative">CANCEL</string>
     <string name="url_search_summary">Show your searched text instead of the page\'s URL</string>
@@ -177,7 +169,5 @@
     <string name="new_tab">New Tab</string>
     <string name="new_incognito_tab">New Incognito Tab</string>
     <string name="shortcut_disabled">Shortcut not avaliable</string>
-
-    <string name="shortcut_settings">Settings</string>
 
 </resources>

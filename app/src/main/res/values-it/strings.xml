@@ -45,12 +45,6 @@
 
     <string name="pref_header_intro">Guida</string>
 
-    <string name="pref_swipe_to_refresh">Swipe to refresh</string>
-    <string name="pref_swipe_to_refresh_summary">Con uno swipe verso il basso dall\'inizio della pagina potrai ricaricarla</string>
-
-    <string name="pref_circle_progress">Indicatore Progresso</string>
-    <string name="pref_circle_progress_summary">Un cerchio che gira verrà mostrato quando una pagina viene caricata</string>
-
     <string name="search_open_dialog">Apertura all\'esterno</string>
     <string name="search_open_dialog_summary">Cabia come i link famosi vengono gestiti</string>
 
@@ -147,9 +141,7 @@
     <string name="add_bookmark_content">Dai un nome al preferito!</string>
     <string name="tabs_error"><![CDATA[Le schede sono disponibili solo per Android Lollipop o >]]></string>
     <string name="rename_bookmark_title">Rinomina preferito?</string>
-    <string name="rename_bookmark_content">Rinomina questo preferito con un nome più bello!</string>
     <string name="delete_bookmark_title">Elimina preferito?</string>
-    <string name="delete_bookmark_content">Elimina: </string>
     <string name="delete_bookmark_positive">ELIMINA</string>
     <string name="delete_bookmark_negative">ANNULLA</string>
     <string name="url_search_summary">Mostra il testo che hai cercato invece dell\'url della pagina</string>

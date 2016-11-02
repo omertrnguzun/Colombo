@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -159,7 +158,19 @@ public class HistoryActivity extends AppCompatActivity {
         db.closeDB();
     }
 
-    public class HistoryAdapter extends RecyclerView.Adapter<MyHolderHistory>{
+    /**
+     * Copy to clipboard text
+     *
+     * @param text
+     */
+    private void copyToClipBoard(String text) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(null, text);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(this, "Link copied to clipboard", Toast.LENGTH_SHORT).show();
+    }
+
+    public class HistoryAdapter extends RecyclerView.Adapter<MyHolderHistory> {
 
         Context c;
         ArrayList<HistoryData> historyDatas;
@@ -214,16 +225,5 @@ public class HistoryActivity extends AppCompatActivity {
             return historyDatas.size();
         }
 
-    }
-
-    /**
-     * Copy to clipboard text
-     * @param text
-     */
-    private void copyToClipBoard(String text) {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(null, text);
-        clipboard.setPrimaryClip(clip);
-        Toast.makeText(this, "Link copied to clipboard", Toast.LENGTH_SHORT).show();
     }
 }

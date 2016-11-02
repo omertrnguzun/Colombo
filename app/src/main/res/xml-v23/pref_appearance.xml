@@ -34,18 +34,6 @@
             android:key="hide_search"
             android:summary="@string/pref_sticky_header_summary"
             android:title="@string/pref_sticky_header" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="swipe_to_refresh"
-            android:summary="@string/pref_swipe_to_refresh_summary"
-            android:title="@string/pref_swipe_to_refresh" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="circle_progress"
-            android:summary="@string/pref_circle_progress_summary"
-            android:title="@string/pref_circle_progress" />
     </PreferenceCategory>
 
 </PreferenceScreen>

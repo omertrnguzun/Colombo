@@ -71,20 +71,22 @@
         <string name="pref_header_tutorial_summary">Узнать как использовать Colombo</string>
 
 
-        <string name="pref_header_intro">Обучение</string>
+        <string name="pref_header_intro">Обучение</string><![CDATA[
 
 
-        <string name="pref_swipe_to_refresh">Провести чтобы обновить</string>
+        
 
-        <string name="pref_swipe_to_refresh_summary">С a простым проведением сверзу вниз вы можете обновить страницу</string>
-
-
-        <string name="pref_circle_progress">Круглый индикатор прогресса загрузки</string>
-
-        <string name="pref_circle_progress_summary">Круглый индикатор прогресса загрузки показывает  что станица загружается</string>
+        
 
 
-        <string name="search_open_dialog">Открыть в...</string>
+        
+
+
+        
+
+
+        ]]>
+    <string name="search_open_dialog">Открыть в...</string>
 
         <string name="search_open_dialog_summary">Переадресация ссылок в приложения если возможно</string>
 
@@ -255,15 +257,16 @@
 
         <string name="tabs_error"><![CDATA[Вкладки доступны для Android Lollipop или >]]></string>
 
-        <string name="rename_bookmark_title">Переименовать эту закладку?</string>
+        <string name="rename_bookmark_title">Переименовать эту закладку?</string><![CDATA[
 
-        <string name="rename_bookmark_content">Переименовать закладку!</string>
+        
 
-        <string name="delete_bookmark_title">Удалить закладку?</string>
+        ]]><string name="delete_bookmark_title">Удалить закладку?</string><![CDATA[
 
-        <string name="delete_bookmark_content">Вы точно хотите удалить эту закладку: </string>
+        
 
-        <string name="delete_bookmark_positive">Удалить</string>
+        ]]>
+    <string name="delete_bookmark_positive">Удалить</string>
 
         <string name="delete_bookmark_negative">Отмена</string>
 

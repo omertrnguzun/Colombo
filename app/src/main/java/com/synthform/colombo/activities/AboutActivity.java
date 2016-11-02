@@ -25,12 +25,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class AboutActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
-    private CoordinatorLayout coordinatorLayout;
-    private TextView rate, github, donate;
-    private RelativeLayout coke, brioches, kebab, kingMeal, present, computer, donateContainer;
-    private Toolbar toolbar;
-    private SharedPreferences prefs;
-    private BillingProcessor bp;
     private static final String PRODUCT_ID_1 = "colombo.coke";
     private static final String PRODUCT_ID_2 = "colombo.brioches";
     private static final String PRODUCT_ID_3 = "colombo.kebab";
@@ -38,6 +32,12 @@ public class AboutActivity extends AppCompatActivity implements BillingProcessor
     private static final String PRODUCT_ID_5 = "colombo.present";
     private static final String PRODUCT_ID_6 = "colombo.computer";
     private static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi1ml9iQBihL7CYuSU3xREwxN2AlYQciQgYnCK90X22siw5J2IT65iCr4YQwQL8Y1Kq/ApNcgUQ1wZluJU3KcUMTFkPF+h0Gn0cMAFCWPh7gm1T1P75Aul3B9azYFDGn+x3wfiTi4qYNF+eT/5xZM6vIaN5L4Hr0Mn3tWn6ZSx5ZJtBg/gMu1x/7PLtNrez39RmW9ngXlndpoJM4Cv+xDRUS+o8BX4szOBa2rk/n4LeOjplVJl8FvLYR83ShkGaEbMeb8bCp+D5PnC+zQ0pktFjuARpVpmMDfzOB3gj3+p7y6mb0FtIXhF3RPzyNJtBlAaUVA1CmobM8mJBqPiBbTrQIDAQAB";
+    private CoordinatorLayout coordinatorLayout;
+    private TextView rate, github, donate;
+    private RelativeLayout coke, brioches, kebab, kingMeal, present, computer, donateContainer;
+    private Toolbar toolbar;
+    private SharedPreferences prefs;
+    private BillingProcessor bp;
     private boolean donateState = false;
 
     @Override

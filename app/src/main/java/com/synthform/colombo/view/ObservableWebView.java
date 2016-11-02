@@ -12,7 +12,6 @@ import android.support.v7.widget.SearchView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
@@ -69,19 +68,6 @@ public class ObservableWebView extends WebView {
 
         webView = (ObservableWebView) getRootView().findViewById(R.id.webview);
         searchView = (SearchView) getRootView().findViewById(R.id.action_search);
-        swipeRefreshLayout = (SwipeRefreshLayout) getRootView().findViewById(R.id.swipe_layout);
-
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        if (prefs.getBoolean("swipe_to_refresh", true)) {
-            if (t == 0 && webView.getScrollY() == 0) {
-                swipeRefreshLayout.setEnabled(true);
-            } else if (t > 0 && webView.getScrollY() > 0) {
-                swipeRefreshLayout.setEnabled(false);
-            }
-        } else {
-            swipeRefreshLayout.setEnabled(false);
-        }
 
         if (searchView.getVisibility() == View.VISIBLE) {
             searchView.setIconified(false);

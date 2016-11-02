@@ -13,15 +13,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -38,11 +35,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -70,6 +65,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,7 +74,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
-import com.synthform.colombo.BuildConfig;
 import com.synthform.colombo.R;
 import com.synthform.colombo.data.CardData;
 import com.synthform.colombo.database.DBAdapter;
@@ -94,10 +89,8 @@ import com.synthform.colombo.view.ObservableWebView;
 import com.synthform.colombo.view.ViewAnimationUtils;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -161,11 +154,10 @@ public class MainActivity extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     private SearchView searchView;
     private ObservableWebView webView;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
     private TextView title, appTitle;
     private FrameLayout webviewContainer, frameNoBookmarks, frameError;
-    private RelativeLayout titleFrame;
+    private RelativeLayout titleFrame, progressBarFrame;
     private CardView cardSearch;
     private BottomSheetLayout bottomSheet;
     private View search;
@@ -175,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView bookmark_text, no_bookmark_text;
     private ImageView back, forward, bookmark;
     private Menu menu;
+    private ProgressBar progressBar;
 
     /**
      * Detect if running on tablet screen
@@ -237,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
         /** Cookie Settings */
         if (prefs.getBoolean("cookies", true)) {
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 CookieManager.getInstance().setAcceptCookie(true);
             } else {
                 CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
@@ -329,6 +322,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                progressBar.setProgress(newProgress);
+            }
+
+            @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
                 if (prefs.getBoolean("dynamic_colors", true)) {
@@ -381,18 +380,6 @@ public class MainActivity extends AppCompatActivity {
                 webView.setCanScrollVertically((appBarLayout.getHeight() - appBarLayout.getBottom()) != 0);
             }
         });
-
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.swipeRefresh));
-
-        if (prefs.getBoolean("swipe_to_refresh", true)) {
-            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    webView.reload();
-                }
-            });
-        }
     }
 
     @Override
@@ -590,7 +577,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_share:
                 String shareBody = webView.getUrl();
-                share(webView.getTitle(), shareBody, "Share link");
+                share(webView.getTitle(), shareBody, "Share " + webView.getTitle());
                 break;
             case R.id.action_history:
                 startActivity(new Intent(MainActivity.this, HistoryActivity.class));
@@ -631,17 +618,17 @@ public class MainActivity extends AppCompatActivity {
                 item.setChecked(isIncognito);
 
                 WebSettings webSettings = webView.getSettings();
-                CookieManager.getInstance().setAcceptCookie(!isIncognito);
-                webSettings.setAppCacheEnabled(!isIncognito);
-                webView.clearHistory();
-                webView.clearCache(isIncognito);
-                webView.clearFormData();
-                webView.getSettings().setSavePassword(!isIncognito);
-                webView.getSettings().setSaveFormData(!isIncognito);
-                webView.isPrivateBrowsingEnabled();
 
                 if (!isIncognito) {
                     //Exiting incognito
+                    CookieManager.getInstance().setAcceptCookie(true);
+                    webSettings.setAppCacheEnabled(true);
+                    webView.getSettings().setSavePassword(true);
+                    webView.getSettings().setSaveFormData(true);
+                    webView.clearCache(true);
+                    webView.clearHistory();
+                    webView.clearFormData();
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu));
                         toolbar.setNavigationIcon(R.drawable.ic_search_toolbar);
@@ -654,6 +641,12 @@ public class MainActivity extends AppCompatActivity {
                     setUpUiTheme();
                 } else {
                     //Entering incognito
+                    webView.clearCache(true);
+                    webView.clearFormData();
+                    webView.isPrivateBrowsingEnabled();
+                    webView.getSettings().setSavePassword(false);
+                    webView.getSettings().setSaveFormData(false);
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu_white));
                         toolbar.setNavigationIcon(R.drawable.ic_search_toolbar_white);
@@ -785,6 +778,12 @@ public class MainActivity extends AppCompatActivity {
         appTitle = (TextView) findViewById(R.id.app_title); // Big Colombo TextView
         titleFrame = (RelativeLayout) findViewById(R.id.big_title); // FrameLayout with Big Colombo TextView
 
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+        progressBar.setProgress(0);
+
+        progressBarFrame = (RelativeLayout) findViewById(R.id.progress_container);
+        progressBarFrame.setVisibility(View.GONE);
+
         cardSearch = (CardView) findViewById(R.id.card_search); // CardView with SearchView
         search = findViewById(R.id.search); // FrameLayout of cardSearch
 
@@ -905,8 +904,8 @@ public class MainActivity extends AppCompatActivity {
      * Change UI colors when entering incognito mode
      */
     private void changeColorsIncognitoEnter(int appTitleText, int cardBackround, int titleTextColor, int rvBg, int webviewBg,
-                                       int bookmarkTextColor, int bookmarkTextBg, int noBookmarkTextColor, int mainColor,
-                                       int appTitleTextColor, int settingsIcon, int backIcon, int forwardIcon, int bookmarkIcon) {
+                                            int bookmarkTextColor, int bookmarkTextBg, int noBookmarkTextColor, int mainColor,
+                                            int appTitleTextColor, int settingsIcon, int backIcon, int forwardIcon, int bookmarkIcon) {
         appTitle.setText(appTitleText);
         cardSearch.setCardBackgroundColor(cardBackround);
         title.setTextColor(titleTextColor);
@@ -939,7 +938,7 @@ public class MainActivity extends AppCompatActivity {
      * Change UI colors when exiting incognito mode
      */
     private void changeColorsIncognitoExit(int appTitleText, int cardBackround, int titleTextColor, int rvBg, int webviewBg,
-                                       int bookmarkTextColor, int bookmarkTextBg, int noBookmarkTextColor, int mainColor) {
+                                           int bookmarkTextColor, int bookmarkTextBg, int noBookmarkTextColor, int mainColor) {
         appTitle.setText(appTitleText);
         cardSearch.setCardBackgroundColor(cardBackround);
         title.setTextColor(titleTextColor);
@@ -1164,6 +1163,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Copy to clipboard text
+     *
      * @param text
      */
     private void copyToClipBoard(String text) {
@@ -1284,12 +1284,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animator) {
                 appbar.setBackgroundColor((int) animator.getAnimatedValue());
-                swipeRefreshLayout.setColorSchemeColors((int) animator.getAnimatedValue());
             }
         });
         colorAnimation.start();
 
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
+        //swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
     }
 
     /**
@@ -1430,6 +1429,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Download image on a given URL
+     *
      * @param imageUrl
      */
     private void downloadImage(String imageUrl) {
@@ -1444,6 +1444,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Download file
+     *
      * @param url
      * @param contentDisposition
      * @param mimeType
@@ -1668,7 +1669,7 @@ public class MainActivity extends AppCompatActivity {
                                                 break;
                                             case R.id.action_share_link:
                                                 String shareBody = webView.getHitTestResult().getExtra();
-                                                share("Website link", shareBody, "Share Link");
+                                                share("Website link", shareBody, "Share " + webView.getHitTestResult().getExtra());
                                                 break;
                                         }
                                         bottomSheet.setUseHardwareLayerWhileAnimating(true);
@@ -1697,22 +1698,17 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap facIcon) {
-            if (prefs.getBoolean("circle_progress", true)) {
-                swipeRefreshLayout.setRefreshing(true);
-            } else {
-                swipeRefreshLayout.setEnabled(false);
-                swipeRefreshLayout.setRefreshing(false);
-            }
-
+            super.onPageStarted(view, url, facIcon);
             checkInternet();
+            ViewAnimationUtils.expand(progressBarFrame);
+            progressBar.setProgress(0);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            if (prefs.getBoolean("circle_progress", true)) {
-                swipeRefreshLayout.setRefreshing(false);
-                swipeRefreshLayout.setEnabled(false);
-            }
+            super.onPageFinished(view, url);
+            ViewAnimationUtils.collapse(progressBarFrame);
+            progressBar.setProgress(100);
 
             if (prefs.getBoolean("title_search", true)) {
                 title.setText(webView.getTitle());
@@ -1733,14 +1729,12 @@ public class MainActivity extends AppCompatActivity {
     public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
         Context c;
         ArrayList<CardData> cardData;
-        private int lastPosition = -1;
 
         public MyAdapter(Context c, ArrayList<CardData> cardData) {
             this.c = c;
             this.cardData = cardData;
         }
 
-        //Inzializzazione ViewHolder
         @Override
         public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_layout, parent, false);
@@ -1748,7 +1742,6 @@ public class MainActivity extends AppCompatActivity {
             return holder;
         }
 
-        //Inizialiazzione Bind
         @Override
         public void onBindViewHolder(final MyHolder holder, final int position) {
 
@@ -1796,13 +1789,12 @@ public class MainActivity extends AppCompatActivity {
                                             break;
                                         case R.id.action_share_bookmark: // Share the bookmark
                                             String shareBody = cardData.get(position).getCode();
-                                            share(cardData.get(position).getName(), shareBody, "Share bookmark");
+                                            share(cardData.get(position).getName(), shareBody, "Share " + cardData.get(position).getName());
                                             bottomSheet.dismissSheet();
                                             break;
                                         case R.id.action_rename_bookmark: // Rename the bookmark
                                             new MaterialDialog.Builder(MainActivity.this)
                                                     .title(R.string.rename_bookmark_title)
-                                                    .content(R.string.rename_bookmark_content)
                                                     .inputType(InputType.TYPE_CLASS_TEXT)
                                                     .input("Bookmark name", cardData.get(position).getName(), new MaterialDialog.InputCallback() {
                                                         @Override
@@ -1815,7 +1807,7 @@ public class MainActivity extends AppCompatActivity {
                                         case R.id.action_delete_bookmark: // Delete the bookmark
                                             new MaterialDialog.Builder(MainActivity.this)
                                                     .title(R.string.delete_bookmark_title)
-                                                    .content(R.string.delete_bookmark_content + cardData.get(pos).getName() + "?")
+                                                    .content(cardData.get(pos).getName())
                                                     .positiveText(R.string.delete_bookmark_positive)
                                                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                                                         @Override

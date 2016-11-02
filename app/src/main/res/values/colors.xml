@@ -18,9 +18,6 @@
     <color name="colorSlide3">#5E35B1</color>
     <color name="colorSlide3Dark">#4527A0</color>
 
-    <color name="swipeRefresh">#757575</color>
-    <color name="swipeRefreshIncognito">#424242</color>
-
     <color name="colorTextBlack">#364749</color>
     <color name="colorTextWhite">#FAFAFA</color>
     <color name="colorTextDarkBlue">#233B3F</color>
