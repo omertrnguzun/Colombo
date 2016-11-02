@@ -165,5 +165,9 @@
     <string name="title_activity_about">אודות</string>
     <string name="pref_header_general_summary">אפשרויות כלליות לאתרים ועוד</string>
     <string name="pref_header_appearance_summary">הענקת מראה משופר לדפדפן</string>
+    <string name="menu_copy">העתק קישור</string>
+    <string name="new_incognito_tab">כרטיסיה חדשה לגלישה בסתר</string>
+    <string name="new_tab">כרטיסייה חדשה</string>
+    <string name="shortcut_disabled">קיצור לא זמין</string>
 
 </resources>

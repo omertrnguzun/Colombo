@@ -436,6 +436,7 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.action_bookmark).setIcon(R.drawable.menu_bookmark);
         menu.findItem(R.id.action_incognito).setIcon(R.drawable.menu_incognito);
         menu.findItem(R.id.action_add).setIcon(R.drawable.menu_add);
+        menu.findItem(R.id.action_copy).setIcon(R.drawable.menu_copy);
         menu.findItem(R.id.action_share).setIcon(R.drawable.menu_share);
         menu.findItem(R.id.action_history).setIcon(R.drawable.menu_history);
         menu.findItem(R.id.action_settings).setIcon(R.drawable.menu_settings);
@@ -613,6 +614,10 @@ public class MainActivity extends AppCompatActivity {
                     desktop = true;
                 }
                 break;
+            case R.id.action_copy:
+                copyToClipBoard(webView.getUrl());
+                Toast.makeText(this, "Current link copied to clipboard!", Toast.LENGTH_SHORT).show();
+                break;
             case R.id.action_incognito:
                 isIncognito = !isIncognito;
                 item.setChecked(isIncognito);
@@ -691,12 +696,6 @@ public class MainActivity extends AppCompatActivity {
             super.attachBaseContext(newBase);
         }
     }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -818,7 +817,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (shortcutIncognitoComing != null && shortcutIncognitoComing.equals("yes")) {
-            //TODO Gestire cambio colore e modalità
             isIncognito = true;
         }
     }
