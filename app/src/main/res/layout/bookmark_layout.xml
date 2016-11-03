@@ -4,20 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="2dp"
-    android:background="@color/colorPrimaryLight"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/name"
-        style="@style/TextViewCustomFontBold"
+        style="@style/TextViewCustomFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_margin="16dp"
         android:text="Site Name"
-        android:textColor="@color/colorTextBlack"
+        android:textColor="#2E2F30"
         android:textSize="16sp" />
 
 </RelativeLayout>

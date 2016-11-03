@@ -38,6 +38,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -168,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView back, forward, bookmark;
     private Menu menu;
     private ProgressBar progressBar;
+    private GridLayoutManager gridLayoutManager;
 
     /**
      * Detect if running on tablet screen
@@ -185,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
         setUpElements();
 
-        setUpUiTheme();
+        applyColors(false);
 
         setUpBookmarksStructure();
 
@@ -331,39 +333,15 @@ public class MainActivity extends AppCompatActivity {
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
                 if (prefs.getBoolean("dynamic_colors", true)) {
-                    if (Build.VERSION.SDK_INT >= M) {
-                        if (prefs.getBoolean("light_icons", true)) {
-                            Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    setColor(palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getLightMutedColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
-                                    }
-                                }
-                            });
-                        } else {
-                            Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
-                                    }
-                                }
-                            });
-                        }
-                    } else {
-                        Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
-                            @Override
-                            public void onGenerated(Palette palette) {
-                                setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
-                                }
+                    Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
+                        @Override
+                        public void onGenerated(Palette palette) {
+                            setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                             }
-                        });
-                    }
+                        }
+                    });
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), Color.parseColor("#80DEEA")));
@@ -445,17 +423,13 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.action_new).setVisible(false);
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu));
+            toolbar.setNavigationIcon(R.drawable.ic_search_toolbar);
+        }
+
         if (isIncognito) {
             menu.findItem(R.id.action_incognito).setChecked(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu_white));
-                toolbar.setNavigationIcon(R.drawable.ic_search_toolbar_white);
-            }
-            changeColorsIncognitoEnter(R.string.app_name_incognito, Color.parseColor("#455A64"), Color.parseColor("#FAFAFA"),
-                    Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"),
-                    Color.parseColor("#37474F"), Color.parseColor("#233B3F"), R.color.colorPrimaryIncognito,
-                    Color.parseColor("#FAFAFA"), R.drawable.ic_settings_title_white, R.drawable.ic_back_title_white,
-                    R.drawable.ic_forward_title_white, R.drawable.ic_bookmark_title_white);
         }
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
@@ -633,17 +607,7 @@ public class MainActivity extends AppCompatActivity {
                     webView.clearCache(true);
                     webView.clearHistory();
                     webView.clearFormData();
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu));
-                        toolbar.setNavigationIcon(R.drawable.ic_search_toolbar);
-                    }
-
-                    changeColorsIncognitoExit(R.string.app_name, Color.parseColor("#FAFAFA"), Color.parseColor("#B2B2B2"),
-                            Color.parseColor("#E0F7FA"), Color.parseColor("#E0F7FA"), Color.parseColor("#233B3F"),
-                            Color.parseColor("#B2EBF2"), Color.parseColor("#233B3F"), R.color.colorPrimary);
-
-                    setUpUiTheme();
+                    applyColors(false);
                 } else {
                     //Entering incognito
                     webView.clearCache(true);
@@ -651,17 +615,7 @@ public class MainActivity extends AppCompatActivity {
                     webView.isPrivateBrowsingEnabled();
                     webView.getSettings().setSavePassword(false);
                     webView.getSettings().setSaveFormData(false);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu_white));
-                        toolbar.setNavigationIcon(R.drawable.ic_search_toolbar_white);
-                    }
-
-                    changeColorsIncognitoEnter(R.string.app_name_incognito, Color.parseColor("#455A64"), Color.parseColor("#FAFAFA"),
-                            Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"), Color.parseColor("#FAFAFA"),
-                            Color.parseColor("#37474F"), Color.parseColor("#233B3F"), R.color.colorPrimaryIncognito,
-                            Color.parseColor("#FAFAFA"), R.drawable.ic_settings_title_white, R.drawable.ic_back_title_white,
-                            R.drawable.ic_forward_title_white, R.drawable.ic_bookmark_title_white);
+                    applyColors(true);
                 }
                 break;
             case R.id.action_add:
@@ -669,7 +623,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -899,56 +852,71 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Change UI colors when entering incognito mode
+     * Apply UI colors
+     * @param incognito is used to determinate if you want incognito colors or not
      */
-    private void changeColorsIncognitoEnter(int appTitleText, int cardBackround, int titleTextColor, int rvBg, int webviewBg,
-                                            int bookmarkTextColor, int bookmarkTextBg, int noBookmarkTextColor, int mainColor,
-                                            int appTitleTextColor, int settingsIcon, int backIcon, int forwardIcon, int bookmarkIcon) {
-        appTitle.setText(appTitleText);
-        cardSearch.setCardBackgroundColor(cardBackround);
-        title.setTextColor(titleTextColor);
-        rv.setBackgroundColor(rvBg);
-        webviewContainer.setBackgroundColor(webviewBg);
-        bookmark_text.setTextColor(bookmarkTextColor);
-        backround_bookmark_text.setBackgroundColor(bookmarkTextBg);
-        no_bookmark_text.setTextColor(noBookmarkTextColor);
+    private void applyColors(boolean incognito) {
+        if (incognito) {
+            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            appTitle.setText("Colombo Incognito");
+            // Search card backround
+            cardSearch.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+            // Search card text
+            title.setTextColor(Color.parseColor("#AEAEAE"));
+            // Recyclerviewer backround color
+            rv.setBackgroundColor(Color.parseColor("#FAFAFA"));
+            // Webview container (Framelayout)
+            webviewContainer.setBackgroundColor(Color.parseColor("#FAFAFA"));
+            // Bookmark text color
+            bookmark_text.setTextColor(Color.parseColor("#FFFFFF"));
+            // Backround of bookmark
+            backround_bookmark_text.setBackgroundColor(Color.parseColor("#488DFB"));
+            no_bookmark_text.setTextColor(Color.parseColor("#AEAEAE"));
+            // Frame that contains the error image
+            frameError.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
-        if (prefs.getBoolean("light_icons", true)) {
-        } else {
-            setColor(ContextCompat.getColor(MainActivity.this, mainColor));
-            appTitle.setTextColor(appTitleTextColor);
-            Drawable drawable_light = getResources().getDrawable(settingsIcon);
+            Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
             settings.setImageDrawable(drawable_light);
             if (isTablet(this)) {
-                Drawable drawable_back_white = getResources().getDrawable(backIcon);
+                Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
                 back.setImageDrawable(drawable_back_white);
 
-                Drawable drawable_forward_white = getResources().getDrawable(forwardIcon);
+                Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
                 forward.setImageDrawable(drawable_forward_white);
 
-                Drawable drawable_bookmark_white = getResources().getDrawable(bookmarkIcon);
+                Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
                 bookmark.setImageDrawable(drawable_bookmark_white);
             }
-        }
-    }
-
-    /**
-     * Change UI colors when exiting incognito mode
-     */
-    private void changeColorsIncognitoExit(int appTitleText, int cardBackround, int titleTextColor, int rvBg, int webviewBg,
-                                           int bookmarkTextColor, int bookmarkTextBg, int noBookmarkTextColor, int mainColor) {
-        appTitle.setText(appTitleText);
-        cardSearch.setCardBackgroundColor(cardBackround);
-        title.setTextColor(titleTextColor);
-        rv.setBackgroundColor(rvBg);
-        webviewContainer.setBackgroundColor(webviewBg);
-        bookmark_text.setTextColor(bookmarkTextColor);
-        backround_bookmark_text.setBackgroundColor(bookmarkTextBg);
-        no_bookmark_text.setTextColor(noBookmarkTextColor);
-
-        if (prefs.getBoolean("light_icons", true)) {
         } else {
-            setColor(ContextCompat.getColor(MainActivity.this, mainColor));
+            // App title big
+            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            appTitle.setText("Colombo");
+            // Search card backround
+            cardSearch.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+            // Search card text
+            title.setTextColor(Color.parseColor("#AEAEAE"));
+            // Recyclerviewer backround color
+            rv.setBackgroundColor(Color.parseColor("#FAFAFA"));
+            // Webview container (Framelayout)
+            webviewContainer.setBackgroundColor(Color.parseColor("#FAFAFA"));
+            // Bookmark text color
+            bookmark_text.setTextColor(Color.parseColor("#FFFFFF"));
+            // Backround of bookmark
+            backround_bookmark_text.setBackgroundColor(Color.parseColor("#488DFB"));
+            no_bookmark_text.setTextColor(Color.parseColor("#AEAEAE"));
+
+            Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
+            settings.setImageDrawable(drawable_light);
+            if (isTablet(this)) {
+                Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
+                back.setImageDrawable(drawable_back_white);
+
+                Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
+                forward.setImageDrawable(drawable_forward_white);
+
+                Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
+                bookmark.setImageDrawable(drawable_bookmark_white);
+            }
         }
     }
 
@@ -956,13 +924,12 @@ public class MainActivity extends AppCompatActivity {
      * Handle Bookmark elements
      */
     private void setUpBookmarksStructure() {
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, 1);
-        rv.hasFixedSize();
-        rv.setItemAnimator(new SlideInLeftAnimator());
-        rv.setLayoutManager(staggeredGridLayoutManager);
+        gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
+        rv = (RecyclerView) findViewById(R.id.recyclerViewer);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(gridLayoutManager);
         adapter = new MyAdapter(this, cardDatas);
-        ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(adapter);
-        rv.setAdapter(alphaAdapter);
+        rv.setAdapter(adapter);
         retrieve();
     }
 
@@ -1096,67 +1063,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setUpFirstTheme() {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (Build.VERSION.SDK_INT >= M) {
-            if (prefs.getBoolean("light_icons", true)) {
-                //coordinatorLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                setTheme(R.style.AppThemeDark);
-            } else {
-                setTheme(R.style.AppTheme);
-            }
-        } else {
-            setTheme(R.style.AppTheme);
-        }
-    }
-
-    /**
-     * SetUp white theme
-     */
-    private void setUpUiTheme() {
-        if (Build.VERSION.SDK_INT >= M) {
-            if (prefs.getBoolean("light_icons", true)) {
-                appTitle.setTextColor(Color.parseColor("#233B3F"));
-                Drawable drawable_black = getResources().getDrawable(R.drawable.ic_settings_title);
-                settings.setImageDrawable(drawable_black);
-                if (isTablet(this)) {
-                    Drawable drawable_back_black = getResources().getDrawable(R.drawable.ic_back_title);
-                    back.setImageDrawable(drawable_back_black);
-
-                    Drawable drawable_forward_black = getResources().getDrawable(R.drawable.ic_forward_title);
-                    forward.setImageDrawable(drawable_forward_black);
-
-                    Drawable drawable_bookmark_black = getResources().getDrawable(R.drawable.ic_bookmark_title);
-                    bookmark.setImageDrawable(drawable_bookmark_black);
-                }
-            } else {
-                appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-                Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
-                settings.setImageDrawable(drawable_light);
-                if (isTablet(this)) {
-                    Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
-                    back.setImageDrawable(drawable_back_white);
-
-                    Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
-                    forward.setImageDrawable(drawable_forward_white);
-
-                    Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
-                    bookmark.setImageDrawable(drawable_bookmark_white);
-                }
-            }
-        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
-            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-            Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
-            settings.setImageDrawable(drawable_light);
-            if (isTablet(this)) {
-                Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
-                back.setImageDrawable(drawable_back_white);
-
-                Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
-                forward.setImageDrawable(drawable_forward_white);
-
-                Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
-                bookmark.setImageDrawable(drawable_bookmark_white);
-            }
-        }
+        setTheme(R.style.AppTheme);
     }
 
     /**
@@ -1193,7 +1100,7 @@ public class MainActivity extends AppCompatActivity {
      * Setup the preferences
      */
     private void setUpPrefs() {
-        setUpUiTheme();
+        applyColors(false);
         if (prefs.getBoolean("adblock", true)) {
             AdBlocker.init(this);
         }
@@ -1285,8 +1192,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         colorAnimation.start();
-
-        //swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, isIncognito ? R.color.swipeRefreshIncognito : R.color.swipeRefresh));
     }
 
     /**
@@ -1746,7 +1651,7 @@ public class MainActivity extends AppCompatActivity {
             int[] androidColors = getResources().getIntArray(R.array.bookmarkColors);
             int randomBookmarkColor = androidColors[new Random().nextInt(androidColors.length)];
 
-            holder.bookmarkContainer.setBackgroundColor(randomBookmarkColor);
+            holder.bookmarkContainer.setBackgroundColor(Color.parseColor("#ECEFF1"));
 
             holder.name.setText(cardData.get(position).getName());
 

@@ -39,7 +39,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     @Override
@@ -82,16 +81,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
                 findPreference("dynamic_colors").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.restart_colombo, Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                });
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                findPreference("light_icons").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
                         Toast.makeText(getActivity().getApplicationContext(), R.string.restart_colombo, Toast.LENGTH_SHORT).show();

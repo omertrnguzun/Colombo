@@ -2804,20 +2804,20 @@ containing a value of this type.
         public static final int cardview_shadow_end_color=0x7f0e0015;
         public static final int cardview_shadow_start_color=0x7f0e0016;
         public static final int colorAccent=0x7f0e0017;
-        public static final int colorAccentDark=0x7f0e0018;
+        public static final int colorAccentSettings=0x7f0e0018;
         public static final int colorBook1=0x7f0e0019;
         public static final int colorBook2=0x7f0e001a;
         public static final int colorBook3=0x7f0e001b;
         public static final int colorBook4=0x7f0e001c;
         public static final int colorBook5=0x7f0e001d;
         public static final int colorBook6=0x7f0e001e;
-        public static final int colorCyanLight=0x7f0e001f;
-        public static final int colorIconGrey=0x7f0e0020;
-        public static final int colorPrimary=0x7f0e0021;
-        public static final int colorPrimaryDark=0x7f0e0022;
+        public static final int colorIconGrey=0x7f0e001f;
+        public static final int colorPrimary=0x7f0e0020;
+        public static final int colorPrimaryDark=0x7f0e0021;
+        public static final int colorPrimaryDarkSettings=0x7f0e0022;
         public static final int colorPrimaryDarkSplash=0x7f0e0023;
         public static final int colorPrimaryIncognito=0x7f0e0024;
-        public static final int colorPrimaryLight=0x7f0e0025;
+        public static final int colorPrimarySettings=0x7f0e0025;
         public static final int colorSlide1=0x7f0e0026;
         public static final int colorSlide1Dark=0x7f0e0027;
         public static final int colorSlide2=0x7f0e0028;
@@ -3252,10 +3252,14 @@ containing a value of this type.
         public static final int notification_bg_normal=0x7f0200a1;
         public static final int notification_bg_normal_pressed=0x7f0200a2;
         public static final int notification_icon_background=0x7f0200a3;
-        public static final int notification_template_icon_bg=0x7f0200a6;
-        public static final int notification_template_icon_low_bg=0x7f0200a7;
+        public static final int notification_template_icon_bg=0x7f0200aa;
+        public static final int notification_template_icon_low_bg=0x7f0200ab;
         public static final int notification_tile_bg=0x7f0200a4;
         public static final int notify_panel_notification_icon_bg=0x7f0200a5;
+        public static final int settings_about=0x7f0200a6;
+        public static final int settings_appearance=0x7f0200a7;
+        public static final int settings_general=0x7f0200a8;
+        public static final int settings_guide=0x7f0200a9;
     }
     public static final class id {
         public static final int action0=0x7f0f00f1;

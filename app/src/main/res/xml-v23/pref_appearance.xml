@@ -16,12 +16,6 @@
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="light_icons"
-            android:summary="@string/pref_light_icons_summary"
-            android:title="@string/pref_light_icons" />
-
-        <SwitchPreference
-            android:defaultValue="true"
             android:key="font"
             android:summary="@string/pref_font_summary"
             android:title="@string/pref_font" />

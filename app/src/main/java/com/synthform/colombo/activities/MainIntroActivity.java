@@ -20,7 +20,6 @@ public class MainIntroActivity extends IntroActivity {
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
         addSlide(new SimpleSlide.Builder()
                 .title(R.string.title_1)

@@ -158,7 +158,6 @@
                 android:id="@+id/webviewContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorCyanLight"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <RelativeLayout
@@ -168,8 +167,7 @@
                     <View
                         android:id="@+id/backround_bookmarks"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:background="@color/colorPrimaryLight" />
+                        android:layout_height="56dp" />
 
                     <TextView
                         android:id="@+id/text_bookmark"
@@ -235,7 +233,6 @@
                         android:id="@+id/frameError"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/colorCyanLight"
                         android:visibility="gone">
 
                         <RelativeLayout

@@ -42,7 +42,7 @@ public class AboutActivity extends AppCompatActivity implements BillingProcessor
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppThemeDark);
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean("hw_acceleration", true)) {
@@ -55,7 +55,6 @@ public class AboutActivity extends AppCompatActivity implements BillingProcessor
         setTitle("About");
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
         bp = new BillingProcessor(this, LICENSE_KEY, this);
 

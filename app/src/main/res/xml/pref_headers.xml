@@ -3,23 +3,27 @@
     <header
         android:fragment="com.synthform.colombo.activities.SettingsActivity$GeneralPreferenceFragment"
         android:summary="@string/pref_header_general_summary"
-        android:title="@string/pref_header_general" />
+        android:title="@string/pref_header_general"
+        android:icon="@drawable/settings_general" />
 
     <header
         android:fragment="com.synthform.colombo.activities.SettingsActivity$AppearancePreferenceFragment"
         android:summary="@string/pref_header_appearance_summary"
-        android:title="@string/pref_header_appearance" />
+        android:title="@string/pref_header_appearance"
+        android:icon="@drawable/settings_appearance"/>
 
     <header
         android:summary="@string/pref_header_tutorial_summary"
-        android:title="@string/pref_header_intro">
+        android:title="@string/pref_header_intro"
+        android:icon="@drawable/settings_guide">
         <intent
             android:targetClass="com.synthform.colombo.activities.MainIntroActivity"
             android:targetPackage="com.synthform.colombo" />
     </header>
 
     <header
-        android:title="@string/pref_header_about">
+        android:title="@string/pref_header_about"
+        android:icon="@drawable/settings_about">
         <intent
             android:targetClass="com.synthform.colombo.activities.AboutActivity"
             android:targetPackage="com.synthform.colombo" />

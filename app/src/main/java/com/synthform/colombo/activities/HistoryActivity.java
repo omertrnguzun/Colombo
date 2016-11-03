@@ -41,7 +41,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppThemeDark);
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -53,7 +53,6 @@ public class HistoryActivity extends AppCompatActivity {
                 finish();
             }
         });
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
         rv = (RecyclerView) findViewById(R.id.recyclerViewerHistory);
         rv.hasFixedSize();
