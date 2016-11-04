@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), Color.parseColor("#80DEEA")));
+                        setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), Color.parseColor("#307DFB")));
                     }
                 }
             }
@@ -1647,13 +1647,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final MyHolder holder, final int position) {
-
-            int[] androidColors = getResources().getIntArray(R.array.bookmarkColors);
-            int randomBookmarkColor = androidColors[new Random().nextInt(androidColors.length)];
-
             holder.bookmarkContainer.setBackgroundColor(Color.parseColor("#ECEFF1"));
 
             holder.name.setText(cardData.get(position).getName());
+
+            holder.letterName.setText(cardData.get(position).getName());
+            holder.letterName.setSolidColor("#307DFB");
 
             holder.setItemClickListener(new ItemClickListener() {
                 @Override

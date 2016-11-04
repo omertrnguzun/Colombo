@@ -27,21 +27,4 @@
 
     <color name="colorIconGrey">#696969</color>
 
-    <color name="colorBook1">#A4D1FB</color>
-    <color name="colorBook2">#FCF3AA</color>
-    <color name="colorBook3">#AF82F8</color>
-    <color name="colorBook4">#6375F7</color>
-    <color name="colorBook5">#DD5E9D</color>
-    <color name="colorBook6">#84DEE9</color>
-
-    <integer-array name="bookmarkColors">
-        <item>@color/colorBook1</item>
-        <item>@color/colorBook2</item>
-        <item>@color/colorBook3</item>
-        <item>@color/colorBook4</item>
-        <item>@color/colorBook5</item>
-        <item>@color/colorBook5</item>
-        <item>@color/colorBook6</item>
-    </integer-array>
-
 </resources>

@@ -7,13 +7,25 @@
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground">
 
+    <com.synthform.colombo.view.CircularTextView
+        android:id="@+id/name_letter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_margin="8dp"
+        android:text="S"
+        android:gravity="center"
+        android:padding="8dp"
+        android:layout_centerHorizontal="true"
+        android:maxLength="1"/>
+
     <TextView
         android:id="@+id/name"
         style="@style/TextViewCustomFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/name_letter"
         android:layout_margin="16dp"
         android:text="Site Name"
         android:textColor="#2E2F30"
