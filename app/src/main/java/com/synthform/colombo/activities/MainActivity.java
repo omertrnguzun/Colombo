@@ -1,6 +1,7 @@
 package com.synthform.colombo.activities;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -17,6 +18,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -42,6 +44,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -49,7 +52,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -64,6 +69,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -87,17 +93,14 @@ import com.synthform.colombo.util.ItemLongClickListener;
 import com.synthform.colombo.util.StaticUtils;
 import com.synthform.colombo.view.CustomWebChromeClient;
 import com.synthform.colombo.view.ObservableWebView;
-import com.synthform.colombo.view.ViewAnimationUtils;
+import com.synthform.colombo.view.ExpandAnimationUtil;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static android.os.Build.VERSION_CODES.M;
@@ -164,12 +167,13 @@ public class MainActivity extends AppCompatActivity {
     private View search;
     private ImageView settings;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
-    private View backround_bookmark_text;
+    private RelativeLayout backround_bookmark_text;
     private TextView bookmark_text, no_bookmark_text;
     private ImageView back, forward, bookmark;
     private Menu menu;
     private ProgressBar progressBar;
     private GridLayoutManager gridLayoutManager;
+    private SwitchCompat privateSwitch;
 
     /**
      * Detect if running on tablet screen
@@ -332,14 +336,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
+                Palette palette = Palette.from(icon).generate();
+                Palette.Swatch swatch = palette.getVibrantSwatch();
+                Toast.makeText(MainActivity.this, String.valueOf(convertColorToHexadeimal(swatch)), Toast.LENGTH_SHORT).show();
                 if (prefs.getBoolean("dynamic_colors", true)) {
                     Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
                         @Override
                         public void onGenerated(Palette palette) {
-                            setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                            //setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                 setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                             }
+                            revealColor(appbar, palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)),
+                                    StaticUtils.darkColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                         }
                     });
                 } else {
@@ -444,7 +453,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
-                    ViewAnimationUtils.collapse(titleFrame);
+                    ExpandAnimationUtil.collapse(titleFrame);
                 }
 
                 if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
@@ -561,10 +570,10 @@ public class MainActivity extends AppCompatActivity {
                 if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
                     webView.setVisibility(View.GONE);
                     titleFrame.setVisibility(View.GONE);
-                    ViewAnimationUtils.expand(titleFrame);
+                    ExpandAnimationUtil.expand(titleFrame);
                 } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
-                    ViewAnimationUtils.collapse(titleFrame);
+                    ExpandAnimationUtil.collapse(titleFrame);
                 }
                 break;
             case R.id.action_search_words:
@@ -741,7 +750,7 @@ public class MainActivity extends AppCompatActivity {
 
         webviewContainer = (FrameLayout) findViewById(R.id.webviewContainer);
 
-        backround_bookmark_text = findViewById(R.id.backround_bookmarks);
+        backround_bookmark_text = (RelativeLayout) findViewById(R.id.backround_bookmarks);
         bookmark_text = (TextView) findViewById(R.id.text_bookmark);
         bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
         settings = (ImageView) findViewById(R.id.settings);
@@ -752,6 +761,20 @@ public class MainActivity extends AppCompatActivity {
         frameNoBookmarks.setVisibility(View.GONE);
         frameError = (FrameLayout) findViewById(R.id.frameError);
         no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
+
+        privateSwitch = (SwitchCompat) findViewById(R.id.private_switch);
+        privateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    privateSwitch.getThumbDrawable().setColorFilter(Color.parseColor("#2E67FB"), PorterDuff.Mode.MULTIPLY);
+                    privateSwitch.getTrackDrawable().setColorFilter(Color.parseColor("#307DFB"), PorterDuff.Mode.MULTIPLY);
+                } else {
+                    privateSwitch.getThumbDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.MULTIPLY);
+                    privateSwitch.getTrackDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.MULTIPLY);
+                }
+            }
+        });
 
         webView = (ObservableWebView) findViewById(R.id.webview);
         if (urlIntent == null) {
@@ -781,7 +804,7 @@ public class MainActivity extends AppCompatActivity {
         if (urlIntent != null && shortcutNew == null && shortcutIncognito == null) {
             webView.loadUrl(urlIntent);
             webView.setVisibility(View.VISIBLE);
-            ViewAnimationUtils.collapse(titleFrame);
+            ExpandAnimationUtil.collapse(titleFrame);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -924,7 +947,7 @@ public class MainActivity extends AppCompatActivity {
      * Handle Bookmark elements
      */
     private void setUpBookmarksStructure() {
-        gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
+        gridLayoutManager = new GridLayoutManager(MainActivity.this, 3);
         rv = (RecyclerView) findViewById(R.id.recyclerViewer);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(gridLayoutManager);
@@ -989,6 +1012,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 save(input.toString(), webView.getUrl());
+                                Palette palette = Palette.from(webView.getFavicon()).generate();
                                 dialog.dismiss();
                             }
                         }).show();
@@ -1153,14 +1177,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void revealColor(AppBarLayout appbar, int colorPrimary, int colorPrimaryDark){
+        // get the center for the clipping circle
+        int cx = appbar.getWidth() / 2;
+        int cy = appbar.getHeight() / 2;
+
+        // get the final radius for the clipping circle
+        float finalRadius = (float) Math.hypot(cx, cy);
+
+        // create the animator for this view (the start radius is zero)
+        Animator anim = ViewAnimationUtils.createCircularReveal(appbar, cx, cy, 0, finalRadius);
+
+        // make the view visible and start the animation
+        appbar.setBackgroundColor(colorPrimary);
+        anim.start();
+        Window window = getWindow();
+        window.setStatusBarColor(colorPrimaryDark);
+    }
+
     /**
      * Set color class to change dinamically color of UI
      */
     private void setColor(int color) {
-        if (prefs.getBoolean("light_icons", true)) {
-        } else {
-            color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
-        }
+        color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), StaticUtils.darkColor(color));
@@ -1192,6 +1231,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         colorAnimation.start();
+    }
+
+    /**
+     * Convert RGB color to hex
+     * @param swatch
+     * @return
+     */
+    public static String convertColorToHexadeimal(Palette.Swatch swatch) {
+        String hex = Integer.toHexString(swatch.getRgb() & 0xffffff);
+        if(hex.length() < 6)
+        {
+            if(hex.length()==5)
+                hex = "0" + hex;
+            if(hex.length()==4)
+                hex = "00" + hex;
+            if(hex.length()==3)
+                hex = "000" + hex;
+        }
+        hex = "#" + hex;
+        return hex;
     }
 
     /**
@@ -1603,14 +1662,14 @@ public class MainActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap facIcon) {
             super.onPageStarted(view, url, facIcon);
             checkInternet();
-            ViewAnimationUtils.expand(progressBarFrame);
+            ExpandAnimationUtil.expand(progressBarFrame);
             progressBar.setProgress(0);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            ViewAnimationUtils.collapse(progressBarFrame);
+            ExpandAnimationUtil.collapse(progressBarFrame);
             progressBar.setProgress(100);
 
             if (prefs.getBoolean("title_search", true)) {
@@ -1647,7 +1706,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final MyHolder holder, final int position) {
-            holder.bookmarkContainer.setBackgroundColor(Color.parseColor("#ECEFF1"));
+            //holder.bookmarkContainer.setBackgroundColor(Color.parseColor("#ECEFF1"));
 
             holder.name.setText(cardData.get(position).getName());
 
@@ -1660,7 +1719,7 @@ public class MainActivity extends AppCompatActivity {
                     if (webView.getVisibility() == View.GONE) {
                         webView.setVisibility(View.VISIBLE);
                         //titleFrame.setVisibility(View.GONE);
-                        ViewAnimationUtils.collapse(titleFrame);
+                        ExpandAnimationUtil.collapse(titleFrame);
                         searchView.setIconified(false);
                         searchView.setVisibility(View.GONE);
                         searchView.clearFocus();

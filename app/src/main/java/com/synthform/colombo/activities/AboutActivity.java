@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.synthform.colombo.R;
-import com.synthform.colombo.view.ViewAnimationUtils;
+import com.synthform.colombo.view.ExpandAnimationUtil;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -103,10 +103,10 @@ public class AboutActivity extends AppCompatActivity implements BillingProcessor
             @Override
             public void onClick(View v) {
                 if (!donateState) { // Open donate
-                    ViewAnimationUtils.expand(donateContainer);
+                    ExpandAnimationUtil.expand(donateContainer);
                     donateState = true;
                 } else { // Close donate
-                    ViewAnimationUtils.collapse(donateContainer);
+                    ExpandAnimationUtil.collapse(donateContainer);
                     donateState = false;
                 }
             }

@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
  * Created by riccardobusetti on 29/09/16.
  */
 
-public class ViewAnimationUtils {
+public class ExpandAnimationUtil {
 
     /**
      * Expand any view with a cool animation

@@ -49,6 +49,10 @@
         <item name="searchHintIcon">@null</item>
     </style>
 
+    <style name="SwitchNormal">
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+    </style>
+
     <style name="AppTheme.BrandedLaunch.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.BrandedLaunch.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
