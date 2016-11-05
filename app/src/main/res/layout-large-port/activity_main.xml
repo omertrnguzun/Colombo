@@ -61,7 +61,7 @@
                                 android:clickable="true"
                                 android:foreground="?attr/selectableItemBackgroundBorderless"
                                 android:padding="16dp"
-                                app:srcCompat="@drawable/ic_settings_title" />
+                                app:srcCompat="@drawable/ic_settings_title_white" />
 
                     </RelativeLayout>
 

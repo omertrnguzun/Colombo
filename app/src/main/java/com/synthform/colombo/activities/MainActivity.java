@@ -723,6 +723,9 @@ public class MainActivity extends AppCompatActivity {
         shortcutNew = getIntent().getStringExtra("shortcut_new");
         shortcutIncognito = getIntent().getStringExtra("shortcut_incognito");
         shortcutIncognitoComing = getIntent().getStringExtra("shortcut_incognito_coming");
+        if (shortcutIncognitoComing != null && shortcutIncognitoComing.equals("yes")) {
+            isIncognito = true;
+        }
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -758,13 +761,20 @@ public class MainActivity extends AppCompatActivity {
         no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
 
         privateSwitch = (SwitchCompat) findViewById(R.id.private_switch);
+        if (isIncognito) {
+            privateSwitch.setChecked(true);
+        }
         privateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
+                    isIncognito = true;
+                    Toast.makeText(MainActivity.this, "Entering incognito", Toast.LENGTH_SHORT).show();
                     privateSwitch.getThumbDrawable().setColorFilter(Color.parseColor("#2E67FB"), PorterDuff.Mode.MULTIPLY);
                     privateSwitch.getTrackDrawable().setColorFilter(Color.parseColor("#307DFB"), PorterDuff.Mode.MULTIPLY);
                 } else {
+                    isIncognito = false;
+                    Toast.makeText(MainActivity.this, "Exiting incognito", Toast.LENGTH_SHORT).show();
                     privateSwitch.getThumbDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.MULTIPLY);
                     privateSwitch.getTrackDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.MULTIPLY);
                 }
@@ -785,10 +795,6 @@ public class MainActivity extends AppCompatActivity {
             back = (ImageView) findViewById(R.id.back);
             forward = (ImageView) findViewById(R.id.forward);
             bookmark = (ImageView) findViewById(R.id.bookmark);
-        }
-
-        if (shortcutIncognitoComing != null && shortcutIncognitoComing.equals("yes")) {
-            isIncognito = true;
         }
     }
 
@@ -821,7 +827,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             intent.setData(Uri.parse(getHomepage()));
-            intent.putExtra("shortcut_incognito_coming", "yes");
             startActivity(intent);
         } else {
             webView.loadUrl(getHomepage());
@@ -874,6 +879,7 @@ public class MainActivity extends AppCompatActivity {
      * @param incognito is used to determinate if you want incognito colors or not
      */
     private void applyColors(boolean incognito) {
+        // TODO : ContextCompat.getColor(this, R.color.color...) usare questo
         if (incognito) {
             appTitle.setTextColor(Color.parseColor("#FAFAFA"));
             appTitle.setText("Colombo Incognito");
@@ -892,19 +898,6 @@ public class MainActivity extends AppCompatActivity {
             no_bookmark_text.setTextColor(Color.parseColor("#AEAEAE"));
             // Frame that contains the error image
             frameError.setBackgroundColor(Color.parseColor("#FFFFFF"));
-
-            Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
-            settings.setImageDrawable(drawable_light);
-            if (isTablet(this)) {
-                Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
-                back.setImageDrawable(drawable_back_white);
-
-                Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
-                forward.setImageDrawable(drawable_forward_white);
-
-                Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
-                bookmark.setImageDrawable(drawable_bookmark_white);
-            }
         } else {
             // App title big
             appTitle.setTextColor(Color.parseColor("#FAFAFA"));
@@ -922,19 +915,6 @@ public class MainActivity extends AppCompatActivity {
             // Backround of bookmark
             backround_bookmark_text.setBackgroundColor(Color.parseColor("#488DFB"));
             no_bookmark_text.setTextColor(Color.parseColor("#AEAEAE"));
-
-            Drawable drawable_light = getResources().getDrawable(R.drawable.ic_settings_title_white);
-            settings.setImageDrawable(drawable_light);
-            if (isTablet(this)) {
-                Drawable drawable_back_white = getResources().getDrawable(R.drawable.ic_back_title_white);
-                back.setImageDrawable(drawable_back_white);
-
-                Drawable drawable_forward_white = getResources().getDrawable(R.drawable.ic_forward_title_white);
-                forward.setImageDrawable(drawable_forward_white);
-
-                Drawable drawable_bookmark_white = getResources().getDrawable(R.drawable.ic_bookmark_title_white);
-                bookmark.setImageDrawable(drawable_bookmark_white);
-            }
         }
     }
 
@@ -1006,9 +986,13 @@ public class MainActivity extends AppCompatActivity {
                         .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                Palette palette = Palette.from(webView.getFavicon()).generate();
-                                Palette.Swatch swatch = palette.getVibrantSwatch();
-                                save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    Palette palette = Palette.from(webView.getFavicon()).generate();
+                                    Palette.Swatch swatch = palette.getVibrantSwatch();
+                                    save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                } else {
+                                    save(input.toString(), webView.getUrl(), "#307DFB");
+                                }
                                 dialog.dismiss();
                             }
                         }).show();
@@ -1020,7 +1004,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
@@ -1057,9 +1040,13 @@ public class MainActivity extends AppCompatActivity {
                             .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
                                 @Override
                                 public void onInput(MaterialDialog dialog, CharSequence input) {
-                                    Palette palette = Palette.from(webView.getFavicon()).generate();
-                                    Palette.Swatch swatch = palette.getVibrantSwatch();
-                                    save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        Palette palette = Palette.from(webView.getFavicon()).generate();
+                                        Palette.Swatch swatch = palette.getVibrantSwatch();
+                                        save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                    } else {
+                                        save(input.toString(), webView.getUrl(), "#307DFB");
+                                    }
                                     dialog.dismiss();
                                 }
                             }).show();
@@ -1173,24 +1160,6 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return "https://www.google.com/search?q=";
         }
-    }
-
-    private void revealColor(AppBarLayout appbar, int colorPrimary, int colorPrimaryDark){
-        // get the center for the clipping circle
-        int cx = appbar.getWidth() / 2;
-        int cy = appbar.getHeight() / 2;
-
-        // get the final radius for the clipping circle
-        float finalRadius = (float) Math.hypot(cx, cy);
-
-        // create the animator for this view (the start radius is zero)
-        Animator anim = ViewAnimationUtils.createCircularReveal(appbar, cx, cy, 0, finalRadius);
-
-        // make the view visible and start the animation
-        appbar.setBackgroundColor(colorPrimary);
-        anim.start();
-        Window window = getWindow();
-        window.setStatusBarColor(colorPrimaryDark);
     }
 
     /**
@@ -1615,9 +1584,13 @@ public class MainActivity extends AppCompatActivity {
                                                         .input("Bookmark name", "", new MaterialDialog.InputCallback() {
                                                             @Override
                                                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                                                Palette palette = Palette.from(webView.getFavicon()).generate();
-                                                                Palette.Swatch swatch = palette.getVibrantSwatch();
-                                                                save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadeimal(swatch));
+                                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                                                    Palette palette = Palette.from(webView.getFavicon()).generate();
+                                                                    Palette.Swatch swatch = palette.getVibrantSwatch();
+                                                                    save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadeimal(swatch));
+                                                                } else {
+                                                                    save(input.toString(), webView.getUrl(), "#307DFB");
+                                                                }
                                                                 dialog.dismiss();
                                                             }
                                                         }).show();
