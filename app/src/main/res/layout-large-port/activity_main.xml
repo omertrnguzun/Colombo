@@ -110,6 +110,21 @@
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
+            <RelativeLayout
+                android:id="@+id/progress_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-6.5dp"
+                    android:layout_marginTop="-6.5dp"/>
+
+            </RelativeLayout>
+
         </android.support.design.widget.AppBarLayout>
 
             <FrameLayout
@@ -122,20 +137,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <View
+                    <RelativeLayout
                         android:id="@+id/backround_bookmarks"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp" />
+                        android:layout_height="56dp">
 
-                    <TextView
-                        android:id="@+id/text_bookmark"
-                        style="@style/TextViewCustomFontBold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:text="Bookmarks"
-                        android:textColor="@color/colorTextDarkBlue"
-                        android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/text_bookmark"
+                            style="@style/TextViewCustomFontBold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:layout_centerVertical="true"
+                            android:text="Private"
+                            android:textColor="@color/colorTextDarkBlue"
+                            android:textSize="16sp" />
+
+                        <android.support.v7.widget.SwitchCompat
+                            android:id="@+id/private_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="16dp"/>
+
+                    </RelativeLayout>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerViewer"
