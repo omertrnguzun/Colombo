@@ -336,19 +336,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
-                Palette palette = Palette.from(icon).generate();
-                Palette.Swatch swatch = palette.getVibrantSwatch();
-                Toast.makeText(MainActivity.this, String.valueOf(convertColorToHexadeimal(swatch)), Toast.LENGTH_SHORT).show();
                 if (prefs.getBoolean("dynamic_colors", true)) {
                     Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
                         @Override
                         public void onGenerated(Palette palette) {
-                            //setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                            setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                 setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                             }
-                            revealColor(appbar, palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)),
-                                    StaticUtils.darkColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                         }
                     });
                 } else {
@@ -1011,8 +1006,9 @@ public class MainActivity extends AppCompatActivity {
                         .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                save(input.toString(), webView.getUrl());
                                 Palette palette = Palette.from(webView.getFavicon()).generate();
+                                Palette.Swatch swatch = palette.getVibrantSwatch();
+                                save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
                                 dialog.dismiss();
                             }
                         }).show();
@@ -1061,7 +1057,9 @@ public class MainActivity extends AppCompatActivity {
                             .input("Bookmark name", webView.getTitle(), new MaterialDialog.InputCallback() {
                                 @Override
                                 public void onInput(MaterialDialog dialog, CharSequence input) {
-                                    save(input.toString(), webView.getUrl());
+                                    Palette palette = Palette.from(webView.getFavicon()).generate();
+                                    Palette.Swatch swatch = palette.getVibrantSwatch();
+                                    save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
                                     dialog.dismiss();
                                 }
                             }).show();
@@ -1322,8 +1320,9 @@ public class MainActivity extends AppCompatActivity {
             int id = c.getInt(0);
             String name = c.getString(1);
             String code = c.getString(2);
+            String hex = c.getString(3);
 
-            CardData cardData = new CardData(id, name, code);
+            CardData cardData = new CardData(id, name, code, hex);
 
             cardDatas.add(cardData);
         }
@@ -1340,11 +1339,11 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Save data in DB
      */
-    private void save(String name, String code) {
+    private void save(String name, String code, String hex) {
         DBAdapter db = new DBAdapter(this);
         db.openDB();
 
-        long result = db.add(name, code);
+        long result = db.add(name, code, hex);
 
         if (result > 0) {
             Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark added successfully!", Snackbar.LENGTH_SHORT);
@@ -1616,7 +1615,9 @@ public class MainActivity extends AppCompatActivity {
                                                         .input("Bookmark name", "", new MaterialDialog.InputCallback() {
                                                             @Override
                                                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                                                save(input.toString(), webView.getHitTestResult().getExtra());
+                                                                Palette palette = Palette.from(webView.getFavicon()).generate();
+                                                                Palette.Swatch swatch = palette.getVibrantSwatch();
+                                                                save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadeimal(swatch));
                                                                 dialog.dismiss();
                                                             }
                                                         }).show();
@@ -1711,7 +1712,7 @@ public class MainActivity extends AppCompatActivity {
             holder.name.setText(cardData.get(position).getName());
 
             holder.letterName.setText(cardData.get(position).getName());
-            holder.letterName.setSolidColor("#307DFB");
+            holder.letterName.setSolidColor(cardData.get(position).getHex());
 
             holder.setItemClickListener(new ItemClickListener() {
                 @Override

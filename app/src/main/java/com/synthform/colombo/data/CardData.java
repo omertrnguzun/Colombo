@@ -7,12 +7,13 @@ package com.synthform.colombo.data;
 public class CardData {
 
     private int id;
-    private String name, code;
+    private String name, code, hex;
 
-    public CardData(int id, String name, String code) {
+    public CardData(int id, String name, String code, String hex) {
         this.id = id;
         this.name = name;
         this.code = code;
+        this.hex = hex;
     }
 
     public int getId() {
@@ -37,5 +38,13 @@ public class CardData {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getHex() {
+        return hex;
+    }
+
+    public void setHex(String hex) {
+        this.hex = hex;
     }
 }

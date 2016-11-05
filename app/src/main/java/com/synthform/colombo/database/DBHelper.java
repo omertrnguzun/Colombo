@@ -18,26 +18,17 @@ public class DBHelper extends SQLiteOpenHelper {
     //Creazione Table
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         try {
-
             db.execSQL(Contants.CREATE_TB);
-
         } catch (Exception ex) {
-
             ex.printStackTrace();
-
         }
-
     }
 
     //Upgrade Table
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
         db.execSQL("DROP TABLE IF EXISTS " + Contants.TB_NAME);
-
         onCreate(db);
-
     }
 }

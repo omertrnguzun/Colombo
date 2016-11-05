@@ -23,61 +23,41 @@ public class DBAdapter {
 
     //Apertura DataBase
     public DBAdapter openDB() {
-
         try {
-
             db = helper.getWritableDatabase();
-
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
-
         return this;
-
     }
 
     //Chiusura DataBase
     public DBAdapter closeDB() {
-
         try {
-
             helper.close();
-
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
-
         return this;
-
     }
 
     //Inserimento
-    public long add(String name, String code) {
-
+    public long add(String name, String code, String hex) {
         try {
-
             ContentValues cv = new ContentValues();
             cv.put(Contants.NAME, name);
             cv.put(Contants.CODE, code);
-
+            cv.put(Contants.HEX, hex);
             return db.insert(Contants.TB_NAME, Contants.ROW_ID, cv);
-
         } catch (SQLException e) {
-
             e.printStackTrace();
-
         }
-
         return 0;
     }
 
     //Prendere
     public Cursor getAllData() {
-
-        String[] colums = {Contants.ROW_ID, Contants.NAME, Contants.CODE};
-
+        String[] colums = {Contants.ROW_ID, Contants.NAME, Contants.CODE, Contants.HEX};
         return db.query(Contants.TB_NAME, colums, null, null, null, null, null);
     }
 
