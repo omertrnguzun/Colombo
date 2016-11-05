@@ -340,7 +340,11 @@ public class MainActivity extends AppCompatActivity {
                     Palette.from(icon).generate(new Palette.PaletteAsyncListener() {
                         @Override
                         public void onGenerated(Palette palette) {
-                            setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+                            if (palette.getVibrantSwatch() != null) {
+                                setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)), false);
+                            } else {
+                                setColor(palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)), true);
+                            }
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                 setTaskDescription(new ActivityManager.TaskDescription("Colombo | " + webView.getTitle(), webView.getFavicon(), palette.getVibrantColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))));
                             }
@@ -989,7 +993,11 @@ public class MainActivity extends AppCompatActivity {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     Palette palette = Palette.from(webView.getFavicon()).generate();
                                     Palette.Swatch swatch = palette.getVibrantSwatch();
-                                    save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                    if (swatch != null) {
+                                        save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                    } else {
+                                        save(input.toString(), webView.getUrl(), "#307DFB");
+                                    }
                                 } else {
                                     save(input.toString(), webView.getUrl(), "#307DFB");
                                 }
@@ -1043,7 +1051,11 @@ public class MainActivity extends AppCompatActivity {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                         Palette palette = Palette.from(webView.getFavicon()).generate();
                                         Palette.Swatch swatch = palette.getVibrantSwatch();
-                                        save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                        if (swatch != null) {
+                                            save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                        } else {
+                                            save(input.toString(), webView.getUrl(), "#307DFB");
+                                        }
                                     } else {
                                         save(input.toString(), webView.getUrl(), "#307DFB");
                                     }
@@ -1165,11 +1177,11 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Set color class to change dinamically color of UI
      */
-    private void setColor(int color) {
+    private void setColor(int color, boolean noFavicon) {
         color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), StaticUtils.darkColor(color));
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), noFavicon ? ContextCompat.getColor(this, R.color.colorPrimaryDark) : StaticUtils.darkColor(color));
             colorAnimation.setDuration(150);
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -1198,6 +1210,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         colorAnimation.start();
+    }
+
+    /**
+     * Method to detect if color is dark or light
+     * @param color
+     * @return
+     */
+    public boolean isColorDark(int color){
+        double darkness = 1-(0.299*Color.red(color) + 0.587*Color.green(color) + 0.114*Color.blue(color))/255;
+
+        if(darkness<0.5){
+            return false; // It's a light color
+        }else{
+            return true; // It's a dark color
+        }
     }
 
     /**
@@ -1261,7 +1288,6 @@ public class MainActivity extends AppCompatActivity {
     private void delete(int id) {
         DBAdapter db = new DBAdapter(this);
         db.openDB();
-
         long result = db.Delete(id);
         if (result > 0) {
             Snackbar.make(coordinatorLayout, "Bookmark deleted", Snackbar.LENGTH_SHORT).show();
@@ -1269,9 +1295,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Snackbar.make(coordinatorLayout, "Unable to Delete", Snackbar.LENGTH_SHORT).show();
         }
-
         retrieve();
-
         db.closeDB();
     }
 
@@ -1281,9 +1305,7 @@ public class MainActivity extends AppCompatActivity {
     private void retrieve() {
         DBAdapter db = new DBAdapter(this);
         db.openDB();
-
         cardDatas.clear();
-
         Cursor c = db.getAllData();
         while (c.moveToNext()) {
             int id = c.getInt(0);
@@ -1295,13 +1317,10 @@ public class MainActivity extends AppCompatActivity {
 
             cardDatas.add(cardData);
         }
-
         if (!(cardDatas.size() < 1)) {
             rv.setAdapter(adapter);
         }
-
         db.closeDB();
-
         detectArraySize();
     }
 
@@ -1311,9 +1330,7 @@ public class MainActivity extends AppCompatActivity {
     private void save(String name, String code, String hex) {
         DBAdapter db = new DBAdapter(this);
         db.openDB();
-
         long result = db.add(name, code, hex);
-
         if (result > 0) {
             Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bookmark added successfully!", Snackbar.LENGTH_SHORT);
             snackbar.show();
@@ -1322,7 +1339,6 @@ public class MainActivity extends AppCompatActivity {
             Snackbar snackbar = Snackbar.make(coordinatorLayout, "Impossible to save Bookmark :_(", Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
-
         db.closeDB();
     }
 
@@ -1332,9 +1348,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveHistory(String title, String link) {
         DBAdapterHistory db = new DBAdapterHistory(this);
         db.openDB();
-
         long result = db.add(title, link);
-
         db.closeDB();
     }
 
@@ -1587,7 +1601,11 @@ public class MainActivity extends AppCompatActivity {
                                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                                                     Palette palette = Palette.from(webView.getFavicon()).generate();
                                                                     Palette.Swatch swatch = palette.getVibrantSwatch();
-                                                                    save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadeimal(swatch));
+                                                                    if (swatch != null) {
+                                                                        save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadeimal(swatch));
+                                                                    } else {
+                                                                        save(input.toString(), webView.getHitTestResult().getExtra(), "#307DFB");
+                                                                    }
                                                                 } else {
                                                                     save(input.toString(), webView.getUrl(), "#307DFB");
                                                                 }
@@ -1681,6 +1699,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final MyHolder holder, final int position) {
             //holder.bookmarkContainer.setBackgroundColor(Color.parseColor("#ECEFF1"));
+
+            String color = cardData.get(position).getHex();
+
+            if (isColorDark(Integer.decode(color))) {
+                holder.letterName.setTextColor(Color.parseColor("#FAFAFA"));
+            } else {
+                holder.letterName.setTextColor(Color.parseColor("#364749"));
+            }
 
             holder.name.setText(cardData.get(position).getName());
 
