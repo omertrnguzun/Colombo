@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -46,6 +47,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,6 +68,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -78,6 +81,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.synthform.colombo.R;
 import com.synthform.colombo.data.CardData;
 import com.synthform.colombo.database.DBAdapter;
@@ -89,10 +93,16 @@ import com.synthform.colombo.util.ItemClickListener;
 import com.synthform.colombo.util.ItemLongClickListener;
 import com.synthform.colombo.util.StaticUtils;
 import com.synthform.colombo.view.CustomWebChromeClient;
+import com.synthform.colombo.view.FadeAnimationUtil;
 import com.synthform.colombo.view.ObservableWebView;
 import com.synthform.colombo.view.ExpandAnimationUtil;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -153,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private AppBarLayout appbar;
     private CoordinatorLayout coordinatorLayout;
-    private SearchView searchView;
     private ObservableWebView webView;
     private Toolbar toolbar;
     private TextView title, appTitle;
@@ -171,6 +180,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private GridLayoutManager gridLayoutManager;
     private SwitchCompat privateSwitch;
+    private MaterialSearchView materialSearchView;
+    private ArrayList<String> lines;
 
     /**
      * Detect if running on tablet screen
@@ -189,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
         setUpElements();
 
         applyColors(false);
+
+        setUpSearchView();
 
         setUpBookmarksStructure();
 
@@ -383,20 +396,27 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Snackbar.make(coordinatorLayout, R.string.msg_upload_failed, Snackbar.LENGTH_SHORT).show();
         }
+
+        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
+            ArrayList<String> matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (matches != null && matches.size() > 0) {
+                String searchWrd = matches.get(0);
+                if (!TextUtils.isEmpty(searchWrd)) {
+                    materialSearchView.setQuery(searchWrd, false);
+                }
+            }
+            return;
+        }
     }
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack() && searchView.getVisibility() == View.VISIBLE) {
-            searchView.setIconified(false);
-            searchView.setVisibility(View.GONE);
-            searchView.clearFocus();
+        if (webView.canGoBack() && materialSearchView.isSearchOpen()) {
+            materialSearchView.closeSearch();
         } else if (webView.canGoBack()) {
             webView.goBack();
-        } else if (searchView.getVisibility() == View.VISIBLE) {
-            searchView.setIconified(false);
-            searchView.setVisibility(View.GONE);
-            searchView.clearFocus();
+        } else if (materialSearchView.isSearchOpen()) {
+            materialSearchView.closeSearch();
         } else if (bottomSheet.isSheetShowing()) {
             bottomSheet.dismissSheet();
         } else {
@@ -436,103 +456,6 @@ public class MainActivity extends AppCompatActivity {
         if (isIncognito) {
             menu.findItem(R.id.action_private).setChecked(true);
         }
-
-        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        searchView.setBackground(new ColorDrawable(Color.TRANSPARENT));
-        searchView.setQueryHint("");
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setIconified(true);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                    webView.setVisibility(View.VISIBLE);
-                    ExpandAnimationUtil.collapse(titleFrame);
-                }
-
-                if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".com") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".gov") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".net") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".org") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".mil") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".edu") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".int") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".de") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".uk") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".it") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".jp") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".ru") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-                }
-                if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
-                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
-                    webView.loadUrl(query);
-
-                } else
-                    webView.loadUrl(getSearchPrefix() + query);
-
-                searchView.setIconified(false);
-                searchView.setVisibility(View.GONE);
-                searchView.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                return false;
-            }
-        });
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -747,6 +670,11 @@ public class MainActivity extends AppCompatActivity {
         cardSearch = (CardView) findViewById(R.id.card_search); // CardView with SearchView
         search = findViewById(R.id.search); // FrameLayout of cardSearch
 
+        materialSearchView = (MaterialSearchView) findViewById(R.id.search_view);
+        materialSearchView.setVoiceSearch(true);
+        materialSearchView.setVoiceIcon(ContextCompat.getDrawable(this, R.drawable.ic_voice_search));
+        materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
+
         webviewContainer = (FrameLayout) findViewById(R.id.webviewContainer);
 
         backround_bookmark_text = (RelativeLayout) findViewById(R.id.backround_bookmarks);
@@ -799,6 +727,104 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setUpSearchView() {
+        materialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                    webView.setVisibility(View.VISIBLE);
+                    ExpandAnimationUtil.collapse(titleFrame);
+                }
+
+                if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".com") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".gov") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".net") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".org") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".mil") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".edu") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".int") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".de") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".uk") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".it") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".jp") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".ru") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+                }
+                if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
+
+                } else {
+                    webView.loadUrl(getSearchPrefix() + query);
+                }
+
+                changeSearchItemsVisibility(true);
+                materialSearchView.closeSearch();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        materialSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                changeSearchItemsVisibility(false);
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                changeSearchItemsVisibility(true);
+            }
+        });
+    }
+
     /**
      * Load the url based on actions
      */
@@ -811,13 +837,6 @@ public class MainActivity extends AppCompatActivity {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
                 toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
-                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        searchView.setIconified(false);
-                        searchView.setVisibility(View.VISIBLE);
-                    }
-                });
             }
         } else if (shortcutNew != null && shortcutNew.equals("yes")) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -833,13 +852,6 @@ public class MainActivity extends AppCompatActivity {
             webView.loadUrl(getHomepage());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
-                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        searchView.setIconified(false);
-                        searchView.setVisibility(View.VISIBLE);
-                    }
-                });
             }
         }
     }
@@ -872,6 +884,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+        }
+    }
+
+    /**
+     * Change toolbar, title and card search visibility
+     * @param show
+     */
+    private void changeSearchItemsVisibility(boolean show) {
+        if (show) {
+            toolbar.setVisibility(View.VISIBLE);
+            cardSearch.setVisibility(View.VISIBLE);
+            title.setVisibility(View.VISIBLE);
+        } else {
+            toolbar.setVisibility(View.GONE);
+            cardSearch.setVisibility(View.GONE);
+            title.setVisibility(View.GONE);
         }
     }
 
@@ -972,8 +1000,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchView.setIconified(false);
-                searchView.setVisibility(View.VISIBLE);
+                materialSearchView.showSearch(true);
+                changeSearchItemsVisibility(false);
             }
         });
 
@@ -1664,7 +1692,6 @@ public class MainActivity extends AppCompatActivity {
             if (prefs.getBoolean("title_search", true)) {
                 title.setText(webView.getTitle());
             } else {
-                searchView.setQuery(webView.getUrl(), false);
                 title.setText(webView.getUrl());
             }
 
@@ -1717,9 +1744,6 @@ public class MainActivity extends AppCompatActivity {
                         webView.setVisibility(View.VISIBLE);
                         //titleFrame.setVisibility(View.GONE);
                         ExpandAnimationUtil.collapse(titleFrame);
-                        searchView.setIconified(false);
-                        searchView.setVisibility(View.GONE);
-                        searchView.clearFocus();
                     }
                     if (!webView.getUrl().equals(cardData.get(pos).getCode())) {
                         webView.loadUrl(cardData.get(pos).getCode());

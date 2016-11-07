@@ -29,7 +29,6 @@ public class ObservableWebView extends WebView {
     private boolean canScrollVertically;
 
     private ObservableWebView webView;
-    private SearchView searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private CustomWebChromeClient webChromeClient;
@@ -67,13 +66,6 @@ public class ObservableWebView extends WebView {
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         webView = (ObservableWebView) getRootView().findViewById(R.id.webview);
-        searchView = (SearchView) getRootView().findViewById(R.id.action_search);
-
-        if (searchView.getVisibility() == View.VISIBLE) {
-            searchView.setIconified(false);
-            searchView.setVisibility(View.GONE);
-            searchView.clearFocus();
-        }
     }
 
     @SuppressWarnings("unused")
