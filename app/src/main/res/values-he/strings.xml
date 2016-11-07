@@ -5,7 +5,7 @@
 
     <string name="menu_home">דף הבית</string>
     <string name="menu_refresh">רענון</string>
-    <string name="menu_incognito">גלישה בסתר</string>
+    <string name="menu_private">גלישה בסתר</string>
     <string name="menu_share">שיתוף</string>
     <string name="menu_settings">הגדרות</string>
 

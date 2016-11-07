@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -52,9 +53,15 @@ public class AboutActivity extends AppCompatActivity implements BillingProcessor
         }
         setContentView(R.layout.activity_about);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setTitle("About");
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationIcon(R.drawable.ic_back_title_white);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        toolbar.setTitle("About");
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorTextLight));
 
         bp = new BillingProcessor(this, LICENSE_KEY, this);
 
@@ -70,10 +77,6 @@ public class AboutActivity extends AppCompatActivity implements BillingProcessor
         kingMeal = (RelativeLayout) findViewById(R.id.layoutKing);
         present = (RelativeLayout) findViewById(R.id.layoutPresent);
         computer = (RelativeLayout) findViewById(R.id.layoutPC);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            coordinatorLayout.setSystemUiVisibility(coordinatorLayout.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }
 
         setUpClick();
 

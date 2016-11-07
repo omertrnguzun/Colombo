@@ -1,7 +1,6 @@
 package com.synthform.colombo.activities;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -52,9 +51,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -420,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.action_search_words).setIcon(R.drawable.menu_search_words);
         menu.findItem(R.id.action_dekstop).setIcon(R.drawable.menu_dekstop);
         menu.findItem(R.id.action_bookmark).setIcon(R.drawable.menu_bookmark);
-        menu.findItem(R.id.action_incognito).setIcon(R.drawable.menu_incognito);
+        menu.findItem(R.id.action_private).setIcon(R.drawable.menu_private);
         menu.findItem(R.id.action_add).setIcon(R.drawable.menu_add);
         menu.findItem(R.id.action_copy).setIcon(R.drawable.menu_copy);
         menu.findItem(R.id.action_share).setIcon(R.drawable.menu_share);
@@ -437,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (isIncognito) {
-            menu.findItem(R.id.action_incognito).setChecked(true);
+            menu.findItem(R.id.action_private).setChecked(true);
         }
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
@@ -552,7 +549,7 @@ public class MainActivity extends AppCompatActivity {
                 webView.loadUrl(getHomepage());
                 if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.VISIBLE);
-                    titleFrame.setVisibility(View.GONE);
+                    ExpandAnimationUtil.collapse(titleFrame);
                 }
                 break;
             case R.id.action_refresh:
@@ -600,7 +597,7 @@ public class MainActivity extends AppCompatActivity {
                 copyToClipBoard(webView.getUrl());
                 Toast.makeText(this, "Current link copied to clipboard!", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.action_incognito:
+            case R.id.action_private:
                 isIncognito = !isIncognito;
                 item.setChecked(isIncognito);
 
@@ -886,7 +883,7 @@ public class MainActivity extends AppCompatActivity {
         // TODO : ContextCompat.getColor(this, R.color.color...) usare questo
         if (incognito) {
             appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-            appTitle.setText("Colombo Incognito");
+            appTitle.setText(R.string.app_name_private);
             // Search card backround
             cardSearch.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
             // Search card text
@@ -904,21 +901,21 @@ public class MainActivity extends AppCompatActivity {
             frameError.setBackgroundColor(Color.parseColor("#FFFFFF"));
         } else {
             // App title big
-            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
-            appTitle.setText("Colombo");
+            appTitle.setTextColor(ContextCompat.getColor(this, R.color.colorTextLight));
+            appTitle.setText(R.string.app_name);
             // Search card backround
-            cardSearch.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+            cardSearch.setCardBackgroundColor(ContextCompat.getColor(this, R.color.colorTextLight));
             // Search card text
-            title.setTextColor(Color.parseColor("#AEAEAE"));
+            title.setTextColor(ContextCompat.getColor(this, R.color.colorTextDarkGrey));
             // Recyclerviewer backround color
-            rv.setBackgroundColor(Color.parseColor("#FAFAFA"));
+            rv.setBackgroundColor(ContextCompat.getColor(this, R.color.colorTextLight));
             // Webview container (Framelayout)
-            webviewContainer.setBackgroundColor(Color.parseColor("#FAFAFA"));
+            webviewContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.colorTextLight));
             // Bookmark text color
-            bookmark_text.setTextColor(Color.parseColor("#FFFFFF"));
+            bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorTextDarkGrey));
             // Backround of bookmark
-            backround_bookmark_text.setBackgroundColor(Color.parseColor("#488DFB"));
-            no_bookmark_text.setTextColor(Color.parseColor("#AEAEAE"));
+            backround_bookmark_text.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBackroundBookmark));
+            no_bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorTextDarkGrey));
         }
     }
 
@@ -1256,7 +1253,7 @@ public class MainActivity extends AppCompatActivity {
         data.setData(Uri.parse(webView.getUrl()));
         shortcutintent.putExtra("duplicate", false);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, webView.getTitle());
-        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_home_shortcut);
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_home_shortcut);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
         shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, data);
         sendBroadcast(shortcutintent);

@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Colombo</string>
+    <string name="app_name_private" translatable="false">Colombo Private</string>
 
     <string name="search_query">Search</string>
 
     <string name="menu_home">Homepage</string>
     <string name="menu_refresh">Refresh</string>
-    <string name="menu_incognito">Incognito Mode</string>
+    <string name="menu_private">Private mode</string>
     <string name="menu_share">Share</string>
     <string name="menu_settings">Settings</string>
 
@@ -104,7 +105,7 @@
     <string name="menu_open">Open</string>
     <string name="menu_new">New tab</string>
     <string name="menu_dekstop">Desktop view</string>
-    <string name="menu_add">Add to home</string>
+    <string name="menu_add">Add shortcut</string>
 
     <string name="general_2_title">Search</string>
     <string name="general_3_title">Others</string>

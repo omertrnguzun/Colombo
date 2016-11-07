@@ -25,13 +25,19 @@
                 app:showAsAction="never" />
 
             <item
-                android:id="@+id/action_refresh"
-                android:title="@string/menu_refresh"
+                android:id="@+id/action_bookmark"
+                android:title="@string/menu_bookmark"
                 app:showAsAction="never" />
 
             <item
-                android:id="@+id/action_search_words"
-                android:title="@string/menu_search_words"
+                android:id="@+id/action_history"
+                android:title="@string/menu_history"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/action_private"
+                android:checkable="true"
+                android:title="@string/menu_private"
                 app:showAsAction="never" />
 
             <item
@@ -41,14 +47,13 @@
                 app:showAsAction="never" />
 
             <item
-                android:id="@+id/action_bookmark"
-                android:title="@string/menu_bookmark"
+                android:id="@+id/action_search_words"
+                android:title="@string/menu_search_words"
                 app:showAsAction="never" />
 
             <item
-                android:id="@+id/action_incognito"
-                android:checkable="true"
-                android:title="@string/menu_incognito"
+                android:id="@+id/action_refresh"
+                android:title="@string/menu_refresh"
                 app:showAsAction="never" />
 
             <item
@@ -64,11 +69,6 @@
             <item
                 android:id="@+id/action_share"
                 android:title="@string/menu_share"
-                app:showAsAction="never" />
-
-            <item
-                android:id="@+id/action_history"
-                android:title="@string/menu_history"
                 app:showAsAction="never" />
 
             <item

@@ -6,7 +6,7 @@
 
     <string name="menu_home">Homepage</string>
     <string name="menu_refresh">Ricarica</string>
-    <string name="menu_incognito">Modalità Incognito</string>
+    <string name="menu_private">Modalità privata</string>
     <string name="menu_share">Condividi</string>
     <string name="menu_settings">Impostazioni</string>
 
@@ -105,7 +105,7 @@
     <string name="menu_open">Apri</string>
     <string name="menu_new">Nuova scheda</string>
     <string name="menu_dekstop">Modalità dekstop</string>
-    <string name="menu_add">Aggiungi alla home</string>
+    <string name="menu_add">Aggiungi scorciatoia</string>
 
     <string name="general_2_title">Cerca</string>
     <string name="general_3_title">Altre</string>

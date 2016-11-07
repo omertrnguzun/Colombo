@@ -14,7 +14,7 @@
             android:id="@+id/backround"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorTextWhite" />
+            android:background="@color/colorTextLight" />
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -50,7 +50,6 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_centerVertical="true"
                                 android:text="@string/app_name"
-                                android:textColor="@color/colorTextDarkBlue"
                                 android:textSize="38sp" />
 
                             <ImageView
@@ -98,7 +97,7 @@
                                 android:elevation="4dp"
                                 app:theme="@style/ToolbarSearchView"
                                 app:titleTextAppearance="?android:attr/textAppearanceMedium"
-                                app:titleTextColor="@color/colorIconGrey">
+                                app:titleTextColor="@color/colorTextDarkGrey">
 
                                 <TextView
                                     android:id="@+id/toolbar_title"
@@ -192,7 +191,7 @@
                             android:layout_margin="16dp"
                             android:layout_centerVertical="true"
                             android:text="Private"
-                            android:textColor="@color/colorTextDarkBlue"
+                            android:textColor="@color/colorTextDarkGrey"
                             android:textSize="16sp" />
 
                         <android.support.v7.widget.SwitchCompat
@@ -241,7 +240,7 @@
                                 android:layout_below="@+id/image_no_bookmarks"
                                 android:layout_margin="16dp"
                                 android:text="You have no bookmarks"
-                                android:textColor="@color/colorTextDarkBlue"
+                                android:textColor="@color/colorTextDarkGrey"
                                 android:textSize="16sp" />
 
                         </RelativeLayout>
@@ -282,7 +281,7 @@
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginTop="10dp"
                                 android:text="Colombo Error"
-                                android:textColor="@color/colorTextDarkBlue"
+                                android:textColor="@color/colorTextDarkGrey"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -297,7 +296,7 @@
                                 android:layout_marginLeft="16dp"
                                 android:layout_marginRight="16dp"
                                 android:text="No connection :/"
-                                android:textColor="@color/colorTextDarkBlue" />
+                                android:textColor="@color/colorTextDarkGrey" />
 
                         </RelativeLayout>
 

@@ -7,13 +7,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- Base 2 Theme -->
-    <style name="AppThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
     <!-- Splash Theme -->
     <style name="AppTheme.BrandedLaunch" parent="AppTheme">
         <item name="android:windowBackground">@drawable/launch_screen</item>
@@ -22,9 +15,9 @@
 
     <!-- App Theme for other sections -->
     <style name="AppThemeGeneric" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimarySettings</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkSettings</item>
-        <item name="colorAccent">@color/colorAccentSettings</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>

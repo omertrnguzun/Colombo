@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="38sp" />
 
                 <TextView
@@ -50,7 +50,7 @@
                     android:layout_below="@+id/title"
                     android:layout_marginTop="32dp"
                     android:text="@string/description_about"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="20sp" />
 
                 <TextView
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/subtitle"
                     android:text="@string/description_about_2"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="20sp" />
 
                 <TextView
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/donations_coke"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
                 <TextView
@@ -112,7 +112,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:text="1$"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
             </RelativeLayout>
@@ -134,7 +134,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:text="@string/donations_brioches"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
                 <TextView
@@ -144,7 +144,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:text="2$"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
             </RelativeLayout>
@@ -164,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/donations_kebab"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
                 <TextView
@@ -174,7 +174,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:text="5$"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
             </RelativeLayout>
@@ -194,7 +194,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/donations_king"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
                 <TextView
@@ -204,7 +204,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:text="15$"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
             </RelativeLayout>
@@ -224,7 +224,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/donations_present"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
                 <TextView
@@ -234,7 +234,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:text="20$"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
             </RelativeLayout>
@@ -254,7 +254,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/donations_pc"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
                 <TextView
@@ -264,7 +264,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:text="50$"
-                    android:textColor="@color/colorTextDarkBlue"
+                    android:textColor="@color/colorTextLight"
                     android:textSize="18sp" />
 
             </RelativeLayout>
@@ -336,7 +336,7 @@
                             android:layout_below="@+id/me_name"
                             android:layout_marginTop="16dp"
                             android:text="Lead Developer"
-                            android:textColor="@color/colorTextGrey"
+                            android:textColor="@color/colorTextLightGrey"
                             android:textSize="16sp" />
 
                     </RelativeLayout>
@@ -387,7 +387,7 @@
                             android:layout_below="@+id/gabriel_name"
                             android:layout_marginTop="16dp"
                             android:text="Lead Designer"
-                            android:textColor="@color/colorTextGrey"
+                            android:textColor="@color/colorTextLightGrey"
                             android:textSize="16sp" />
 
                     </RelativeLayout>
@@ -437,7 +437,7 @@
                             android:layout_below="@+id/james_name"
                             android:layout_marginTop="16dp"
                             android:text="Developer"
-                            android:textColor="@color/colorTextGrey"
+                            android:textColor="@color/colorTextLightGrey"
                             android:textSize="16sp" />
 
                     </RelativeLayout>
@@ -487,7 +487,7 @@
                         android:layout_below="@+id/lib_1"
                         android:layout_marginTop="16dp"
                         android:text="Aidan Follestad"
-                        android:textColor="@color/colorTextGrey"
+                        android:textColor="@color/colorTextLightGrey"
                         android:textSize="16sp" />
 
                 </RelativeLayout>
@@ -515,7 +515,7 @@
                         android:layout_below="@+id/lib_2"
                         android:layout_marginTop="16dp"
                         android:text="Flipboard"
-                        android:textColor="@color/colorTextGrey"
+                        android:textColor="@color/colorTextLightGrey"
                         android:textSize="16sp" />
 
                 </RelativeLayout>
@@ -543,7 +543,7 @@
                         android:layout_below="@+id/lib_3"
                         android:layout_marginTop="16dp"
                         android:text="Chrisjenx"
-                        android:textColor="@color/colorTextGrey"
+                        android:textColor="@color/colorTextLightGrey"
                         android:textSize="16sp" />
 
                 </RelativeLayout>
@@ -570,7 +570,7 @@
                         android:layout_below="@+id/lib_4"
                         android:layout_marginTop="16dp"
                         android:text="Heinrich Reimer"
-                        android:textColor="@color/colorTextGrey"
+                        android:textColor="@color/colorTextLightGrey"
                         android:textSize="16sp" />
 
                 </RelativeLayout>
