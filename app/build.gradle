@@ -38,6 +38,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'jp.wasabeef:recyclerview-animators:2.2.3'
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
-    compile 'com.miguelcatalan:materialsearchview:1.4.0'
     testCompile 'junit:junit:4.12'
 }

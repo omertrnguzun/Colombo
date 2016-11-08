@@ -95,7 +95,6 @@
                                 android:layout_marginLeft="4dp"
                                 android:layout_marginRight="4dp"
                                 android:elevation="4dp"
-                                app:theme="@style/ToolbarSearchView"
                                 app:titleTextAppearance="?android:attr/textAppearanceMedium"
                                 app:titleTextColor="@color/colorTextDarkGrey">
 

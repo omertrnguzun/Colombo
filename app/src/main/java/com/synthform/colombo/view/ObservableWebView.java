@@ -8,14 +8,18 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import com.synthform.colombo.R;
+import com.synthform.colombo.search.MaterialSearchView;
 
 public class ObservableWebView extends WebView {
 
@@ -87,6 +91,18 @@ public class ObservableWebView extends WebView {
         final int action = MotionEventCompat.getActionMasked(event);
         if (action == MotionEvent.ACTION_DOWN) {
             nestedOffsetY = 0;
+        }
+
+        Toolbar toolbar = (Toolbar) getRootView().findViewById(R.id.toolbar);
+        CardView cardSearch = (CardView) getRootView().findViewById(R.id.card_search);
+        TextView title = (TextView) getRootView().findViewById(R.id.toolbar_title);
+        MaterialSearchView materialSearchView = (MaterialSearchView) getRootView().findViewById(R.id.search_view);
+
+        if (!materialSearchView.isSearchOpen() && toolbar.getVisibility() == View.GONE
+                && cardSearch.getVisibility() == View.GONE && title.getVisibility() == View.GONE) {
+            toolbar.setVisibility(View.VISIBLE);
+            cardSearch.setVisibility(View.VISIBLE);
+            title.setVisibility(View.VISIBLE);
         }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());

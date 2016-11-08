@@ -81,12 +81,13 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.synthform.colombo.R;
 import com.synthform.colombo.data.CardData;
 import com.synthform.colombo.database.DBAdapter;
 import com.synthform.colombo.database.DBAdapterHistory;
 import com.synthform.colombo.holder.MyHolder;
+import com.synthform.colombo.search.AnimationUtil;
+import com.synthform.colombo.search.MaterialSearchView;
 import com.synthform.colombo.util.AdBlocker;
 import com.synthform.colombo.util.AppStatus;
 import com.synthform.colombo.util.ItemClickListener;
@@ -671,8 +672,7 @@ public class MainActivity extends AppCompatActivity {
         search = findViewById(R.id.search); // FrameLayout of cardSearch
 
         materialSearchView = (MaterialSearchView) findViewById(R.id.search_view);
-        materialSearchView.setVoiceSearch(true);
-        materialSearchView.setVoiceIcon(ContextCompat.getDrawable(this, R.drawable.ic_voice_search));
+        materialSearchView.setAnimationDuration(300);
         materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
 
         webviewContainer = (FrameLayout) findViewById(R.id.webviewContainer);
@@ -802,7 +802,6 @@ public class MainActivity extends AppCompatActivity {
 
                 changeSearchItemsVisibility(true);
                 materialSearchView.closeSearch();
-
                 return true;
             }
 
@@ -896,7 +895,7 @@ public class MainActivity extends AppCompatActivity {
             toolbar.setVisibility(View.VISIBLE);
             cardSearch.setVisibility(View.VISIBLE);
             title.setVisibility(View.VISIBLE);
-        } else {
+        } else if (toolbar.getVisibility() == View.VISIBLE && cardSearch.getVisibility() == View.VISIBLE && title.getVisibility() == View.VISIBLE) {
             toolbar.setVisibility(View.GONE);
             cardSearch.setVisibility(View.GONE);
             title.setVisibility(View.GONE);
@@ -1681,6 +1680,11 @@ public class MainActivity extends AppCompatActivity {
             checkInternet();
             ExpandAnimationUtil.expand(progressBarFrame);
             progressBar.setProgress(0);
+
+            if (!materialSearchView.isSearchOpen() && toolbar.getVisibility() == View.GONE
+                    && cardSearch.getVisibility() == View.GONE && title.getVisibility() == View.GONE) {
+                changeSearchItemsVisibility(true);
+            }
         }
 
         @Override
@@ -1689,10 +1693,16 @@ public class MainActivity extends AppCompatActivity {
             ExpandAnimationUtil.collapse(progressBarFrame);
             progressBar.setProgress(100);
 
+            if (!materialSearchView.isSearchOpen() && toolbar.getVisibility() == View.GONE
+                    && cardSearch.getVisibility() == View.GONE && title.getVisibility() == View.GONE) {
+                changeSearchItemsVisibility(true);
+            }
+
             if (prefs.getBoolean("title_search", true)) {
                 title.setText(webView.getTitle());
             } else {
                 title.setText(webView.getUrl());
+                materialSearchView.setSearchText(webView.getUrl());
             }
 
             if (!isIncognito && webView.getTitle() != null && webView.getUrl() != null) {
