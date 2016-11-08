@@ -7,18 +7,17 @@
         <item>Duck Duck Go</item>
         <item>Microsoft</item>
         <item>Apple</item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
+        <item>GitHub</item>
+        <item>Netflix</item>
+        <item>ApkMirror</item>
+        <item>Google Play</item>
+        <item>YouTube</item>
+        <item>Spotify</item>
+        <item>Pandora</item>
+        <item>Snapchat</item>
+        <item>Facebook</item>
+        <item>Instagram</item>
+        <item>Google +</item>
+        <item>Google Drive</item>
     </string-array>
 </resources>
