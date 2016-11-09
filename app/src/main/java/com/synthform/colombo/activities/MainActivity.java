@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
     private MaterialSearchView materialSearchView;
     private ArrayList<String> lines;
     private WebSettings webSettings;
+    private View whiteSearch;
 
     /**
      * Detect if running on tablet screen
@@ -288,7 +289,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDownloadStart(final String url, String userAgent, final String contentDisposition, final String mimeType, long contentLength) {
                 final String filename1 = URLUtil.guessFileName(url, contentDisposition, mimeType);
                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Download " + filename1 + "?", Snackbar.LENGTH_INDEFINITE);
-                snackbar.setActionTextColor(Color.parseColor("#1DE9B6"));
                 snackbar.setAction("DOWNLOAD", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -474,7 +474,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_home:
                 webView.loadUrl(getHomepage());
                 if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                    webView.setVisibility(View.VISIBLE);
+                    AnimationUtil.fadeInView(webView, 200);
                     ExpandAnimationUtil.collapse(titleFrame);
                 }
                 break;
@@ -490,11 +490,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_bookmark:
                 if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
-                    webView.setVisibility(View.GONE);
-                    titleFrame.setVisibility(View.GONE);
+                    AnimationUtil.fadeOutView(webView, 200);
                     ExpandAnimationUtil.expand(titleFrame);
                 } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                    webView.setVisibility(View.VISIBLE);
+                    AnimationUtil.fadeInView(webView, 200);
                     ExpandAnimationUtil.collapse(titleFrame);
                 }
                 break;
@@ -534,12 +533,14 @@ public class MainActivity extends AppCompatActivity {
                     webView.getSettings().setSavePassword(true);
                     webView.getSettings().setSaveFormData(true);
                     applyColors(false);
+                    privateSwitch.setChecked(false);
                 } else {
                     //Entering incognito
                     webView.isPrivateBrowsingEnabled();
                     webView.getSettings().setSavePassword(false);
                     webView.getSettings().setSaveFormData(false);
                     applyColors(true);
+                    privateSwitch.setChecked(true);
                 }
                 break;
             case R.id.action_add:
@@ -669,8 +670,11 @@ public class MainActivity extends AppCompatActivity {
         cardSearch = (CardView) findViewById(R.id.card_search); // CardView with SearchView
         search = findViewById(R.id.search); // FrameLayout of cardSearch
 
+        whiteSearch = findViewById(R.id.white_search);
+        whiteSearch.setVisibility(View.GONE);
+
         materialSearchView = (MaterialSearchView) findViewById(R.id.search_view);
-        materialSearchView.setAnimationDuration(300);
+        materialSearchView.setAnimationDuration(400);
         materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
 
         webviewContainer = (FrameLayout) findViewById(R.id.webviewContainer);
@@ -738,7 +742,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                    webView.setVisibility(View.VISIBLE);
+                    AnimationUtil.fadeInView(webView, 200);
                     ExpandAnimationUtil.collapse(titleFrame);
                 }
 
@@ -823,6 +827,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSearchViewClosed() {
+                AnimationUtil.fadeOutView(whiteSearch, 400);
                 toolbar.setVisibility(View.VISIBLE);
                 cardSearch.setVisibility(View.VISIBLE);
                 title.setVisibility(View.VISIBLE);
@@ -957,16 +962,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setUpUiAnimations() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (settings != null && settings.getVisibility() == View.VISIBLE) {
-                settings.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotation));
-            }
-
             if (search != null && search.getVisibility() == View.VISIBLE) {
                 search.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_fab_in));
-            }
-
-            if (appTitle != null && appTitle.getVisibility() == View.VISIBLE) {
-                appTitle.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in));
             }
         }
     }
@@ -979,6 +976,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 materialSearchView.showSearch(true);
+                AnimationUtil.fadeInView(whiteSearch, 400);
                 toolbar.setVisibility(View.GONE);
                 cardSearch.setVisibility(View.GONE);
                 title.setVisibility(View.GONE);
@@ -990,11 +988,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
-                        webView.setVisibility(View.GONE);
-                        titleFrame.setVisibility(View.GONE);
+                        AnimationUtil.fadeOutView(webView, 200);
                         ExpandAnimationUtil.expand(titleFrame);
                     } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
-                        webView.setVisibility(View.VISIBLE);
+                        AnimationUtil.fadeInView(webView, 200);
                         ExpandAnimationUtil.collapse(titleFrame);
                     }
                 }
@@ -1758,8 +1755,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(View v, int pos) {
                     if (webView.getVisibility() == View.GONE) {
-                        webView.setVisibility(View.VISIBLE);
-                        //titleFrame.setVisibility(View.GONE);
+                        AnimationUtil.fadeInView(webView, 200);
                         ExpandAnimationUtil.collapse(titleFrame);
                     }
                     if (!webView.getUrl().equals(cardData.get(pos).getCode())) {

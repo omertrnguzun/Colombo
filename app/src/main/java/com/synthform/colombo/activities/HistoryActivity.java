@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,14 +46,16 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back_title_white);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                onBackPressed();
             }
         });
+        toolbar.setTitle(R.string.title_activity_history);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorTextLight));
 
         rv = (RecyclerView) findViewById(R.id.recyclerViewerHistory);
         rv.hasFixedSize();
@@ -147,7 +150,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         long result = db.deleteAll();
         if (result > 0) {
-            Toast.makeText(HistoryActivity.this, "All list deleted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(HistoryActivity.this, "History deleted", Toast.LENGTH_SHORT).show();
             retrieve();
             adapter.notifyDataSetChanged();
         } else {
@@ -169,8 +172,10 @@ public class HistoryActivity extends AppCompatActivity {
         Toast.makeText(this, "Link copied to clipboard", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * History adapter class
+     */
     public class HistoryAdapter extends RecyclerView.Adapter<MyHolderHistory> {
-
         Context c;
         ArrayList<HistoryData> historyDatas;
 
@@ -179,7 +184,6 @@ public class HistoryActivity extends AppCompatActivity {
             this.historyDatas = historyDatas;
         }
 
-        //Inzializzazione ViewHolder
         @Override
         public MyHolderHistory onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.history_layout, parent, false);
@@ -223,6 +227,5 @@ public class HistoryActivity extends AppCompatActivity {
         public int getItemCount() {
             return historyDatas.size();
         }
-
     }
 }

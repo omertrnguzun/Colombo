@@ -10,11 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/backround"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorTextLight" />
+        <!--<View
+           android:id="@+id/backround"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:background="@color/colorTextLight" />-->
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -133,12 +133,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <FrameLayout
-                android:id="@+id/white_backround_search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorTextLight"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -267,6 +261,12 @@
                 </FrameLayout>
 
             </RelativeLayout>
+
+            <View
+                android:id="@+id/white_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTextLight"/>
 
         </FrameLayout>
 
