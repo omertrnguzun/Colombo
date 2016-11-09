@@ -93,18 +93,6 @@ public class ObservableWebView extends WebView {
             nestedOffsetY = 0;
         }
 
-        Toolbar toolbar = (Toolbar) getRootView().findViewById(R.id.toolbar);
-        CardView cardSearch = (CardView) getRootView().findViewById(R.id.card_search);
-        TextView title = (TextView) getRootView().findViewById(R.id.toolbar_title);
-        MaterialSearchView materialSearchView = (MaterialSearchView) getRootView().findViewById(R.id.search_view);
-
-        if (!materialSearchView.isSearchOpen() && toolbar.getVisibility() == View.GONE
-                && cardSearch.getVisibility() == View.GONE && title.getVisibility() == View.GONE) {
-            toolbar.setVisibility(View.VISIBLE);
-            cardSearch.setVisibility(View.VISIBLE);
-            title.setVisibility(View.VISIBLE);
-        }
-
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         float eventY = event.getY();

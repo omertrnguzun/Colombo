@@ -55,6 +55,28 @@ public class StaticUtils {
         return Color.HSVToColor(hsv);
     }
 
+    public static int lightColor(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] = 1.0f - 0.8f * (1.0f - hsv[2]);
+        return Color.HSVToColor(hsv);
+    }
+
+    public static int lighten(int color, double fraction) {
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        red = lightenColor(red, fraction);
+        green = lightenColor(green, fraction);
+        blue = lightenColor(blue, fraction);
+        int alpha = Color.alpha(color);
+        return Color.argb(alpha, red, green, blue);
+    }
+
+    private static int lightenColor(int color, double fraction) {
+        return (int) Math.min(color + (color * fraction), 255);
+    }
+
     public static boolean isColorDark(int color) {
         double darkness = (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
         return darkness < 0.5;

@@ -134,6 +134,12 @@
             android:layout_height="wrap_content"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <FrameLayout
+                android:id="@+id/white_backround_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTextLight"/>
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -165,11 +171,11 @@
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
+                    android:padding="2dp"
                     android:id="@+id/recyclerViewer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/backround_bookmarks"
-                    android:layout_margin="2dp"
                     android:scrollbars="vertical" />
 
                 <FrameLayout

@@ -48,6 +48,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String YAHOO = "https://www.yahoo.com/";
     private static final String DUCKDUCKGO = "https://www.duckduckgo.com/";
     private static final String BING = "https://www.bing.com/";
+    private static final double FRACTION = 0.2;
 
     /**
      * Array Vars
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
     private SwitchCompat privateSwitch;
     private MaterialSearchView materialSearchView;
     private ArrayList<String> lines;
+    private WebSettings webSettings;
 
     /**
      * Detect if running on tablet screen
@@ -228,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         }
 
-        WebSettings webSettings = webView.getSettings();
+        webSettings = webView.getSettings();
 
         /** Editable settings */
         webSettings.setJavaScriptEnabled(prefs.getBoolean("javascript", true));
@@ -451,7 +454,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             menu.findItem(R.id.action_menu).setIcon(getResources().getDrawable(R.drawable.ic_menu));
-            toolbar.setNavigationIcon(R.drawable.ic_search_toolbar);
         }
 
         if (isIncognito) {
@@ -525,22 +527,15 @@ public class MainActivity extends AppCompatActivity {
                 isIncognito = !isIncognito;
                 item.setChecked(isIncognito);
 
-                WebSettings webSettings = webView.getSettings();
-
                 if (!isIncognito) {
                     //Exiting incognito
                     CookieManager.getInstance().setAcceptCookie(true);
                     webSettings.setAppCacheEnabled(true);
                     webView.getSettings().setSavePassword(true);
                     webView.getSettings().setSaveFormData(true);
-                    webView.clearCache(true);
-                    webView.clearHistory();
-                    webView.clearFormData();
                     applyColors(false);
                 } else {
                     //Entering incognito
-                    webView.clearCache(true);
-                    webView.clearFormData();
                     webView.isPrivateBrowsingEnabled();
                     webView.getSettings().setSavePassword(false);
                     webView.getSettings().setSaveFormData(false);
@@ -657,6 +652,9 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
+        }
 
         title = (TextView) findViewById(R.id.toolbar_title); // SearchBar Title
         appTitle = (TextView) findViewById(R.id.app_title); // Big Colombo TextView
@@ -696,16 +694,24 @@ public class MainActivity extends AppCompatActivity {
         privateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                invalidateOptionsMenu();
                 if (isChecked) {
                     isIncognito = true;
-                    Toast.makeText(MainActivity.this, "Entering incognito", Toast.LENGTH_SHORT).show();
                     privateSwitch.getThumbDrawable().setColorFilter(Color.parseColor("#2E67FB"), PorterDuff.Mode.MULTIPLY);
                     privateSwitch.getTrackDrawable().setColorFilter(Color.parseColor("#307DFB"), PorterDuff.Mode.MULTIPLY);
+                    webView.isPrivateBrowsingEnabled();
+                    webView.getSettings().setSavePassword(false);
+                    webView.getSettings().setSaveFormData(false);
+                    applyColors(true);
                 } else {
                     isIncognito = false;
-                    Toast.makeText(MainActivity.this, "Exiting incognito", Toast.LENGTH_SHORT).show();
                     privateSwitch.getThumbDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.MULTIPLY);
                     privateSwitch.getTrackDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.MULTIPLY);
+                    CookieManager.getInstance().setAcceptCookie(true);
+                    webSettings.setAppCacheEnabled(true);
+                    webView.getSettings().setSavePassword(true);
+                    webView.getSettings().setSaveFormData(true);
+                    applyColors(false);
                 }
             }
         });
@@ -800,7 +806,6 @@ public class MainActivity extends AppCompatActivity {
                     webView.loadUrl(getSearchPrefix() + query);
                 }
 
-                changeSearchItemsVisibility(true);
                 materialSearchView.closeSearch();
                 return true;
             }
@@ -814,12 +819,13 @@ public class MainActivity extends AppCompatActivity {
         materialSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
-                changeSearchItemsVisibility(false);
             }
 
             @Override
             public void onSearchViewClosed() {
-                changeSearchItemsVisibility(true);
+                toolbar.setVisibility(View.VISIBLE);
+                cardSearch.setVisibility(View.VISIBLE);
+                title.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -832,11 +838,6 @@ public class MainActivity extends AppCompatActivity {
             webView.loadUrl(urlIntent);
             webView.setVisibility(View.VISIBLE);
             ExpandAnimationUtil.collapse(titleFrame);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
-                toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
-            }
         } else if (shortcutNew != null && shortcutNew.equals("yes")) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -849,9 +850,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             webView.loadUrl(getHomepage());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_search_toolbar));
-            }
         }
     }
 
@@ -883,22 +881,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
-        }
-    }
-
-    /**
-     * Change toolbar, title and card search visibility
-     * @param show
-     */
-    private void changeSearchItemsVisibility(boolean show) {
-        if (show) {
-            toolbar.setVisibility(View.VISIBLE);
-            cardSearch.setVisibility(View.VISIBLE);
-            title.setVisibility(View.VISIBLE);
-        } else if (toolbar.getVisibility() == View.VISIBLE && cardSearch.getVisibility() == View.VISIBLE && title.getVisibility() == View.VISIBLE) {
-            toolbar.setVisibility(View.GONE);
-            cardSearch.setVisibility(View.GONE);
-            title.setVisibility(View.GONE);
         }
     }
 
@@ -974,9 +956,7 @@ public class MainActivity extends AppCompatActivity {
      * SetUp the elements animated
      */
     private void setUpUiAnimations() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
             if (settings != null && settings.getVisibility() == View.VISIBLE) {
                 settings.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotation));
             }
@@ -988,7 +968,6 @@ public class MainActivity extends AppCompatActivity {
             if (appTitle != null && appTitle.getVisibility() == View.VISIBLE) {
                 appTitle.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in));
             }
-
         }
     }
 
@@ -1000,9 +979,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 materialSearchView.showSearch(true);
-                changeSearchItemsVisibility(false);
+                toolbar.setVisibility(View.GONE);
+                cardSearch.setVisibility(View.GONE);
+                title.setVisibility(View.GONE);
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (webView.getVisibility() == View.VISIBLE && titleFrame.getVisibility() == View.GONE) {
+                        webView.setVisibility(View.GONE);
+                        titleFrame.setVisibility(View.GONE);
+                        ExpandAnimationUtil.expand(titleFrame);
+                    } else if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                        webView.setVisibility(View.VISIBLE);
+                        ExpandAnimationUtil.collapse(titleFrame);
+                    }
+                }
+            });
+        }
 
         toolbar.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -1018,7 +1015,7 @@ public class MainActivity extends AppCompatActivity {
                                     Palette palette = Palette.from(webView.getFavicon()).generate();
                                     Palette.Swatch swatch = palette.getVibrantSwatch();
                                     if (swatch != null) {
-                                        save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                        save(input.toString(), webView.getUrl(), convertColorToHexadecimalNoSwatch(StaticUtils.lighten(swatch.getRgb(), FRACTION)));
                                     } else {
                                         save(input.toString(), webView.getUrl(), "#307DFB");
                                     }
@@ -1076,7 +1073,7 @@ public class MainActivity extends AppCompatActivity {
                                         Palette palette = Palette.from(webView.getFavicon()).generate();
                                         Palette.Swatch swatch = palette.getVibrantSwatch();
                                         if (swatch != null) {
-                                            save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
+                                            save(input.toString(), webView.getUrl(), convertColorToHexadecimalNoSwatch(StaticUtils.lighten(swatch.getRgb(), FRACTION)));
                                         } else {
                                             save(input.toString(), webView.getUrl(), "#307DFB");
                                         }
@@ -1249,6 +1246,21 @@ public class MainActivity extends AppCompatActivity {
         }else{
             return true; // It's a dark color
         }
+    }
+
+    public static String convertColorToHexadecimalNoSwatch(int color) {
+        String hex = Integer.toHexString(color & 0xffffff);
+        if(hex.length() < 6)
+        {
+            if(hex.length()==5)
+                hex = "0" + hex;
+            if(hex.length()==4)
+                hex = "00" + hex;
+            if(hex.length()==3)
+                hex = "000" + hex;
+        }
+        hex = "#" + hex;
+        return hex;
     }
 
     /**
@@ -1626,7 +1638,7 @@ public class MainActivity extends AppCompatActivity {
                                                                     Palette palette = Palette.from(webView.getFavicon()).generate();
                                                                     Palette.Swatch swatch = palette.getVibrantSwatch();
                                                                     if (swatch != null) {
-                                                                        save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadeimal(swatch));
+                                                                        save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadecimalNoSwatch(StaticUtils.lighten(swatch.getRgb(), FRACTION)));
                                                                     } else {
                                                                         save(input.toString(), webView.getHitTestResult().getExtra(), "#307DFB");
                                                                     }
@@ -1680,11 +1692,6 @@ public class MainActivity extends AppCompatActivity {
             checkInternet();
             ExpandAnimationUtil.expand(progressBarFrame);
             progressBar.setProgress(0);
-
-            if (!materialSearchView.isSearchOpen() && toolbar.getVisibility() == View.GONE
-                    && cardSearch.getVisibility() == View.GONE && title.getVisibility() == View.GONE) {
-                changeSearchItemsVisibility(true);
-            }
         }
 
         @Override
@@ -1692,11 +1699,6 @@ public class MainActivity extends AppCompatActivity {
             super.onPageFinished(view, url);
             ExpandAnimationUtil.collapse(progressBarFrame);
             progressBar.setProgress(100);
-
-            if (!materialSearchView.isSearchOpen() && toolbar.getVisibility() == View.GONE
-                    && cardSearch.getVisibility() == View.GONE && title.getVisibility() == View.GONE) {
-                changeSearchItemsVisibility(true);
-            }
 
             if (prefs.getBoolean("title_search", true)) {
                 title.setText(webView.getTitle());
@@ -1736,16 +1738,21 @@ public class MainActivity extends AppCompatActivity {
 
             String color = cardData.get(position).getHex();
 
-            if (isColorDark(Integer.decode(color))) {
+            /*if (isColorDark(Integer.decode(color))) {
                 holder.letterName.setTextColor(Color.parseColor("#FAFAFA"));
             } else {
                 holder.letterName.setTextColor(Color.parseColor("#364749"));
-            }
+            }*/
+
+            holder.bookmarkContainer.setBackgroundColor(Color.parseColor(color));
+
+            holder.letterName.setTextColor(Color.parseColor("#364749"));
+
+            holder.letterName.setSolidColor("#FFFFFF");
 
             holder.name.setText(cardData.get(position).getName());
 
             holder.letterName.setText(cardData.get(position).getName());
-            holder.letterName.setSolidColor(cardData.get(position).getHex());
 
             holder.setItemClickListener(new ItemClickListener() {
                 @Override
