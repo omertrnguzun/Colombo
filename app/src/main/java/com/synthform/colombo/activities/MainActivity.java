@@ -200,13 +200,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setUpFirstTheme();
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Initialize getting intents and sharedpreferences
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        urlIntent = getIntent().getDataString();
+        shortcutNew = getIntent().getStringExtra("shortcut_new");
+        shortcutIncognito = getIntent().getStringExtra("shortcut_incognito");
+        shortcutIncognitoComing = getIntent().getStringExtra("shortcut_incognito_coming");
 
         setUpElements();
 
-        applyColors(false);
+        if (shortcutIncognitoComing != null && shortcutIncognitoComing.equals("yes")) {
+            isIncognito = true;
+            applyColors(true);
+        } else {
+            isIncognito = false;
+            applyColors(false);
+        }
 
         setUpSearchView();
 
@@ -639,10 +651,6 @@ public class MainActivity extends AppCompatActivity {
      * SetUp the UI elements importing them
      */
     private void setUpElements() {
-        urlIntent = getIntent().getDataString();
-        shortcutNew = getIntent().getStringExtra("shortcut_new");
-        shortcutIncognito = getIntent().getStringExtra("shortcut_incognito");
-        shortcutIncognitoComing = getIntent().getStringExtra("shortcut_incognito_coming");
         if (shortcutIncognitoComing != null && shortcutIncognitoComing.equals("yes")) {
             isIncognito = true;
         }
@@ -840,6 +848,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             intent.setData(Uri.parse(getHomepage()));
+            intent.putExtra("shortcut_incognito_coming", "yes");
             startActivity(intent);
         } else {
             webView.loadUrl(getHomepage());
@@ -1087,14 +1096,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * SetUp themes first
-     */
-    private void setUpFirstTheme() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        setTheme(R.style.AppTheme);
-    }
-
-    /**
      * Copy to clipboard text
      *
      * @param text
@@ -1128,7 +1129,6 @@ public class MainActivity extends AppCompatActivity {
      * Setup the preferences
      */
     private void setUpPrefs() {
-        applyColors(false);
         if (prefs.getBoolean("adblock", true)) {
             AdBlocker.init(this);
         }
