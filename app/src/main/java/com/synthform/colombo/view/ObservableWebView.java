@@ -101,8 +101,6 @@ public class ObservableWebView extends WebView {
         switch (action) {
             case MotionEvent.ACTION_MOVE:
                 float deltaY = startY - eventY;
-
-                if (prefs.getBoolean("hide_search", true)) {
                     if (dispatchNestedPreScroll(0, (int) deltaY, scrollConsumed, scrollOffset)) {
                         deltaY -= scrollConsumed[1];
                         startY = eventY - scrollOffset[1];
@@ -115,29 +113,17 @@ public class ObservableWebView extends WebView {
                         nestedOffsetY += scrollOffset[1];
                         startY -= scrollOffset[1];
                     }
-                }
 
-                if (prefs.getBoolean("gestures", true)) {
                     if (Math.abs(deltaY) < Math.abs(startX - event.getX())) {
                         float scrollX = startX - event.getX();
                         if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
                             setX(-scrollX / 5);
-
-                        //getRootView().findViewById(R.id.next).setPressed(false);
-                        //getRootView().findViewById(R.id.previous).setPressed(false);
                     }
-                }
                 break;
             case MotionEvent.ACTION_DOWN:
-                if (prefs.getBoolean("hide_search", true)) {
                     startY = eventY;
                     startX = event.getX();
                     startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
-                } else {
-                    startY = eventY;
-                    startX = event.getX();
-                    startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
-                }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:

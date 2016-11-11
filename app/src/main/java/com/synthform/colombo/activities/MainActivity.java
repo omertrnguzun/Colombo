@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     private ObservableWebView webView;
     private Toolbar toolbar;
     private TextView title, appTitle;
-    private FrameLayout webviewContainer, frameNoBookmarks, frameError;
+    private FrameLayout webviewContainer, frameNoBookmarks;
     private RelativeLayout titleFrame, progressBarFrame;
     private CardView cardSearch;
     private BottomSheetLayout bottomSheet;
@@ -618,6 +618,10 @@ public class MainActivity extends AppCompatActivity {
         webView.onResume();
         webView.resumeTimers();
 
+        if (webView.getUrl() == null) {
+            webView.loadUrl(getHomepage());
+        }
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else if (locationManager != null) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
@@ -688,7 +692,6 @@ public class MainActivity extends AppCompatActivity {
 
         frameNoBookmarks = (FrameLayout) findViewById(R.id.frameNoBookmarks);
         frameNoBookmarks.setVisibility(View.GONE);
-        frameError = (FrameLayout) findViewById(R.id.frameError);
         no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
 
         privateSwitch = (SwitchCompat) findViewById(R.id.private_switch);
@@ -911,8 +914,6 @@ public class MainActivity extends AppCompatActivity {
             // Backround of bookmark
             backround_bookmark_text.setBackgroundColor(Color.parseColor("#488DFB"));
             no_bookmark_text.setTextColor(Color.parseColor("#AEAEAE"));
-            // Frame that contains the error image
-            frameError.setBackgroundColor(Color.parseColor("#FFFFFF"));
         } else {
             // App title big
             appTitle.setTextColor(ContextCompat.getColor(this, R.color.colorTextLight));
@@ -1011,7 +1012,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     Palette palette = Palette.from(webView.getFavicon()).generate();
                                     Palette.Swatch swatch = palette.getVibrantSwatch();
-                                    if (swatch != null) {
+                                    if (swatch != null && webView.getFavicon() != null) {
                                         save(input.toString(), webView.getUrl(), convertColorToHexadecimalNoSwatch(StaticUtils.lighten(swatch.getRgb(), FRACTION)));
                                     } else {
                                         save(input.toString(), webView.getUrl(), "#307DFB");
@@ -1069,7 +1070,7 @@ public class MainActivity extends AppCompatActivity {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                         Palette palette = Palette.from(webView.getFavicon()).generate();
                                         Palette.Swatch swatch = palette.getVibrantSwatch();
-                                        if (swatch != null) {
+                                        if (swatch != null && webView.getFavicon() != null) {
                                             save(input.toString(), webView.getUrl(), convertColorToHexadecimalNoSwatch(StaticUtils.lighten(swatch.getRgb(), FRACTION)));
                                         } else {
                                             save(input.toString(), webView.getUrl(), "#307DFB");
@@ -1148,6 +1149,11 @@ public class MainActivity extends AppCompatActivity {
         webView.getSettings().setBuiltInZoomControls(prefs.getBoolean("zooming", true));
         if (prefs.getBoolean("plugins", true)) {
             webView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        }
+        if (!prefs.getBoolean("hide_search", true)) {
+            webView.setNestedScrollingEnabled(false);
+        } else {
+            webView.setNestedScrollingEnabled(true);
         }
     }
 
@@ -1634,7 +1640,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                                                     Palette palette = Palette.from(webView.getFavicon()).generate();
                                                                     Palette.Swatch swatch = palette.getVibrantSwatch();
-                                                                    if (swatch != null) {
+                                                                    if (swatch != null && webView.getFavicon() != null) {
                                                                         save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadecimalNoSwatch(StaticUtils.lighten(swatch.getRgb(), FRACTION)));
                                                                     } else {
                                                                         save(input.toString(), webView.getHitTestResult().getExtra(), "#307DFB");
@@ -1699,6 +1705,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (prefs.getBoolean("title_search", true)) {
                 title.setText(webView.getTitle());
+                materialSearchView.setSearchText(webView.getUrl());
             } else {
                 title.setText(webView.getUrl());
                 materialSearchView.setSearchText(webView.getUrl());
@@ -1731,15 +1738,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final MyHolder holder, final int position) {
-            //holder.bookmarkContainer.setBackgroundColor(Color.parseColor("#ECEFF1"));
-
             String color = cardData.get(position).getHex();
 
-            /*if (isColorDark(Integer.decode(color))) {
-                holder.letterName.setTextColor(Color.parseColor("#FAFAFA"));
+            if (isColorDark(Integer.decode(color))) {
+                holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextLight));
             } else {
-                holder.letterName.setTextColor(Color.parseColor("#364749"));
-            }*/
+                holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextDarkGrey));
+            }
 
             holder.bookmarkContainer.setBackgroundColor(Color.parseColor(color));
 

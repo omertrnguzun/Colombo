@@ -19,5 +19,22 @@
         <item>Instagram</item>
         <item>Google +</item>
         <item>Google Drive</item>
+        <item>Twitter</item>
+        <item>Kissanime</item>
+        <item>Amazon</item>
+        <item>Reddit</item>
+        <item>LinkedIn</item>
+        <item>Pinterest</item>
+        <item>PayPal</item>
+        <item>Imgur</item>
+        <item>Wikipedia</item>
+        <item>Wikia</item>
+        <item>IMDb</item>
+        <item>Twitch</item>
+        <item>Android Police</item>
+        <item>Webtekno</item>
+        <item>TheVerge</item>
+        <item>Eurostreaming</item>
+        <item>Guardaserie</item>
     </string-array>
 </resources>

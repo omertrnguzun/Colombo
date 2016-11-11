@@ -63,7 +63,7 @@
     <string name="pref_adblock">AdBlock [BETA]</string>
     <string name="pref_adblock_summary">Blocca gli ADS nelle pagine per una migliore esperienza ma se lo avete attivo siete delle brutte persone</string>
 
-    <string name="pref_font_summary">Usa Space Mono invece di Roboto</string>
+    <string name="pref_font_summary">Usa un font custom invece di Roboto</string>
     <string name="pref_font">Custom Font</string>
 
     <string-array name="search_engines_titles">
@@ -156,7 +156,7 @@
     <string name="menu_history">Cronologia</string>
     <string name="title_activity_history">Cronologia</string>
     <string name="donate">DONA</string>
-    <string name="donations_brioches">Offrimi una Coca Cola</string>
+    <string name="donations_brioches">Offrimi una Brioches</string>
     <string name="donations_coke">Offrimi una Coca Cola</string>
     <string name="donations_kebab">Offrimi un Kebab</string>
     <string name="donations_king">Offrimi un Buon Pranzo</string>

@@ -63,7 +63,7 @@
     <string name="pref_adblock">AdBlock [BETA]</string>
     <string name="pref_adblock_summary">Block advertisements for better navigation but you are not a good person</string>
 
-    <string name="pref_font_summary">Use the Space Mono Font instead of Roboto</string>
+    <string name="pref_font_summary">Use custom font instead of Roboto</string>
     <string name="pref_font">Custom Font</string>
 
     <string-array name="search_engines_titles">
