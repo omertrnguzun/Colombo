@@ -107,7 +107,9 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -217,10 +219,6 @@ public class MainActivity extends AppCompatActivity {
         setUpClickListeners();
 
         handleUrlLoading();
-
-        if (prefs.getBoolean("adblock", true)) {
-            AdBlocker.init(this);
-        }
 
         handleLocation();
 
@@ -635,9 +633,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         webView.destroy();
-        SharedPreferences.Editor ed = prefs.edit();
-        ed.putBoolean("active", false);
-        ed.apply();
     }
 
     /**
@@ -748,67 +743,54 @@ public class MainActivity extends AppCompatActivity {
                     AnimationUtil.fadeInView(webView, 200);
                     ExpandAnimationUtil.collapse(titleFrame);
                 }
-
                 if (query.startsWith("www") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".com") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".com") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".gov") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".gov") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".net") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".net") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".org") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".org") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".mil") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".mil") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".edu") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".edu") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".int") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".int") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".ly") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".de") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".de") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".uk") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".uk") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".it") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".it") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".jp") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".jp") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".ru") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".ru") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                }
-                if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
+                } else if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-
+                } else if (query.contains(".") || URLUtil.isValidUrl(query)) {
+                    if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
+                    webView.loadUrl(query);
                 } else {
                     webView.loadUrl(getSearchPrefix() + query);
                 }
@@ -831,6 +813,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSearchViewClosed() {
                 AnimationUtil.fadeOutView(whiteSearch, 400);
+                if (prefs.getBoolean("hide_search", true)) {
+                    webView.setNestedScrollingEnabled(true);
+                }
                 toolbar.setVisibility(View.VISIBLE);
                 cardSearch.setVisibility(View.VISIBLE);
                 title.setVisibility(View.VISIBLE);
@@ -845,7 +830,7 @@ public class MainActivity extends AppCompatActivity {
         if (urlIntent != null && shortcutNew == null && shortcutIncognito == null) {
             webView.loadUrl(urlIntent);
             webView.setVisibility(View.VISIBLE);
-            ExpandAnimationUtil.collapse(titleFrame);
+            titleFrame.setVisibility(View.GONE);
         } else if (shortcutNew != null && shortcutNew.equals("yes")) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -978,6 +963,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 materialSearchView.showSearch(true);
                 AnimationUtil.fadeInView(whiteSearch, 400);
+                if (prefs.getBoolean("hide_search", true)) {
+                    webView.setNestedScrollingEnabled(false);
+                }
                 toolbar.setVisibility(View.GONE);
                 cardSearch.setVisibility(View.GONE);
                 title.setVisibility(View.GONE);
@@ -1705,7 +1693,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (prefs.getBoolean("title_search", true)) {
                 title.setText(webView.getTitle());
-                materialSearchView.setSearchText(webView.getUrl());
             } else {
                 title.setText(webView.getUrl());
                 materialSearchView.setSearchText(webView.getUrl());

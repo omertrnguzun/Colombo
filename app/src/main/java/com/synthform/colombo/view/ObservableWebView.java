@@ -114,11 +114,13 @@ public class ObservableWebView extends WebView {
                         startY -= scrollOffset[1];
                     }
 
+                if (prefs.getBoolean("gestures", true)) {
                     if (Math.abs(deltaY) < Math.abs(startX - event.getX())) {
                         float scrollX = startX - event.getX();
                         if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
                             setX(-scrollX / 5);
                     }
+                }
                 break;
             case MotionEvent.ACTION_DOWN:
                     startY = eventY;
