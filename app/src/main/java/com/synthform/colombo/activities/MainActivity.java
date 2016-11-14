@@ -17,7 +17,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -36,19 +35,15 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,8 +64,6 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -95,21 +88,13 @@ import com.synthform.colombo.util.ItemClickListener;
 import com.synthform.colombo.util.ItemLongClickListener;
 import com.synthform.colombo.util.StaticUtils;
 import com.synthform.colombo.view.CustomWebChromeClient;
-import com.synthform.colombo.view.FadeAnimationUtil;
 import com.synthform.colombo.view.ObservableWebView;
 import com.synthform.colombo.view.ExpandAnimationUtil;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -534,6 +519,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_private:
                 isIncognito = !isIncognito;
                 item.setChecked(isIncognito);
+                adapter.notifyDataSetChanged();
 
                 if (!isIncognito) {
                     //Exiting incognito
@@ -861,38 +847,47 @@ public class MainActivity extends AppCompatActivity {
     private void applyColors(boolean incognito) {
         // TODO : ContextCompat.getColor(this, R.color.color...) usare questo
         if (incognito) {
-            appTitle.setTextColor(Color.parseColor("#FAFAFA"));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDarkIncognto));
+            }
+            appbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryIncognito));
+            // App title big
+            appTitle.setTextColor(ContextCompat.getColor(this, R.color.colorTextLight));
             appTitle.setText(R.string.app_name_private);
             // Search card backround
-            cardSearch.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+            cardSearch.setCardBackgroundColor(ContextCompat.getColor(this, R.color.colorTextLight));
             // Search card text
-            title.setTextColor(Color.parseColor("#AEAEAE"));
+            title.setTextColor(ContextCompat.getColor(this, R.color.colorBlack70));
             // Recyclerviewer backround color
-            rv.setBackgroundColor(Color.parseColor("#FAFAFA"));
+            rv.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundIncognito));
             // Webview container (Framelayout)
-            webviewContainer.setBackgroundColor(Color.parseColor("#FAFAFA"));
+            webviewContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundIncognito));
             // Bookmark text color
-            bookmark_text.setTextColor(Color.parseColor("#FFFFFF"));
+            bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
             // Backround of bookmark
-            backround_bookmark_text.setBackgroundColor(Color.parseColor("#488DFB"));
-            no_bookmark_text.setTextColor(Color.parseColor("#AEAEAE"));
+            backround_bookmark_text.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBookmarksBarIncognito));
+            no_bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
         } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+            }
+            appbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
             // App title big
             appTitle.setTextColor(ContextCompat.getColor(this, R.color.colorTextLight));
             appTitle.setText(R.string.app_name);
             // Search card backround
             cardSearch.setCardBackgroundColor(ContextCompat.getColor(this, R.color.colorTextLight));
             // Search card text
-            title.setTextColor(ContextCompat.getColor(this, R.color.colorTextDarkGrey));
+            title.setTextColor(ContextCompat.getColor(this, R.color.colorBlack70));
             // Recyclerviewer backround color
             rv.setBackgroundColor(ContextCompat.getColor(this, R.color.colorTextLight));
             // Webview container (Framelayout)
             webviewContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.colorTextLight));
             // Bookmark text color
-            bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorTextDarkGrey));
+            bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorBlack70));
             // Backround of bookmark
-            backround_bookmark_text.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBackroundBookmark));
-            no_bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorTextDarkGrey));
+            backround_bookmark_text.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBookmarksBar));
+            no_bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorBlack70));
         }
     }
 
@@ -1440,8 +1435,7 @@ public class MainActivity extends AppCompatActivity {
             if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
                     || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
                     || url.startsWith("mailto:") || url.startsWith("intent://")
-                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")
-                    || url.startsWith("https://www.google.com/maps")) {
+                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
                 switch (Integer.parseInt(prefs.getString("show_open_dialog", "0"))) {
                     case OPEN_ALWAYS:
                         MenuSheetView menuSheetView =
@@ -1515,6 +1509,9 @@ public class MainActivity extends AppCompatActivity {
                         bottomSheet.showWithSheetView(menuSheetView2);
                         return true;
                 }
+            } else if (url.startsWith("tel:")) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                startActivity(intent);
             }
 
             webView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -1695,14 +1692,20 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(final MyHolder holder, final int position) {
             String color = cardData.get(position).getHex();
 
-            if (isColorDark(Integer.decode(color))) {
+            /*if (isColorDark(Integer.decode(color))) {
                 holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextLight));
             } else {
                 holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextDarkGrey));
-            }
+            }*/
 
             holder.bookmarkContainer.setBackgroundColor(Color.parseColor(color));
-            holder.bookmarkContainer.getBackground().setAlpha(128);
+            if (isIncognito) {
+                holder.bookmarkContainer.getBackground().setAlpha(230);
+                holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextLight));
+            } else {
+                holder.bookmarkContainer.getBackground().setAlpha(128);
+                holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextDarkGrey));
+            }
 
             holder.letterName.setTextColor(Color.parseColor("#364749"));
 

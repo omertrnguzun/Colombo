@@ -10,12 +10,19 @@
     <color name="colorPrimaryIncognito">#2d2d2d</color>
     <color name="colorPrimaryDarkIncognto">#242424</color>
     <color name="colorBookmarksBarIncognito">#414141</color>
+    <color name="colorBackgroundIncognito">#202020</color>
 
     <!-- SplashScreen colors -->
     <color name="colorPrimaryDarkSplash">#ebeef0</color>
     <color name="colorPrimarySplash">#FFFFFF</color>
 
-    <!-- Search Input colors -->
+    <!-- Different Color Opacity -->
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack50">#80000000</color>
+    <color name="colorWhite50">#80FFFFFF</color>
+    <color name="colorBlack70">#B3000000</color>
+    <color name="colorWhite70">#B3FFFFFF</color>
 
     <!-- Text colors -->
     <color name="colorTextDark">#090909</color>
@@ -24,10 +31,8 @@
     <color name="colorTextLightGrey">#676767</color>
 
     <!-- Other colors -->
-    <color name="colorBlack">#000000</color>
-    <color name="colorWhite">#FFFFFF</color>
     <color name="colorGreyIcon">#4D4D4D</color>
-    <color name="colorBackroundBookmark">#84B3FC</color>
+    <color name="colorStatusBarWhileSearching">#ebeef0</color>
 
     <!-- Tutorial slides colors -->
     <color name="colorSlide1">#283593</color>
