@@ -183,17 +183,10 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="16dp"
                             android:layout_centerVertical="true"
-                            android:text="Private"
-                            android:textColor="@color/colorTextDarkGrey"
+                            android:text="@string/menu_bookmark"
+                            android:alpha="178.5"
+                            android:textColor="#000000"
                             android:textSize="16sp" />
-
-                        <android.support.v7.widget.SwitchCompat
-                            android:id="@+id/private_switch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_margin="16dp"/>
 
                     </RelativeLayout>
 

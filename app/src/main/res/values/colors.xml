@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Primary UI colors -->
-    <color name="colorPrimary">#488DFB</color>
-    <color name="colorPrimaryDark">#307DFB</color>
-    <color name="colorAccent">#607C89</color>
-    <color name="colorPrimaryIncognito">#263238</color>
-    <color name="colorPrimaryDarkSplash">#E0E0E0</color>
+    <color name="colorPrimary">#4389ff</color>
+    <color name="colorPrimaryDark">#2878ff</color>
+    <color name="colorBookmarksBar">#81b0ff</color>
+    <color name="colorAccent">#5f7c8a</color>
+
+    <!-- Primary UI private colors -->
+    <color name="colorPrimaryIncognito">#2d2d2d</color>
+    <color name="colorPrimaryDarkIncognto">#242424</color>
+    <color name="colorBookmarksBarIncognito">#414141</color>
+
+    <!-- SplashScreen colors -->
+    <color name="colorPrimaryDarkSplash">#ebeef0</color>
+    <color name="colorPrimarySplash">#FFFFFF</color>
+
+    <!-- Search Input colors -->
 
     <!-- Text colors -->
     <color name="colorTextDark">#090909</color>
@@ -14,6 +24,8 @@
     <color name="colorTextLightGrey">#676767</color>
 
     <!-- Other colors -->
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
     <color name="colorGreyIcon">#4D4D4D</color>
     <color name="colorBackroundBookmark">#84B3FC</color>
 

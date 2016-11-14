@@ -184,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
     private Menu menu;
     private ProgressBar progressBar;
     private GridLayoutManager gridLayoutManager;
-    private SwitchCompat privateSwitch;
     private MaterialSearchView materialSearchView;
     private ArrayList<String> lines;
     private WebSettings webSettings;
@@ -543,14 +542,12 @@ public class MainActivity extends AppCompatActivity {
                     webView.getSettings().setSavePassword(true);
                     webView.getSettings().setSaveFormData(true);
                     applyColors(false);
-                    privateSwitch.setChecked(false);
                 } else {
                     //Entering incognito
                     webView.isPrivateBrowsingEnabled();
                     webView.getSettings().setSavePassword(false);
                     webView.getSettings().setSaveFormData(false);
                     applyColors(true);
-                    privateSwitch.setChecked(true);
                 }
                 break;
             case R.id.action_add:
@@ -696,35 +693,6 @@ public class MainActivity extends AppCompatActivity {
         frameNoBookmarks = (FrameLayout) findViewById(R.id.frameNoBookmarks);
         frameNoBookmarks.setVisibility(View.GONE);
         no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
-
-        privateSwitch = (SwitchCompat) findViewById(R.id.private_switch);
-        if (isIncognito) {
-            privateSwitch.setChecked(true);
-        }
-        privateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                invalidateOptionsMenu();
-                if (isChecked) {
-                    isIncognito = true;
-                    privateSwitch.getThumbDrawable().setColorFilter(Color.parseColor("#2E67FB"), PorterDuff.Mode.MULTIPLY);
-                    privateSwitch.getTrackDrawable().setColorFilter(Color.parseColor("#307DFB"), PorterDuff.Mode.MULTIPLY);
-                    webView.isPrivateBrowsingEnabled();
-                    webView.getSettings().setSavePassword(false);
-                    webView.getSettings().setSaveFormData(false);
-                    applyColors(true);
-                } else {
-                    isIncognito = false;
-                    privateSwitch.getThumbDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.MULTIPLY);
-                    privateSwitch.getTrackDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.MULTIPLY);
-                    CookieManager.getInstance().setAcceptCookie(true);
-                    webSettings.setAppCacheEnabled(true);
-                    webView.getSettings().setSavePassword(true);
-                    webView.getSettings().setSaveFormData(true);
-                    applyColors(false);
-                }
-            }
-        });
 
         webView = (ObservableWebView) findViewById(R.id.webview);
         if (urlIntent == null) {
@@ -1010,7 +978,7 @@ public class MainActivity extends AppCompatActivity {
                                     Palette palette = Palette.from(webView.getFavicon()).generate();
                                     Palette.Swatch swatch = palette.getVibrantSwatch();
                                     if (swatch != null && webView.getFavicon() != null) {
-                                        save(input.toString(), webView.getUrl(), convertColorToHexadecimalNoSwatch(StaticUtils.lighten(swatch.getRgb(), FRACTION)));
+                                        save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
                                     } else {
                                         save(input.toString(), webView.getUrl(), "#307DFB");
                                     }
@@ -1068,7 +1036,7 @@ public class MainActivity extends AppCompatActivity {
                                         Palette palette = Palette.from(webView.getFavicon()).generate();
                                         Palette.Swatch swatch = palette.getVibrantSwatch();
                                         if (swatch != null && webView.getFavicon() != null) {
-                                            save(input.toString(), webView.getUrl(), convertColorToHexadecimalNoSwatch(StaticUtils.lighten(swatch.getRgb(), FRACTION)));
+                                            save(input.toString(), webView.getUrl(), convertColorToHexadeimal(swatch));
                                         } else {
                                             save(input.toString(), webView.getUrl(), "#307DFB");
                                         }
@@ -1629,7 +1597,7 @@ public class MainActivity extends AppCompatActivity {
                                                                     Palette palette = Palette.from(webView.getFavicon()).generate();
                                                                     Palette.Swatch swatch = palette.getVibrantSwatch();
                                                                     if (swatch != null && webView.getFavicon() != null) {
-                                                                        save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadecimalNoSwatch(StaticUtils.lighten(swatch.getRgb(), FRACTION)));
+                                                                        save(input.toString(), webView.getHitTestResult().getExtra(), convertColorToHexadeimal(swatch));
                                                                     } else {
                                                                         save(input.toString(), webView.getHitTestResult().getExtra(), "#307DFB");
                                                                     }
@@ -1734,6 +1702,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             holder.bookmarkContainer.setBackgroundColor(Color.parseColor(color));
+            holder.bookmarkContainer.getBackground().setAlpha(128);
 
             holder.letterName.setTextColor(Color.parseColor("#364749"));
 
