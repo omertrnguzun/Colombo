@@ -87,7 +87,7 @@ public class AboutActivity extends AppCompatActivity implements BillingProcessor
         rate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.riccardobusetti.colombo");
+                Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.synthform.colombo");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }

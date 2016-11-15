@@ -35,6 +35,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
@@ -653,6 +654,7 @@ public class MainActivity extends AppCompatActivity {
         titleFrame = (RelativeLayout) findViewById(R.id.big_title); // FrameLayout with Big Colombo TextView
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
+        progressBar.setInterpolator(new FastOutSlowInInterpolator());
         progressBar.setProgress(0);
 
         progressBarFrame = (RelativeLayout) findViewById(R.id.progress_container);
@@ -851,6 +853,7 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDarkIncoginto));
             }
+            progressBar.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.progressbar_light));
             appbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryIncognito));
             // App title big
             appTitle.setTextColor(ContextCompat.getColor(this, R.color.colorTextLight));
@@ -872,6 +875,8 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             }
+            progressBar.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.progressbar_dark));
+            progressBar.getProgressDrawable().setAlpha(178);
             appbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
             // App title big
             appTitle.setTextColor(ContextCompat.getColor(this, R.color.colorTextLight));
