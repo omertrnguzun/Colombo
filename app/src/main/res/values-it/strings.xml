@@ -61,7 +61,7 @@
     <string name="pref_sticky_header_summary">Nasconde la barra di ricerca quando scrolli per una migliore esperienza</string>
 
     <string name="pref_adblock">AdBlock [BETA]</string>
-    <string name="pref_adblock_summary">Blocca gli ADS nelle pagine per una migliore esperienza ma se lo avete attivo siete delle brutte persone</string>
+    <string name="pref_adblock_summary">Blocca gli ADS nelle pagine per una migliore esperienza</string>
 
     <string name="pref_font_summary">Usa un font custom invece di Roboto</string>
     <string name="pref_font">Custom Font</string>

@@ -1,41 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="query_suggestions">
-        <item>Google</item>
-        <item>Yahoo</item>
-        <item>Bing</item>
-        <item>Duck Duck Go</item>
-        <item>Microsoft</item>
-        <item>Apple</item>
-        <item>GitHub</item>
-        <item>Netflix</item>
-        <item>ApkMirror</item>
-        <item>Google Play</item>
-        <item>YouTube</item>
-        <item>Spotify</item>
-        <item>Pandora</item>
-        <item>Snapchat</item>
-        <item>Facebook</item>
-        <item>Instagram</item>
-        <item>Google +</item>
-        <item>Google Drive</item>
-        <item>Twitter</item>
-        <item>Kissanime</item>
-        <item>Amazon</item>
-        <item>Reddit</item>
-        <item>LinkedIn</item>
-        <item>Pinterest</item>
-        <item>PayPal</item>
-        <item>Imgur</item>
-        <item>Wikipedia</item>
-        <item>Wikia</item>
-        <item>IMDb</item>
-        <item>Twitch</item>
-        <item>Android Police</item>
-        <item>Webtekno</item>
-        <item>TheVerge</item>
-        <item>Eurostreaming</item>
-        <item>Guardaserie</item>
+        <item>defsolutions.com</item>
         <item>google.com</item>
         <item>youtube.com</item>
         <item>facebook.com</item>

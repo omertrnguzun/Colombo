@@ -44,6 +44,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -750,7 +751,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (query.endsWith(".gl") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
-                } else if (query.contains(".") || URLUtil.isValidUrl(query)) {
+                } else if (query.contains(".") && !query.contains(" ") || URLUtil.isValidUrl(query)) {
                     if (!URLUtil.isValidUrl(query)) query = URLUtil.guessUrl(query);
                     webView.loadUrl(query);
                 } else {
@@ -848,7 +849,7 @@ public class MainActivity extends AppCompatActivity {
         // TODO : ContextCompat.getColor(this, R.color.color...) usare questo
         if (incognito) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDarkIncognto));
+                getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDarkIncoginto));
             }
             appbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryIncognito));
             // App title big
@@ -1074,7 +1075,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void firstTimeSnackBar() {
         if (prefs.getBoolean("first_time", true)) {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.tutorial, Snackbar.LENGTH_INDEFINITE);
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.tutorial, Snackbar.LENGTH_LONG);
             snackbar.setAction("YES", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1156,7 +1157,7 @@ public class MainActivity extends AppCompatActivity {
         color = isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryIncognito) : color;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), noFavicon ? ContextCompat.getColor(this, R.color.colorPrimaryDark) : StaticUtils.darkColor(color));
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), getWindow().getStatusBarColor(), noFavicon ? !isIncognito ? ContextCompat.getColor(this, R.color.colorPrimaryDark) : ContextCompat.getColor(this, R.color.colorPrimaryDarkIncoginto) : StaticUtils.darkColor(color));
             colorAnimation.setDuration(150);
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override

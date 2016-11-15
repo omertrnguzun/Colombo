@@ -61,7 +61,7 @@
     <string name="pref_sticky_header_summary">Hide search when the page is scrolled down for a more immersive browsing experience</string>
 
     <string name="pref_adblock">AdBlock [BETA]</string>
-    <string name="pref_adblock_summary">Block advertisements for better navigation but you are not a good person</string>
+    <string name="pref_adblock_summary">Block advertisements for better navigation</string>
 
     <string name="pref_font_summary">Use custom font instead of Roboto</string>
     <string name="pref_font">Custom Font</string>
