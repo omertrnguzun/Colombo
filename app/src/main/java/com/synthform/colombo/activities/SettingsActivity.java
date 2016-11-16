@@ -87,14 +87,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     }
                 });
             }
-
-            findPreference("font").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Toast.makeText(getActivity().getApplicationContext(), R.string.restart_colombo, Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            });
         }
     }
 

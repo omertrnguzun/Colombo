@@ -553,13 +553,31 @@ public class MainActivity extends AppCompatActivity {
                     webSettings.setAppCacheEnabled(true);
                     webView.getSettings().setSavePassword(true);
                     webView.getSettings().setSaveFormData(true);
+                    webSettings.setDatabaseEnabled(true);
+                    webSettings.setDomStorageEnabled(true);
                     applyColors(false);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                        CookieManager.getInstance().setAcceptCookie(true);
+                    } else {
+                        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+                    }
+                    CookieSyncManager.createInstance(MainActivity.this);
+                    CookieSyncManager.getInstance().startSync();
                 } else {
                     //Entering incognito
                     webView.isPrivateBrowsingEnabled();
                     webView.getSettings().setSavePassword(false);
                     webView.getSettings().setSaveFormData(false);
                     applyColors(true);
+                    webSettings.setDatabaseEnabled(false);
+                    webSettings.setDomStorageEnabled(false);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                        CookieManager.getInstance().setAcceptCookie(false);
+                    } else {
+                        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, false);
+                    }
+                    CookieSyncManager.createInstance(MainActivity.this);
+                    CookieSyncManager.getInstance().startSync();
                 }
                 break;
             case R.id.action_add:
@@ -587,11 +605,7 @@ public class MainActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         SharedPreferences preferences;
         preferences = PreferenceManager.getDefaultSharedPreferences(newBase);
-        if (preferences.getBoolean("font", true)) {
-            super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-        } else {
-            super.attachBaseContext(newBase);
-        }
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
@@ -805,9 +819,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSearchViewClosed() {
                 AnimationUtil.fadeOutView(whiteSearch, 400);
-                if (prefs.getBoolean("hide_search", true)) {
-                    webView.setNestedScrollingEnabled(true);
-                }
+                webView.setNestedScrollingEnabled(true);
                 toolbar.setVisibility(View.VISIBLE);
                 cardSearch.setVisibility(View.VISIBLE);
                 title.setVisibility(View.VISIBLE);
@@ -971,9 +983,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 materialSearchView.showSearch(true);
                 AnimationUtil.fadeInView(whiteSearch, 400);
-                if (prefs.getBoolean("hide_search", true)) {
-                    webView.setNestedScrollingEnabled(false);
-                }
+                webView.setNestedScrollingEnabled(false);
                 toolbar.setVisibility(View.GONE);
                 cardSearch.setVisibility(View.GONE);
                 title.setVisibility(View.GONE);
@@ -1137,11 +1147,6 @@ public class MainActivity extends AppCompatActivity {
         webView.getSettings().setBuiltInZoomControls(prefs.getBoolean("zooming", true));
         if (prefs.getBoolean("plugins", true)) {
             webView.getSettings().setPluginState(WebSettings.PluginState.ON);
-        }
-        if (!prefs.getBoolean("hide_search", true)) {
-            webView.setNestedScrollingEnabled(false);
-        } else {
-            webView.setNestedScrollingEnabled(true);
         }
     }
 

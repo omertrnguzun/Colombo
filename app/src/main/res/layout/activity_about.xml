@@ -73,8 +73,8 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     android:text="@string/donate"
-                    android:textColor="#FFC107"
-                    android:textSize="20sp"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </RelativeLayout>
