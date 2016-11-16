@@ -8,8 +8,8 @@ android {
         applicationId "com.synthform.colombo"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 26
-        versionName "3.0"
+        versionCode 28
+        versionName "3.0.1.1"
         vectorDrawables.useSupportLibrary = true
     }
 

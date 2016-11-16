@@ -238,8 +238,6 @@ public class MainActivity extends AppCompatActivity {
 
         handleUrlLoading();
 
-        handleLocation();
-
         firstTimeSnackBar();
 
         /** Set Webview params */
@@ -354,7 +352,15 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-                callback.invoke(origin, true, false);
+                if (Build.VERSION.SDK_INT >= M) {
+                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE);
+                    } else {
+                        callback.invoke(origin, true, false);
+                    }
+                } else {
+                    callback.invoke(origin, true, false);
+                }
             }
 
             @Override
@@ -638,11 +644,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         webView.onPause();
         webView.pauseTimers();
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        } else if (locationManager != null) {
-            locationManager.removeUpdates(locationListener);
-        }
     }
 
     @Override
@@ -655,11 +656,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (webView.getUrl() == null) {
             webView.loadUrl(getHomepage());
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        } else if (locationManager != null) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
         }
 
         setUpPrefs();
@@ -878,7 +874,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onProviderDisabled(String s) {
                 }
             };
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, locationListener);
+            }
         }
     }
 
