@@ -2865,13 +2865,13 @@ containing a value of this type.
         public static final int colorPrimaryDarkSplash=0x7f0e0022;
         public static final int colorPrimaryIncognito=0x7f0e0023;
         public static final int colorPrimarySplash=0x7f0e0024;
-        public static final int colorSlide1=0x7f0e0025;
-        public static final int colorSlide1Dark=0x7f0e0026;
-        public static final int colorSlide2=0x7f0e0027;
-        public static final int colorSlide2Dark=0x7f0e0028;
-        public static final int colorSlide3=0x7f0e0029;
-        public static final int colorSlide3Dark=0x7f0e002a;
-        public static final int colorStatusBarWhileSearching=0x7f0e002b;
+        public static final int colorRedError=0x7f0e0025;
+        public static final int colorSlide1=0x7f0e0026;
+        public static final int colorSlide1Dark=0x7f0e0027;
+        public static final int colorSlide2=0x7f0e0028;
+        public static final int colorSlide2Dark=0x7f0e0029;
+        public static final int colorSlide3=0x7f0e002a;
+        public static final int colorSlide3Dark=0x7f0e002b;
         public static final int colorTextDark=0x7f0e002c;
         public static final int colorTextDarkGrey=0x7f0e002d;
         public static final int colorTextLight=0x7f0e002e;
@@ -3379,12 +3379,12 @@ containing a value of this type.
         public static final int app_title=0x7f0f00a2;
         public static final int appbar=0x7f0f00a0;
         public static final int auto=0x7f0f0030;
-        public static final int back=0x7f0f00b4;
+        public static final int back=0x7f0f00b5;
         public static final int backround_bookmarks=0x7f0f00ab;
         public static final int beginning=0x7f0f0040;
         public static final int big_title=0x7f0f00a1;
-        public static final int bookmark=0x7f0f00b3;
-        public static final int bookmarkContainer=0x7f0f00b6;
+        public static final int bookmark=0x7f0f00b4;
+        public static final int bookmarkContainer=0x7f0f00b7;
         public static final int bottom=0x7f0f0031;
         public static final int bottomsheet=0x7f0f009e;
         public static final int buttonDefaultNegative=0x7f0f00d6;
@@ -3419,6 +3419,7 @@ containing a value of this type.
         public static final int colorRLabel=0x7f0f00de;
         public static final int colorRValue=0x7f0f00e0;
         public static final int confirm=0x7f0f00cc;
+        public static final int containerNoBookmarks=0x7f0f00ae;
         public static final int content=0x7f0f00c8;
         public static final int contentListView=0x7f0f00d3;
         public static final int contentListViewFrame=0x7f0f00d2;
@@ -3452,8 +3453,7 @@ containing a value of this type.
         public static final int fill_horizontal=0x7f0f003d;
         public static final int fill_vertical=0x7f0f0034;
         public static final int fixed=0x7f0f0049;
-        public static final int forward=0x7f0f00b5;
-        public static final int frameNoBookmarks=0x7f0f00ae;
+        public static final int forward=0x7f0f00b6;
         public static final int gabriel_name=0x7f0f0090;
         public static final int github=0x7f0f009c;
         public static final int grid=0x7f0f00c5;
@@ -3469,7 +3469,7 @@ containing a value of this type.
         public static final int image=0x7f0f0050;
         public static final int image_gabriel=0x7f0f008f;
         public static final int image_me=0x7f0f008c;
-        public static final int image_no_bookmarks=0x7f0f00af;
+        public static final int image_no_bookmarks=0x7f0f00b0;
         public static final int info=0x7f0f00f6;
         public static final int input=0x7f0f00ca;
         public static final int inputLayout=0x7f0f00c9;
@@ -3514,7 +3514,6 @@ containing a value of this type.
         public static final int mini=0x7f0f003f;
         public static final int multiply=0x7f0f002a;
         public static final int name=0x7f0f00b8;
-        public static final int name_letter=0x7f0f00b7;
         public static final int navigation_header_container=0x7f0f00bf;
         public static final int never=0x7f0f0047;
         public static final int none=0x7f0f001f;
@@ -3588,9 +3587,10 @@ containing a value of this type.
         public static final int text2=0x7f0f00fc;
         public static final int textSpacerNoButtons=0x7f0f005e;
         public static final int textView=0x7f0f0085;
+        public static final int text_2_no_bookmarks=0x7f0f00b1;
         public static final int text_bookmark=0x7f0f00ac;
         public static final int text_input_password_toggle=0x7f0f00c4;
-        public static final int text_no_bookmarks=0x7f0f00b0;
+        public static final int text_no_bookmarks=0x7f0f00af;
         public static final int thumb=0x7f0f0108;
         public static final int time=0x7f0f00f4;
         public static final int title=0x7f0f0054;
@@ -3610,9 +3610,9 @@ containing a value of this type.
         public static final int up=0x7f0f0015;
         public static final int useLogo=0x7f0f0023;
         public static final int view_offset_helper=0x7f0f0016;
-        public static final int webview=0x7f0f00b1;
+        public static final int webview=0x7f0f00b2;
         public static final int webviewContainer=0x7f0f00aa;
-        public static final int white_search=0x7f0f00b2;
+        public static final int white_search=0x7f0f00b3;
         public static final int withText=0x7f0f0048;
         public static final int wrap_content=0x7f0f002f;
     }

@@ -18,7 +18,6 @@ import com.synthform.colombo.view.ScrollingTextView;
 public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
     public ScrollingTextView name;
-    public CircularTextView letterName;
     public RelativeLayout bookmarkContainer;
     private ItemClickListener itemClickListener;
     private ItemLongClickListener itemLongClickListener;
@@ -27,7 +26,6 @@ public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickLis
         super(itemView);
 
         name = (ScrollingTextView) itemView.findViewById(R.id.name);
-        letterName = (CircularTextView) itemView.findViewById(R.id.name_letter);
         bookmarkContainer = (RelativeLayout) itemView.findViewById(R.id.bookmarkContainer);
 
         itemView.setOnClickListener(this);

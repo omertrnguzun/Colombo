@@ -45,7 +45,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -90,8 +89,8 @@ import com.synthform.colombo.util.ItemClickListener;
 import com.synthform.colombo.util.ItemLongClickListener;
 import com.synthform.colombo.util.StaticUtils;
 import com.synthform.colombo.view.CustomWebChromeClient;
-import com.synthform.colombo.view.ObservableWebView;
 import com.synthform.colombo.view.ExpandAnimationUtil;
+import com.synthform.colombo.view.ObservableWebView;
 
 import java.io.File;
 import java.net.URL;
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     private ObservableWebView webView;
     private Toolbar toolbar;
     private TextView title, appTitle;
-    private FrameLayout webviewContainer, frameNoBookmarks;
+    private FrameLayout webviewContainer;
     private RelativeLayout titleFrame, progressBarFrame;
     private CardView cardSearch;
     private BottomSheetLayout bottomSheet;
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView settings;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private RelativeLayout backround_bookmark_text;
-    private TextView bookmark_text, no_bookmark_text;
+    private TextView bookmark_text, no_bookmark_text, no_bookmark_text_2;
     private ImageView back, forward, bookmark;
     private Menu menu;
     private ProgressBar progressBar;
@@ -175,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> lines;
     private WebSettings webSettings;
     private View whiteSearch;
+    private RelativeLayout containerNoBookmarks;
 
     /**
      * Detect if running on tablet screen
@@ -182,6 +182,26 @@ public class MainActivity extends AppCompatActivity {
     private static Boolean isTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
                 && context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    /**
+     * Convert RGB color to hex
+     *
+     * @param swatch
+     * @return
+     */
+    public static String convertColorToHexadeimal(Palette.Swatch swatch) {
+        String hex = Integer.toHexString(swatch.getRgb() & 0xffffff);
+        if (hex.length() < 6) {
+            if (hex.length() == 5)
+                hex = "0" + hex;
+            if (hex.length() == 4)
+                hex = "00" + hex;
+            if (hex.length() == 3)
+                hex = "000" + hex;
+        }
+        hex = "#" + hex;
+        return hex;
     }
 
     @Override
@@ -513,6 +533,10 @@ public class MainActivity extends AppCompatActivity {
                     webView.reload();
                     desktop = true;
                 }
+                if (webView.getVisibility() == View.GONE && titleFrame.getVisibility() == View.VISIBLE) {
+                    AnimationUtil.fadeInView(webView, 200);
+                    ExpandAnimationUtil.collapse(titleFrame);
+                }
                 break;
             case R.id.action_copy:
                 copyToClipBoard(webView.getUrl());
@@ -613,6 +637,8 @@ public class MainActivity extends AppCompatActivity {
         webView.onResume();
         webView.resumeTimers();
 
+        adapter.notifyDataSetChanged();
+
         if (webView.getUrl() == null) {
             webView.loadUrl(getHomepage());
         }
@@ -679,9 +705,10 @@ public class MainActivity extends AppCompatActivity {
 
         rv = (RecyclerView) findViewById(R.id.recyclerViewer);
 
-        frameNoBookmarks = (FrameLayout) findViewById(R.id.frameNoBookmarks);
-        frameNoBookmarks.setVisibility(View.GONE);
+        containerNoBookmarks = (RelativeLayout) findViewById(R.id.containerNoBookmarks);
+        containerNoBookmarks.setVisibility(View.GONE);
         no_bookmark_text = (TextView) findViewById(R.id.text_no_bookmarks);
+        no_bookmark_text_2 = (TextView) findViewById(R.id.text_2_no_bookmarks);
 
         webView = (ObservableWebView) findViewById(R.id.webview);
         if (urlIntent == null) {
@@ -845,6 +872,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Apply UI colors
+     *
      * @param incognito is used to determinate if you want incognito colors or not
      */
     private void applyColors(boolean incognito) {
@@ -871,6 +899,7 @@ public class MainActivity extends AppCompatActivity {
             // Backround of bookmark
             backround_bookmark_text.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBookmarksBarIncognito));
             no_bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
+            no_bookmark_text_2.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
@@ -894,6 +923,7 @@ public class MainActivity extends AppCompatActivity {
             // Backround of bookmark
             backround_bookmark_text.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBookmarksBar));
             no_bookmark_text.setTextColor(ContextCompat.getColor(this, R.color.colorBlack70));
+            no_bookmark_text_2.setTextColor(ContextCompat.getColor(this, R.color.colorBlack50));
         }
     }
 
@@ -915,9 +945,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void detectArraySize() {
         if (cardDatas.isEmpty()) {
-            frameNoBookmarks.setVisibility(View.VISIBLE);
+            containerNoBookmarks.setVisibility(View.VISIBLE);
         } else {
-            frameNoBookmarks.setVisibility(View.GONE);
+            containerNoBookmarks.setVisibility(View.GONE);
         }
     }
 
@@ -1057,10 +1087,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkInternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            // TODO Fare settings della cache
+            title.setTextColor(ContextCompat.getColor(this, R.color.colorBlack70));
+            title.setText(R.string.search_query);
         } else {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_connection, Snackbar.LENGTH_LONG);
-            snackbar.show();
+            title.setTextColor(ContextCompat.getColor(this, R.color.colorRedError));
+            title.setText("You are offline");
         }
     }
 
@@ -1195,52 +1226,18 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Method to detect if color is dark or light
+     *
      * @param color
      * @return
      */
-    public boolean isColorDark(int color){
-        double darkness = 1-(0.299*Color.red(color) + 0.587*Color.green(color) + 0.114*Color.blue(color))/255;
+    public boolean isColorDark(int color) {
+        double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
 
-        if(darkness<0.5){
+        if (darkness < 0.5) {
             return false; // It's a light color
-        }else{
+        } else {
             return true; // It's a dark color
         }
-    }
-
-    public static String convertColorToHexadecimalNoSwatch(int color) {
-        String hex = Integer.toHexString(color & 0xffffff);
-        if(hex.length() < 6)
-        {
-            if(hex.length()==5)
-                hex = "0" + hex;
-            if(hex.length()==4)
-                hex = "00" + hex;
-            if(hex.length()==3)
-                hex = "000" + hex;
-        }
-        hex = "#" + hex;
-        return hex;
-    }
-
-    /**
-     * Convert RGB color to hex
-     * @param swatch
-     * @return
-     */
-    public static String convertColorToHexadeimal(Palette.Swatch swatch) {
-        String hex = Integer.toHexString(swatch.getRgb() & 0xffffff);
-        if(hex.length() < 6)
-        {
-            if(hex.length()==5)
-                hex = "0" + hex;
-            if(hex.length()==4)
-                hex = "00" + hex;
-            if(hex.length()==3)
-                hex = "000" + hex;
-        }
-        hex = "#" + hex;
-        return hex;
     }
 
     /**
@@ -1662,15 +1659,16 @@ public class MainActivity extends AppCompatActivity {
             ExpandAnimationUtil.collapse(progressBarFrame);
             progressBar.setProgress(100);
 
-            if (prefs.getBoolean("title_search", true)) {
-                title.setText(webView.getTitle());
-            } else {
-                title.setText(webView.getUrl());
-                materialSearchView.setSearchText(webView.getUrl());
-            }
-
-            if (!isIncognito && webView.getTitle() != null && webView.getUrl() != null) {
-                saveHistory(webView.getTitle(), webView.getUrl());
+            if (AppStatus.getInstance(MainActivity.this).isOnline()) {
+                if (prefs.getBoolean("title_search", true)) {
+                    title.setText(webView.getTitle());
+                } else {
+                    title.setText(webView.getUrl());
+                    materialSearchView.setSearchText(webView.getUrl());
+                }
+                if (!isIncognito && webView.getTitle() != null && webView.getUrl() != null) {
+                    saveHistory(webView.getTitle(), webView.getUrl());
+                }
             }
         }
     }
@@ -1698,28 +1696,20 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(final MyHolder holder, final int position) {
             String color = cardData.get(position).getHex();
 
-            /*if (isColorDark(Integer.decode(color))) {
-                holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextLight));
-            } else {
-                holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextDarkGrey));
-            }*/
-
             holder.bookmarkContainer.setBackgroundColor(Color.parseColor(color));
             if (isIncognito) {
                 holder.bookmarkContainer.getBackground().setAlpha(230);
                 holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextLight));
             } else {
-                holder.bookmarkContainer.getBackground().setAlpha(128);
-                holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextDarkGrey));
+                holder.bookmarkContainer.getBackground().setAlpha(178);
+                if (isColorDark(Integer.decode(color))) {
+                    holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorTextLight));
+                } else {
+                    holder.name.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorBlack70));
+                }
             }
 
-            holder.letterName.setTextColor(Color.parseColor("#364749"));
-
-            holder.letterName.setSolidColor("#FFFFFF");
-
             holder.name.setText(cardData.get(position).getName());
-
-            holder.letterName.setText(cardData.get(position).getName());
 
             holder.setItemClickListener(new ItemClickListener() {
                 @Override

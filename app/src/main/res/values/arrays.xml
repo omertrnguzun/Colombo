@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="query_suggestions">
-        <item>defsolutions.com</item>
+    <string-array name="query_suggestions" translatable="false">
+        <item>defsolutions.eu</item>
         <item>google.com</item>
         <item>youtube.com</item>
         <item>facebook.com</item>

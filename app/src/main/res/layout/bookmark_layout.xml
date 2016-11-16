@@ -1,49 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/bookmarkContainer"
-        android:layout_width="match_parent"
-        android:layout_height="132dp"
-        android:clickable="true"
-        android:layout_margin="2dp"
-        android:foreground="?attr/selectableItemBackground">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bookmarkContainer"
+    android:layout_width="match_parent"
+    android:layout_height="132dp"
+    android:layout_margin="2dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true">
-
-            <com.synthform.colombo.view.CircularTextView
-                android:id="@+id/name_letter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
-                android:gravity="center"
-                android:maxLength="1"
-                android:padding="8dp"
-                android:text="S"
-                android:textSize="25sp" />
-
-            <com.synthform.colombo.view.ScrollingTextView
-                android:id="@+id/name"
-                style="@style/TextViewCustomFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/name_letter"
-                android:layout_centerHorizontal="true"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:textColor="#2E2F30"
-                android:textSize="16sp" />
-
-        </RelativeLayout>
+    <com.synthform.colombo.view.ScrollingTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
+        android:scrollHorizontally="true"
+        android:textColor="#2E2F30"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
