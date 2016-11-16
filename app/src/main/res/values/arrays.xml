@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="query_suggestions" translatable="false">
+        <item>buonarroti.tn.it</item>
+        <item>apkmirror.com</item>
         <item>defsolutions.eu</item>
         <item>google.com</item>
         <item>youtube.com</item>
