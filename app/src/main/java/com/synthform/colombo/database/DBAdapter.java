@@ -62,7 +62,7 @@ public class DBAdapter {
     }
 
     //Aggiornare DB
-    public long UPDATE(int id, String name) {
+    public long update(int id, String name) {
         try {
             ContentValues cv = new ContentValues();
             cv.put(Contants.NAME, name);
@@ -74,7 +74,7 @@ public class DBAdapter {
     }
 
     //Eliminare ID
-    public long Delete(int id) {
+    public long delete(int id) {
         try {
             return db.delete(Contants.TB_NAME, Contants.ROW_ID + " =?", new String[]{String.valueOf(id)});
         } catch (SQLException e) {

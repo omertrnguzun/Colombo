@@ -3,12 +3,10 @@ package com.synthform.colombo.holder;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.synthform.colombo.R;
 import com.synthform.colombo.util.ItemClickListener;
 import com.synthform.colombo.util.ItemLongClickListener;
-import com.synthform.colombo.view.CircularTextView;
 import com.synthform.colombo.view.ScrollingTextView;
 
 /**

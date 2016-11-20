@@ -7,7 +7,6 @@ import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 

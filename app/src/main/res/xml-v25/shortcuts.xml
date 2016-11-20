@@ -18,7 +18,7 @@
     <shortcut
         android:shortcutId="incognito"
         android:enabled="true"
-        android:icon="@drawable/ic_shortcut_new_incognito"
+        android:icon="@drawable/ic_shortcut_private"
         android:shortcutShortLabel="@string/new_incognito_tab"
         android:shortcutLongLabel="@string/new_incognito_tab"
         android:shortcutDisabledMessage="@string/shortcut_disabled">
@@ -31,12 +31,12 @@
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
-    <!--<shortcut
+    <shortcut
         android:shortcutId="settings"
         android:enabled="true"
         android:icon="@drawable/ic_shortcut_settings"
-        android:shortcutShortLabel="@string/shortcut_settings"
-        android:shortcutLongLabel="@string/shortcut_settings"
+        android:shortcutShortLabel="@string/menu_settings"
+        android:shortcutLongLabel="@string/menu_settings"
         android:shortcutDisabledMessage="@string/shortcut_disabled">
         <intent
             android:action="android.intent.action.VIEW"
@@ -44,6 +44,22 @@
             android:targetClass="com.synthform.colombo.activities.SettingsActivity">
             <extra android:name="shortcut_settings" android:value="yes" />
         </intent>
-    </shortcut>-->
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="history"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_history"
+        android:shortcutShortLabel="@string/menu_history"
+        android:shortcutLongLabel="@string/menu_history"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.synthform.colombo"
+            android:targetClass="com.synthform.colombo.activities.HistoryActivity">
+            <extra android:name="shortcut_history" android:value="yes" />
+        </intent>
+    </shortcut>
+
 </shortcuts>
 

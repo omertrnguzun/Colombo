@@ -1437,7 +1437,6 @@ goingplatinum.com
 gold.weborama.fr
 goldstats.com
 google-analytics.com
-googleadservices.com
 googlesyndication.com
 gostats.com
 gp.dejanews.com

@@ -7,8 +7,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import static java.security.AccessController.getContext;
-
 /**
  * Created by riccardobusetti on 04/11/16.
  */

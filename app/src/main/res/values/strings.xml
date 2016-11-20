@@ -141,7 +141,7 @@
     <string name="add_bookmark_content">Name your bookmark!</string>
     <string name="tabs_error"><![CDATA[Tabs are available for Lollipop or >]]></string>
     <string name="rename_bookmark_title">Rename bookmark?</string>
-    <string name="delete_bookmark_title">Delete bookmark?</string>
+    <string name="delete_bookmark_title" translatable="false">Delete bookmark?</string>
     <string name="delete_bookmark_positive">DELETE</string>
     <string name="delete_bookmark_negative">CANCEL</string>
     <string name="url_search_summary">Show your searched text instead of the page\'s URL</string>
@@ -168,7 +168,7 @@
     <string name="pref_header_appearance_summary">Give a Colombo a better look</string>
 
     <string name="new_tab">New tab</string>
-    <string name="new_incognito_tab">New incognito tab</string>
+    <string name="new_incognito_tab">New private tab</string>
     <string name="shortcut_disabled">Shortcut not avaliable</string>
     <string name="menu_copy">Copy link</string>
 

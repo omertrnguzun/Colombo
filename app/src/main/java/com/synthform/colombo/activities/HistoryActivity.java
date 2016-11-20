@@ -39,15 +39,21 @@ public class HistoryActivity extends AppCompatActivity {
     private HistoryAdapter adapter;
     private ArrayList<HistoryData> historyDatas = new ArrayList<>();
     private Toolbar toolbar;
+    private String shortcutHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        shortcutHistory = getIntent().getStringExtra("shortcut_history");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back_title_white);
+        if (shortcutHistory != null && shortcutHistory.equals("yes")) {
+            toolbar.setNavigationIcon(R.drawable.ic_close_white);
+        } else {
+            toolbar.setNavigationIcon(R.drawable.ic_back_title_white);
+        }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

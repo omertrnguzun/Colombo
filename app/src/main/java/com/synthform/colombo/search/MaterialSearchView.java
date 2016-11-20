@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.Preference;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -33,6 +32,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.synthform.colombo.R;
 
 import java.lang.reflect.Field;

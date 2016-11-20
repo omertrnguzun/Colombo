@@ -1,17 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-        <string name="app_name">Colombo</string>
+        <string name="app_name">Colombo</string><![CDATA[
+
+        
 
 
-        <string name="search_query">Поиск</string>
+        ]]>
+    <string name="search_query">Поиск</string>
 
 
         <string name="menu_home">Домашняя страница</string>
 
         <string name="menu_refresh">Обновить</string>
 
-        <string name="menu_private">Режим инкогнито</string>
+        <string name="menu_private">Режим Private</string>
 
         <string name="menu_share">Поделиться</string>
 
@@ -24,20 +26,20 @@
         <string name="dialog_cancel">Отмена</string>
 
 
-        <string name="msg_upload_failed">Ошибка загрузки >:(</string>
+        <string name="msg_upload_failed">Загрузка не удалась >:(</string>
 
 
         <string name="pref_header_appearance">Внешний вид</string>
 
 
-        <string name="pref_dynamic_colors">Динамичные цвета</string>
+        <string name="pref_dynamic_colors">Динамические цвета</string>
 
-        <string name="pref_dynamic_colors_summary">Влияет на изменения цветовой схемы основанной на веб-сайте</string>
+        <string name="pref_dynamic_colors_summary">Влияет на изменения цветовой схемы, основанные на веб-сайте</string>
 
 
-        <string name="navbar_tint">Окраска навигационного бара</string>
+        <string name="navbar_tint">Окраска навигационной панели</string>
 
-        <string name="navbar_tint_summary">Окрашивает навигационный бар к цветовой схеме приложения.  Это не работает с физическими кнопками</string>
+        <string name="navbar_tint_summary">Окрашивает навигационную панель по цветовой схеме приложения. Обратите внимание, что это не будет работать на устройствах, которые имеют физические кнопки навигации</string>
 
 
         <string name="pref_javascript">JavaScript</string>
@@ -47,53 +49,41 @@
 
         <string name="pref_location">Местоположение</string>
 
-        <string name="pref_location_summary">Разрешить сайтам доступ к местоположению</string>
+        <string name="pref_location_summary">Разрешить сайтам использовать ваше местоположение</string>
 
 
-        <string name="pref_zoom">Приближение</string>
+        <string name="pref_zoom">Масштабирование</string>
 
-        <string name="pref_zoom_summary">Позволяет масштабировать веб-сайт с использованием жеста "щипок"</string>
+        <string name="pref_zoom_summary">Позволяет масштабировать веб-сайт с использованием жеста \'щипок\'</string>
 
 
         <string name="pref_header_about">О Colombo</string>
 
 
-        <string name="search_engines">Изменить поисковой движок</string>
+        <string name="search_engines">Изменить поисковую систему</string>
 
-        <string name="search_engines_summary">Изменяет поисковой движок по умолчанию</string>
+        <string name="search_engines_summary">Изменяет поисковую систему по умолчанию</string>
 
 
-        <string name="pref_light_icons">Тёмные иконки статус бара</string>
+        <string name="pref_light_icons">Тёмные значки строки состояния</string>
 
-        <string name="pref_light_icons_summary">Иконки статус бара будут тёмными, а цвета шапки будут светлыми</string>
+        <string name="pref_light_icons_summary">Иконки строки состояния станут тёмного цвета</string>
 
 
         <string name="pref_header_tutorial_summary">Узнать как использовать Colombo</string>
 
 
-        <string name="pref_header_intro">Обучение</string><![CDATA[
+        <string name="pref_header_intro">Руководство</string>
 
 
-        
-
-        
-
-
-        
-
-
-        
-
-
-        ]]>
-    <string name="search_open_dialog">Открыть в...</string>
+        <string name="search_open_dialog">Открыть в...</string>
 
         <string name="search_open_dialog_summary">Переадресация ссылок в приложения если возможно</string>
 
 
         <string name="pref_cookies">Cookies</string>
 
-        <string name="pref_cookies_summary">Cookies используются серверами чтобы запомнить ваш логин</string>
+        <string name="pref_cookies_summary">Cookies используются серверами, чтобы запомнить ваш логин</string>
 
 
         <string name="homepage">Домашняя страница</string>
@@ -101,22 +91,22 @@
         <string name="homepage_sumamry">Изменение начальной страницы при запуске браузера. Оставьте пустым, чтобы загрузить поисковую систему по умолчанию.</string>
 
 
-        <string name="home_bookmarks">Домашняя страница закладок</string>
+        <string name="home_bookmarks">Закладки как домашняя страница</string>
 
-        <string name="home_bookmarks_description">Запускать страницу закладок как домашнюю страницу</string>
+        <string name="home_bookmarks_description">Запускает страницу закладок как домашнюю</string>
 
 
-        <string name="pref_sticky_header">Скрыть строку поиска</string>
+        <string name="pref_sticky_header">Скрыть поиск</string>
 
-        <string name="pref_sticky_header_summary">Скрывет строку поиска при прокрутке вниз</string>
+        <string name="pref_sticky_header_summary">Скрыть поиск, когда страница прокручивается вниз для лучшего просмотра</string>
 
 
         <string name="pref_adblock">AdBlock [BETA]</string>
 
-        <string name="pref_adblock_summary">Блокирует рекламу для лучшей навигации, но вы нехороший человек</string>
+        <string name="pref_adblock_summary">Блокирует рекламу для лучшего серфинга</string>
 
 
-        <string name="pref_font_summary">Use the Space Mono Font instead of Roboto</string>
+        <string name="pref_font_summary">Использовать другой шрифт вместо Roboto</string>
 
         <string name="pref_font">Другой шрифт</string>
 
@@ -149,9 +139,9 @@
 
         <string-array name="search_open_dialog_titles">
 
-            <item>Открыть всегда</item>
+            <item>Открывать всегда</item>
 
-            <item>Открыть приложение (если доступно)</item>
+            <item>Открыть в приложении (если доступно</item>
 
             <item>Открыть ссылку</item>
 
@@ -192,9 +182,9 @@
 
         <string name="menu_new">Новая вкладка</string>
 
-        <string name="menu_dekstop">Полня версия</string>
+        <string name="menu_dekstop">Полная версия</string>
 
-        <string name="menu_add">Добавить на рабочий стол</string>
+        <string name="menu_add">Добавить ярлык</string>
 
 
         <string name="general_2_title">Поиск</string>
@@ -212,21 +202,21 @@
 
         <string name="title_1">Жесты</string>
 
-        <string name="description_1">Идти вперёд или назад в истории просмотров проводя по горизонтали</string>
+        <string name="description_1">Переходить вперёд и назад в истории посещений проводя горизонтально</string>
 
 
-        <string name="title_2">Ваши любимое</string>
+        <string name="title_2">Ваше любимое</string>
 
-        <string name="description_2">Долгое нажатие на строку поиска чтобы добавить в закладки</string>
+        <string name="description_2">Долгое нажатие по строке поиска чтобы сохранить закладку</string>
 
-        <string name="title_3">Присоединиться</string>
+        <string name="title_3">Контент</string>
 
-        <string name="description_3">Долгое нажатие на адрес сайта или картинку чтобы выбрать действие</string>
+        <string name="description_3">Долгое нажатие на изображение или ссылку чтобы выбрать действия, которые вы хотите</string>
 
 
         <string name="gestures">Жесты</string>
 
-        <string name="gestures_description">С проведением слвева направо или наоборот вы можете перемещаться в истории посещений</string>
+        <string name="gestures_description">С проведением слева направо или наоборот вы можете перемещаться в истории посещений</string>
 
 
         <string name="menu_search_words">Найти на странице</string>
@@ -236,9 +226,9 @@
 
         <string name="app_name_incognito">Colombo инкогнито</string>
 
-        <string name="no_connection">Вам нужно интернет соединение чтобы пользоваться Colombo</string>
+        <string name="no_connection">Вам нужно интернет соединение чтобы использовать Colombo</string>
 
-        <string name="tutorial">Хотите пропустить обучение?</string>
+        <string name="tutorial">Вы хотите пройти обучение?</string>
 
         <string name="description_about">Быстрый, лёгкий и</string>
 
@@ -251,46 +241,41 @@
         <string name="links_text">Больше</string>
 
 
-        <string name="add_bookmark_title">Добавить закладку?</string>
+        <string name="add_bookmark_title">Добавить в закладки?</string>
 
-        <string name="add_bookmark_content">Назовите свою закладку!</string>
+        <string name="add_bookmark_content">Назовите вашу закладку!</string>
 
         <string name="tabs_error"><![CDATA[Вкладки доступны для Android Lollipop или >]]></string>
 
-        <string name="rename_bookmark_title">Переименовать эту закладку?</string><![CDATA[
+        <string name="rename_bookmark_title">Переименовать закладку?</string>
 
-        
+        <string name="delete_bookmark_title">Удалить закладку?</string>
 
-        ]]><string name="delete_bookmark_title">Удалить закладку?</string><![CDATA[
-
-        
-
-        ]]>
-    <string name="delete_bookmark_positive">Удалить</string>
+        <string name="delete_bookmark_positive">Удалить</string>
 
         <string name="delete_bookmark_negative">Отмена</string>
 
-        <string name="url_search_summary">Показать найденный текст вместо URL-страницы</string>
+        <string name="url_search_summary">Показать свой найденный текст вместо адреса страницы</string>
 
         <string name="url_search">Поиск текста</string>
 
-        <string name="restart_colombo">Надо перезапустить Colombo чтобы применить изменения</string>
+        <string name="restart_colombo">Перезапустить Colombo чтобы применить изменения</string>
 
-        <string name="link_error">Colombo не может распознать эту ссылку :/</string>
+        <string name="link_error">Эта ссылка недоступна</string>
 
         <string name="pref_plugins">Плагины</string>
 
         <string name="pref_plugins_summary">Плагины нужны чтобы сайты работали должным образом</string>
 
-        <string name="home_hw_description">Аппаратное ускорение может улучшить производительность, но уменьшить срок работы батареи</string>
+        <string name="home_hw_description">Аппаратное ускорение может улучшить, но сократит время работы батареи</string>
 
         <string name="home_hw">Аппаратное ускорение</string>
 
-        <string name="title_activity_history">Истроия</string>
+        <string name="title_activity_history">История</string>
 
         <string name="menu_clear">Очистить всё</string>
 
-        <string name="menu_history">Истроия</string>
+        <string name="menu_history">История</string>
 
         <string name="donate">Пожертвовать</string>
 
@@ -300,22 +285,27 @@
 
         <string name="donations_kebab">Купить мне кебаб</string>
 
-        <string name="donations_king">Купить мне королевскую еду</string>
+        <string name="donations_king">Купить мне королевскцю еду</string>
 
         <string name="donations_present">Купить мне подарок</string>
 
-        <string name="donations_pc">Купить мне новый компьютер</string>
+        <string name="donations_pc">Купить новый компьютер</string>
 
 
-        <string name="title_activity_about">О приложении</string>
+        <string name="title_activity_about">О Colombo</string>
 
         <string name="pref_header_general_summary">Основные настройки для сайтов и другое</string>
 
-        <string name="pref_header_appearance_summary">Дпть Colombo выглядеть лучше</string>
-    <string name="menu_copy">Копировать ссылку</string>
-    <string name="shortcut_disabled">Ярлык не доступен</string>
-    <string name="new_tab">Новая вкладка</string>
-    <string name="new_incognito_tab">Новая вкладка инкогнито</string>
+        <string name="pref_header_appearance_summary">Улучшить внешний вид Colombo</string>
+
+
+        <string name="new_tab">Новая вкладка</string>
+
+        <string name="new_incognito_tab">Новая вкладка инкогнито</string>
+
+        <string name="shortcut_disabled">Ярлык не доступен</string>
+
+        <string name="menu_copy">Копировать ссылку</string>
 
 
 </resources>

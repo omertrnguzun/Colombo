@@ -8,18 +8,12 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import com.synthform.colombo.R;
-import com.synthform.colombo.search.MaterialSearchView;
 
 public class ObservableWebView extends WebView {
 

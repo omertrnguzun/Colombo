@@ -1267,7 +1267,7 @@ public class MainActivity extends AppCompatActivity {
         DBAdapter db = new DBAdapter(this);
         db.openDB();
 
-        long result = db.UPDATE(id, newName);
+        long result = db.update(id, newName);
         if (result > 0) {
             Snackbar.make(coordinatorLayout, "Bookmark updated successfully!", Snackbar.LENGTH_SHORT).show();
             retrieve();
@@ -1284,7 +1284,7 @@ public class MainActivity extends AppCompatActivity {
     private void delete(int id) {
         DBAdapter db = new DBAdapter(this);
         db.openDB();
-        long result = db.Delete(id);
+        long result = db.delete(id);
         if (result > 0) {
             Snackbar.make(coordinatorLayout, "Bookmark deleted", Snackbar.LENGTH_SHORT).show();
             retrieve();
@@ -1438,10 +1438,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, final String url) {
-            if (url.startsWith("market://") || url.startsWith("https://m.youtube.com")
+            if (url.startsWith("market:") || url.startsWith("https://m.youtube.com")
                     || url.startsWith("https://play.google.com") || url.startsWith("magnet:")
-                    || url.startsWith("mailto:") || url.startsWith("intent://")
-                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")) {
+                    || url.startsWith("mailto:") || url.startsWith("intent:")
+                    || url.startsWith("https://mail.google.com") || url.startsWith("https://plus.google.com")
+                    || url.startsWith("geo:") || url.startsWith("google.streetview:")) {
                 switch (Integer.parseInt(prefs.getString("show_open_dialog", "0"))) {
                     case OPEN_ALWAYS:
                         MenuSheetView menuSheetView =
