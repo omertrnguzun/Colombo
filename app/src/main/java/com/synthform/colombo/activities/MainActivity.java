@@ -26,6 +26,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
@@ -45,10 +47,12 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -88,9 +92,11 @@ import com.synthform.colombo.util.AppStatus;
 import com.synthform.colombo.util.ItemClickListener;
 import com.synthform.colombo.util.ItemLongClickListener;
 import com.synthform.colombo.util.StaticUtils;
+import com.synthform.colombo.view.CustomGestureDetector;
 import com.synthform.colombo.view.CustomWebChromeClient;
 import com.synthform.colombo.view.ExpandAnimationUtil;
 import com.synthform.colombo.view.ObservableWebView;
+import com.synthform.colombo.view.SwipeGestureDetector;
 
 import java.io.File;
 import java.net.URL;
@@ -175,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
     private WebSettings webSettings;
     private View whiteSearch;
     private RelativeLayout containerNoBookmarks;
+    private GestureDetector gestureDetector;
+    private boolean zoomed = false, firstRun = true;
 
     /**
      * Detect if running on tablet screen
@@ -1140,6 +1148,8 @@ public class MainActivity extends AppCompatActivity {
         if (prefs.getBoolean("adblock", true)) {
             AdBlocker.init(this);
         }
+        webView.getScale();
+        webView.setGestureDetector(new GestureDetector(new CustomGestureDetector(webView, this)));
         webView.getSettings().setJavaScriptEnabled(prefs.getBoolean("javascript", true));
         webView.getSettings().setGeolocationEnabled(prefs.getBoolean("location_services", true));
         webView.getSettings().setBuiltInZoomControls(prefs.getBoolean("zooming", true));
@@ -1434,6 +1444,24 @@ public class MainActivity extends AppCompatActivity {
                         super.shouldInterceptRequest(view, url);
             }
             return super.shouldInterceptRequest(view, url);
+        }
+
+        @Override
+        public void onScaleChanged(WebView view, float oldScale, float newScale) {
+            float initScale = 0;
+            if (firstRun) {
+                initScale = newScale;
+                firstRun=false;
+            } else {
+                if (newScale > oldScale) {
+                    //Toast.makeText(MainActivity.this, "Zoomed true", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (newScale < initScale) {
+                        //Toast.makeText(MainActivity.this, "Zoomed false", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            super.onScaleChanged(view, oldScale, newScale);
         }
 
         @Override

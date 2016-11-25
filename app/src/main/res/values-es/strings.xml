@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Colombo</string>
-    <string name="app_name_private" translatable="falso">Private</string>
 
     <string name="search_query">Buscar</string>
 

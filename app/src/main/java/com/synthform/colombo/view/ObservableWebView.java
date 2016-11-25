@@ -3,17 +3,22 @@ package com.synthform.colombo.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.gesture.GestureUtils;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.synthform.colombo.R;
+
+import java.util.HashMap;
 
 public class ObservableWebView extends WebView {
 
@@ -21,17 +26,14 @@ public class ObservableWebView extends WebView {
     private final int[] scrollConsumed = new int[2];
     private int nestedOffsetY;
     private NestedScrollingChildHelper childHelper;
-
     private float startY, startX, endX;
-
     private boolean canScrollVertically;
-
     private ObservableWebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
-
     private CustomWebChromeClient webChromeClient;
-
     private SharedPreferences prefs;
+    private GestureDetector gestureDetector;
+    private boolean areGesturesEnabled;
 
     public ObservableWebView(Context context) {
         super(context);
@@ -95,47 +97,48 @@ public class ObservableWebView extends WebView {
         switch (action) {
             case MotionEvent.ACTION_MOVE:
                 float deltaY = startY - eventY;
-                    if (dispatchNestedPreScroll(0, (int) deltaY, scrollConsumed, scrollOffset)) {
-                        deltaY -= scrollConsumed[1];
-                        startY = eventY - scrollOffset[1];
-                        event.offsetLocation(0, -scrollOffset[1]);
-                        nestedOffsetY += scrollOffset[1];
-                    }
+                if (dispatchNestedPreScroll(0, (int) deltaY, scrollConsumed, scrollOffset)) {
+                    deltaY -= scrollConsumed[1];
+                    startY = eventY - scrollOffset[1];
+                    event.offsetLocation(0, -scrollOffset[1]);
+                    nestedOffsetY += scrollOffset[1];
+                }
 
-                    if (dispatchNestedScroll(0, scrollOffset[1], 0, (int) deltaY, scrollOffset)) {
-                        event.offsetLocation(0, scrollOffset[1]);
-                        nestedOffsetY += scrollOffset[1];
-                        startY -= scrollOffset[1];
-                    }
-
-                if (prefs.getBoolean("gestures", true)) {
-                    if (Math.abs(deltaY) < Math.abs(startX - event.getX())) {
-                        float scrollX = startX - event.getX();
-                        if ((canGoForward() && scrollX > 0) || (canGoBack() && scrollX < 0))
-                            setX(-scrollX / 5);
-                    }
+                if (dispatchNestedScroll(0, scrollOffset[1], 0, (int) deltaY, scrollOffset)) {
+                    event.offsetLocation(0, scrollOffset[1]);
+                    nestedOffsetY += scrollOffset[1];
+                    startY -= scrollOffset[1];
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
-                    startY = eventY;
-                    startX = event.getX();
-                    startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+                startY = eventY;
+                startX = event.getX();
+                startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                endX = event.getX();
+                /*endX = event.getX();
                 animate().x(0).setDuration(0).start();
-
-                if (prefs.getBoolean("gestures", true)) {
-                    if (startX - endX > 600 && canGoForward()) goForward();
-                    else if (startX - endX < -600 && canGoBack()) goBack();
-                }
-
-                stopNestedScroll();
+                stopNestedScroll();*/
                 break;
         }
 
-        return super.onTouchEvent(event);
+        if (prefs.getBoolean("gestures", true) || areGesturesEnabled) {
+            return gestureDetector.onTouchEvent(ev) || super.onTouchEvent(ev);
+        }
+        return super.onTouchEvent(ev);
+    }
+
+    public void disableGestures(boolean disable) {
+        if (disable) {
+            areGesturesEnabled = false;
+        } else {
+            areGesturesEnabled = true;
+        }
+    }
+
+    public void setGestureDetector(GestureDetector gestureDetector) {
+        this.gestureDetector = gestureDetector;
     }
 
     @Override
