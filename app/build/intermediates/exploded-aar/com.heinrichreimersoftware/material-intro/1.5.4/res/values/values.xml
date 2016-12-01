@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mi_icon_color_dark">#ffffffff</color>
+    <color name="mi_icon_color_light">#8a000000</color>
+    <color name="mi_ripple_color">#17000000</color>
+    <color name="mi_status_bar_background">#ff000000</color>
+    <color name="mi_text_color_primary_dark">#ffffffff</color>
+    <color name="mi_text_color_primary_light">#de000000</color>
+    <color name="mi_text_color_secondary_dark">#b3ffffff</color>
+    <color name="mi_text_color_secondary_light">#8a000000</color>
+    <declare-styleable name="InkPageIndicator"><attr format="dimension" name="dotDiameter"/><attr format="dimension" name="dotGap"/><attr format="integer" name="animationDuration"/><attr format="color" name="pageIndicatorColor"/><attr format="color" name="currentPageIndicatorColor"/></declare-styleable>
+    <declare-styleable name="ParallaxLayout_Layout"><attr format="float" name="layout_parallaxFactor"/></declare-styleable>
+    <dimen name="mi_baseline">16dp</dimen>
+    <dimen name="mi_baseline_half">8dp</dimen>
+    <dimen name="mi_margin_bottom_pager_indicator">39dp</dimen>
+    <dimen name="mi_y_offset">144dp</dimen>
+    <item name="mi_button_cta" type="id"/>
+    <item name="mi_button_next" type="id"/>
+    <item name="mi_button_skip" type="id"/>
+    <item name="mi_description" type="id"/>
+    <item name="mi_frame" type="id"/>
+    <item name="mi_image" type="id"/>
+    <item name="mi_pager" type="id"/>
+    <item name="mi_pager_indicator" type="id"/>
+    <item name="mi_title" type="id"/>
+    <plurals name="mi_label_grant_permission">
+        <item quantity="one">Grant permission</item>
+        <item quantity="other">Grant permissions</item>
+    </plurals>
+    <string name="mi_content_description_back">Back</string>
+    <string name="mi_content_description_next">Next</string>
+    <string name="mi_content_description_next_finish">Next/Finish</string>
+    <string name="mi_content_description_skip">Skip</string>
+    <string name="mi_label_button_cta">Get started</string>
+    <style name="Theme.Intro" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    package="com.heinrichreimersoftware.materialintro"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="15400"
+    android:versionName="1.5.4" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="23" />
+
+</manifest>

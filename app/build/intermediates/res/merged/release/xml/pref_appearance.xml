@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/appearence_1_title">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="dynamic_colors"
+            android:summary="@string/pref_dynamic_colors_summary"
+            android:title="@string/pref_dynamic_colors" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="navbar_tint"
+            android:summary="@string/navbar_tint_summary"
+            android:title="@string/navbar_tint" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

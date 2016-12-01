@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordi_about"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.synthform.colombo.activities.AboutActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="snap|scroll|enterAlwaysCollapsed" />
+
+        <RelativeLayout
+            android:id="@+id/shape"
+            android:layout_width="match_parent"
+            android:layout_height="268dp"
+            android:layout_below="@+id/app_bar"
+            app:layout_scrollFlags="snap|scroll|enterAlwaysCollapsed">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="72dp">
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="38sp" />
+
+                <TextView
+                    android:id="@+id/subtitle"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title"
+                    android:layout_marginTop="32dp"
+                    android:text="@string/description_about"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/subtitle2"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/subtitle"
+                    android:text="@string/description_about_2"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/donate"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/subtitle2"
+                    android:paddingBottom="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/donate"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/donateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="snap|scroll|enterAlwaysCollapsed">
+
+            <RelativeLayout
+                android:id="@+id/layoutCoke"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/donations_coke"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="1$"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutBrioches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutCoke"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="72dp">
+
+                <TextView
+                    android:id="@+id/textView"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/donations_brioches"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="2$"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutKebab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutBrioches"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="72dp">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/donations_kebab"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="5$"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutKing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutKebab"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="72dp">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/donations_king"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="15$"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutPresent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutKing"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="72dp">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/donations_present"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="20$"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutPC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutPresent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="72dp">
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/donations_pc"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+                <TextView
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="50$"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/layoutMe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="72dp">
+
+                <TextView
+                    android:id="@+id/title_2"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="42dp"
+                    android:layout_marginTop="36dp"
+                    android:text="@string/team_text"
+                    android:textColor="@color/colorTextDarkGrey"
+                    android:textSize="38sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_2"
+                    android:layout_marginBottom="42dp">
+
+                    <ImageView
+                        android:id="@+id/image_me"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="38dp"
+                        android:src="@drawable/ic_me" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/image_me">
+
+                        <TextView
+                            android:id="@+id/me_name"
+                            style="@style/TextViewCustomFontBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Riccardo Busetti"
+                            android:textColor="@color/colorTextDarkGrey"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            style="@style/TextViewCustomFont"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/me_name"
+                            android:layout_marginTop="16dp"
+                            android:text="Lead Developer"
+                            android:textColor="@color/colorTextLightGrey"
+                            android:textSize="16sp" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutGabriel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutMe"
+                android:layout_marginStart="72dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="42dp">
+
+                    <ImageView
+                        android:id="@+id/image_gabriel"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="38dp"
+                        android:src="@drawable/ic_gabriel" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/image_gabriel">
+
+                        <TextView
+                            android:id="@+id/gabriel_name"
+                            style="@style/TextViewCustomFontBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Gabriel Zegarra"
+                            android:textColor="@color/colorTextDarkGrey"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            style="@style/TextViewCustomFont"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/gabriel_name"
+                            android:layout_marginTop="16dp"
+                            android:text="Lead Designer"
+                            android:textColor="@color/colorTextLightGrey"
+                            android:textSize="16sp" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/title_3"
+                style="@style/TextViewCustomFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutGabriel"
+                android:layout_marginBottom="42dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="36dp"
+                android:text="@string/libs_text"
+                android:textColor="@color/colorTextDarkGrey"
+                android:textSize="38sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title_3"
+                android:layout_marginStart="72dp">
+
+                <RelativeLayout
+                    android:id="@+id/layoutLib1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="42dp">
+
+                    <TextView
+                        android:id="@+id/lib_1"
+                        style="@style/TextViewCustomFontBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Material Dialogs"
+                        android:textColor="@color/colorTextDarkGrey"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        style="@style/TextViewCustomFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lib_1"
+                        android:layout_marginTop="16dp"
+                        android:text="Aidan Follestad"
+                        android:textColor="@color/colorTextLightGrey"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutLib2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layoutLib1"
+                    android:layout_marginBottom="42dp">
+
+                    <TextView
+                        android:id="@+id/lib_2"
+                        style="@style/TextViewCustomFontBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bottomsheet"
+                        android:textColor="@color/colorTextDarkGrey"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        style="@style/TextViewCustomFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lib_2"
+                        android:layout_marginTop="16dp"
+                        android:text="Flipboard"
+                        android:textColor="@color/colorTextLightGrey"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutLib3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layoutLib2"
+                    android:layout_marginBottom="42dp">
+
+                    <TextView
+                        android:id="@+id/lib_3"
+                        style="@style/TextViewCustomFontBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Calligraphy"
+                        android:textColor="@color/colorTextDarkGrey"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        style="@style/TextViewCustomFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lib_3"
+                        android:layout_marginTop="16dp"
+                        android:text="Chrisjenx"
+                        android:textColor="@color/colorTextLightGrey"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutLib4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layoutLib3">
+
+                    <TextView
+                        android:id="@+id/lib_4"
+                        style="@style/TextViewCustomFontBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Material Intro"
+                        android:textColor="@color/colorTextDarkGrey"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        style="@style/TextViewCustomFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lib_4"
+                        android:layout_marginTop="16dp"
+                        android:text="Heinrich Reimer"
+                        android:textColor="@color/colorTextLightGrey"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/title_4"
+                    style="@style/TextViewCustomFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layoutLib4"
+                    android:layout_marginBottom="42dp"
+                    android:layout_marginTop="36dp"
+                    android:text="@string/links_text"
+                    android:textColor="@color/colorTextDarkGrey"
+                    android:textSize="38sp" />
+
+                <TextView
+                    android:id="@+id/rate"
+                    style="@style/TextViewCustomFontBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_4"
+                    android:layout_marginBottom="42dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:text="Rate the app"
+                    android:textColor="@color/colorTextDarkGrey"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/github"
+                    style="@style/TextViewCustomFontBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rate"
+                    android:layout_marginBottom="36dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:text="See on GitHub"
+                    android:textColor="@color/colorTextDarkGrey"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

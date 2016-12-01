@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="search_engines_titles">
+        <item>Google</item>
+        <item>Yahoo</item>
+        <item>DuckDuckGo</item>
+        <item>Bing</item>
+    </string-array>
+    <string-array name="search_engines_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="search_open_dialog_titles">
+        <item>Apri sempre</item>
+        <item>Apri app (se disponibile)</item>
+        <item>Apri link</item>
+    </string-array>
+    <string-array name="search_open_dialog_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string msgid="4600421777120114993" name="abc_action_bar_home_description">"Vai alla home page"</string>
+    <string msgid="1397052879051804371" name="abc_action_bar_home_description_format">"%1$s, %2$s"</string>
+    <string msgid="6623331958280229229" name="abc_action_bar_home_subtitle_description_format">"%1$s, %2$s, %3$s"</string>
+    <string msgid="1594238315039666878" name="abc_action_bar_up_description">"Vai in alto"</string>
+    <string msgid="3588849162933574182" name="abc_action_menu_overflow_description">"Altre opzioni"</string>
+    <string msgid="4076576682505996667" name="abc_action_mode_done">"Fine"</string>
+    <string msgid="7468859129482906941" name="abc_activity_chooser_view_see_all">"Visualizza tutte"</string>
+    <string msgid="2031811694353399454" name="abc_activitychooserview_choose_application">"Scegli un\'applicazione"</string>
+    <string msgid="121134116657445385" name="abc_capital_off">"OFF"</string>
+    <string msgid="3405795526292276155" name="abc_capital_on">"ON"</string>
+    <string msgid="7723749260725869598" name="abc_search_hint">"Cerca…"</string>
+    <string msgid="3691816814315814921" name="abc_searchview_description_clear">"Cancella query"</string>
+    <string msgid="2550479030709304392" name="abc_searchview_description_query">"Query di ricerca"</string>
+    <string msgid="8264924765203268293" name="abc_searchview_description_search">"Cerca"</string>
+    <string msgid="8928215447528550784" name="abc_searchview_description_submit">"Invia query"</string>
+    <string msgid="893419373245838918" name="abc_searchview_description_voice">"Ricerca vocale"</string>
+    <string msgid="3421042268587513524" name="abc_shareactionprovider_share_with">"Condividi con"</string>
+    <string msgid="7165123711973476752" name="abc_shareactionprovider_share_with_application">"Condividi con %s"</string>
+    <string msgid="1603543279005712093" name="abc_toolbar_collapse_description">"Comprimi"</string>
+    <string name="add_bookmark_content">Dai un nome al preferito!</string>
+    <string name="add_bookmark_title">Aggiungi preferito?</string>
+    <string name="app_name">Colombo</string>
+    <string name="app_name_incognito">Colombo Incognito</string>
+    <string name="appearence_1_title">UI</string>
+    <string name="appearence_2_title">UX</string>
+    <string name="delete_bookmark_negative">ANNULLA</string>
+    <string name="delete_bookmark_positive">ELIMINA</string>
+    <string name="delete_bookmark_title">Elimina preferito?</string>
+    <string name="description_1">Naviga nella pagina con uno swipe orizzontale avanti e indietro</string>
+    <string name="description_2">Premi a lungo la barra di ricerca per aggiungere ai preferiti</string>
+    <string name="description_3">Premi a lungo un link o una immagine e scegli cosa fare</string>
+    <string name="description_about">Un bellissimo browser,</string>
+    <string name="description_about_2">leggero e veloce</string>
+    <string name="dialog_cancel">CANCELLA</string>
+    <string name="dialog_ok">OK</string>
+    <string name="donate">DONA</string>
+    <string name="donations_brioches">Offrimi una Brioches</string>
+    <string name="donations_coke">Offrimi una Coca Cola</string>
+    <string name="donations_kebab">Offrimi un Kebab</string>
+    <string name="donations_king">Offrimi un Buon Pranzo</string>
+    <string name="donations_pc">Regalami un Computer</string>
+    <string name="donations_present">Fammi una Sorpresa</string>
+    <string name="general_1_title">Website</string>
+    <string name="general_2_title">Cerca</string>
+    <string name="general_3_title">Altre</string>
+    <string name="gestures">Gestures</string>
+    <string name="gestures_description">Con uno swipe da destra verso sinitra o contrario potrai navigare nella pagina</string>
+    <string name="home_bookmarks">Home con i preferiti</string>
+    <string name="home_bookmarks_description">Apri Colombo con i preferiti invece che con la home del tuo motore di ricerca</string>
+    <string name="home_hw">Accelerazione Hardware</string>
+    <string name="home_hw_description">L\'accelerazione hardware migliorerà le performance ma ridurrà la durata della batteria</string>
+    <string name="homepage">Homepage</string>
+    <string name="homepage_sumamry">Cambia la pagina iniziale con cui viene aperto il browser. Lascialo vuoto per usare la home del tuo motore di ricerca</string>
+    <string name="libs_text">Librerie</string>
+    <string name="link_error">Questo Uri è sconosciuto</string>
+    <string name="links_text">Altro</string>
+    <string name="menu_add">Aggiungi scorciatoia</string>
+    <string name="menu_bookmark">Preferiti</string>
+    <string name="menu_clear">ELIMINA TUTTO</string>
+    <string name="menu_continue">Continua</string>
+    <string name="menu_copy">Copia link</string>
+    <string name="menu_dekstop">Modalità desktop</string>
+    <string name="menu_delete">Elimina</string>
+    <string name="menu_history">Cronologia</string>
+    <string name="menu_home">Homepage</string>
+    <string name="menu_new">Nuova scheda</string>
+    <string name="menu_open">Apri</string>
+    <string name="menu_open_copy_link">Copia link</string>
+    <string name="menu_open_new">Apri in una nuova scheda</string>
+    <string name="menu_open_new_link">Apri questo link in una nuova scheda</string>
+    <string name="menu_open_save_bookmark">Aggiungi ai preferiti</string>
+    <string name="menu_open_share_link">Condividi link</string>
+    <string name="menu_private">Modalità privata</string>
+    <string name="menu_refresh">Ricarica</string>
+    <string name="menu_rename">Rinomina</string>
+    <string name="menu_save_image">Salva immagine</string>
+    <string name="menu_search_words">Cerca nella pagina</string>
+    <string name="menu_settings">Impostazioni</string>
+    <string name="menu_share">Condividi</string>
+    <string name="msg_upload_failed">Upload fallito >:(</string>
+    <string name="navbar_tint">Barra di navigazione colorata</string>
+    <string name="navbar_tint_summary">Color la barra di navigazione in base alla pagina visitata. Non disponibile su i device senza barra di navigazione</string>
+    <string name="new_incognito_tab">Scheda in incognito</string>
+    <string name="new_tab">Nuova scheda</string>
+    <string name="no_connection">Per continuare ad usare Colombo devi avere internet</string>
+    <string name="pref_adblock">AdBlock [BETA]</string>
+    <string name="pref_adblock_summary">Blocca gli ADS nelle pagine per una migliore esperienza</string>
+    <string name="pref_cookies">Cookies</string>
+    <string name="pref_cookies_summary">I cookies sono usati dai siti per tenere in memoria login</string>
+    <string name="pref_dynamic_colors">Colori dinamici</string>
+    <string name="pref_dynamic_colors_summary">Cambia colore del browser in base alla pagina visitata</string>
+    <string name="pref_font">Custom Font</string>
+    <string name="pref_font_summary">Usa un font custom invece di Roboto</string>
+    <string name="pref_header_about">About Colombo</string>
+    <string name="pref_header_appearance">Aspetto</string>
+    <string name="pref_header_appearance_summary">Dai un look migliore a Colombo</string>
+    <string name="pref_header_general">Generali</string>
+    <string name="pref_header_general_summary">Opzioni generiche per siti e altro</string>
+    <string name="pref_header_intro">Guida</string>
+    <string name="pref_header_tutorial_summary">Impara ad usare Colombo</string>
+    <string name="pref_javascript">JavaScript</string>
+    <string name="pref_javascript_summary">Usa JavaScript per una migliore esperienza web a discapito di un maggiore consumo di dati</string>
+    <string name="pref_light_icons">Icone scure nella barra di stato</string>
+    <string name="pref_light_icons_summary">Le icone scure garantiscono una esperienza unica con un color theming molto particolare</string>
+    <string name="pref_location">Servizi di geolocalizzazione</string>
+    <string name="pref_location_summary">Garantisci ai siti web di accedere alla tua posizione</string>
+    <string name="pref_plugins">Plugins</string>
+    <string name="pref_plugins_summary">I plugins sono richiesti da certi siti per poter funzionare</string>
+    <string name="pref_sticky_header">Nascondi la barra di ricerca</string>
+    <string name="pref_sticky_header_summary">Nasconde la barra di ricerca quando scrolli per una migliore esperienza</string>
+    <string name="pref_zoom">Zoom</string>
+    <string name="pref_zoom_summary">Con un pinch out e in puoi zommare nella pagina</string>
+    <string name="rename_bookmark_title">Rinomina preferito?</string>
+    <string name="restart_colombo">Riavvia Colombo per applicare i cambiamenti</string>
+    <string name="search_engines">Cambia motore di ricerca</string>
+    <string name="search_engines_summary">Cambia il motore di ricerca se non si è settato nessun url per la home</string>
+    <string msgid="146198913615257606" name="search_menu_title">"Ricerca"</string>
+    <string name="search_open_dialog">Apertura all\'esterno</string>
+    <string name="search_open_dialog_summary">Cabia come i link famosi vengono gestiti</string>
+    <string name="search_query">Cerca</string>
+    <string name="shortcut_disabled">Shortcut non disponibile</string>
+    <string msgid="2869576371154716097" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="tabs_error">Le schede sono disponibili solo per Android Lollipop o ></string>
+    <string name="team_text">Il team</string>
+    <string name="title_1">Gestures</string>
+    <string name="title_2">Preferiti</string>
+    <string name="title_3">Contenuto</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_history">Cronologia</string>
+    <string name="tutorial">Vuoi vedere il tutorial?</string>
+    <string name="url_search">Testo cercato nella barra di ricerca</string>
+    <string name="url_search_summary">Mostra il testo che hai cercato invece dell\'url della pagina</string>
+</resources>

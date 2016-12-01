@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="search_engines_titles">
+        <item>Google</item>
+        <item>Yahoo</item>
+        <item>DuckDuckGo</item>
+        <item>Bing</item>
+    </string-array>
+    <string-array name="search_engines_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="search_open_dialog_titles">
+        <item>Her zaman aç</item>
+        <item>Uygulamayı aç (varsa)</item>
+        <item>Bağlantıyı aç</item>
+    </string-array>
+    <string-array name="search_open_dialog_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string msgid="4600421777120114993" name="abc_action_bar_home_description">"Ana ekrana git"</string>
+    <string msgid="1397052879051804371" name="abc_action_bar_home_description_format">"%1$s, %2$s"</string>
+    <string msgid="6623331958280229229" name="abc_action_bar_home_subtitle_description_format">"%1$s, %2$s, %3$s"</string>
+    <string msgid="1594238315039666878" name="abc_action_bar_up_description">"Yukarı git"</string>
+    <string msgid="3588849162933574182" name="abc_action_menu_overflow_description">"Diğer seçenekler"</string>
+    <string msgid="4076576682505996667" name="abc_action_mode_done">"Bitti"</string>
+    <string msgid="7468859129482906941" name="abc_activity_chooser_view_see_all">"Tümünü göster"</string>
+    <string msgid="2031811694353399454" name="abc_activitychooserview_choose_application">"Bir uygulama seçin"</string>
+    <string msgid="121134116657445385" name="abc_capital_off">"KAPAT"</string>
+    <string msgid="3405795526292276155" name="abc_capital_on">"AÇ"</string>
+    <string msgid="7723749260725869598" name="abc_search_hint">"Ara…"</string>
+    <string msgid="3691816814315814921" name="abc_searchview_description_clear">"Sorguyu temizle"</string>
+    <string msgid="2550479030709304392" name="abc_searchview_description_query">"Arama sorgusu"</string>
+    <string msgid="8264924765203268293" name="abc_searchview_description_search">"Ara"</string>
+    <string msgid="8928215447528550784" name="abc_searchview_description_submit">"Sorguyu gönder"</string>
+    <string msgid="893419373245838918" name="abc_searchview_description_voice">"Sesli arama"</string>
+    <string msgid="3421042268587513524" name="abc_shareactionprovider_share_with">"Şununla paylaş"</string>
+    <string msgid="7165123711973476752" name="abc_shareactionprovider_share_with_application">"%s ile paylaş"</string>
+    <string msgid="1603543279005712093" name="abc_toolbar_collapse_description">"Daralt"</string>
+    <string name="add_bookmark_content">Yer iminize bir isim verin!</string>
+    <string name="add_bookmark_title">Yer imi olarak ekleyin</string>
+    <string name="app_name">Colombo</string>
+    <string name="app_name_incognito">Gizli Colombo</string>
+    <string name="app_name_private" translatable="false">Private</string>
+    <string name="appearence_1_title">UI</string>
+    <string name="appearence_2_title">UX</string>
+    <string name="delete_bookmark_negative">İPTAL</string>
+    <string name="delete_bookmark_positive">SİL</string>
+    <string name="delete_bookmark_title" translatable="false">Yer imi silinsin mi?</string>
+    <string name="description_1">Yatay olarak hızlıca kaydırarak tarama geçmişinizde ileri ve geri gidin</string>
+    <string name="description_2">Bir yer işaretini kaydetmek için arama çubuğuna uzun basın</string>
+    <string name="description_3">İstediğiniz eylemi seçmek için bir bağlantıya veya görüntüye uzun basın</string>
+    <string name="description_about">Hızlı, hafif ve</string>
+    <string name="description_about_2">güzel bir tarayıcı</string>
+    <string name="dialog_cancel">İPTAL</string>
+    <string name="dialog_ok">TAMAM</string>
+    <string name="donate">BAĞIŞ</string>
+    <string name="donations_brioches">Bana bir çörek alın</string>
+    <string name="donations_coke">Bana bir kola alın</string>
+    <string name="donations_kebab">Bana bir kebap alın</string>
+    <string name="donations_king">Bana bir King Meal menüsü alın</string>
+    <string name="donations_pc">Bana yeni bir bilgisayar alın</string>
+    <string name="donations_present">Bana bir hediye alın</string>
+    <string name="general_1_title">Web sitesi</string>
+    <string name="general_2_title">Ara</string>
+    <string name="general_3_title">Diğerleri</string>
+    <string name="gestures">Jestler</string>
+    <string name="gestures_description">Soldan sağa veya tersine hızlıca kaydırarak geçmişinizde gezinebilirsiniz</string>
+    <string name="home_bookmarks">Yer imleri anasayfası</string>
+    <string name="home_bookmarks_description">Başlangıçta, ana sayfa olarak yer imleri ekranını başlatın</string>
+    <string name="home_hw">Donanım Hızlandırma</string>
+    <string name="home_hw_description">Donanım Hızlandırma performansı artırabilir, ancak pil ömrünü kısaltır</string>
+    <string name="homepage">Anasayfa</string>
+    <string name="homepage_sumamry">Tarayıcı açıldığında yüklenen ilk sayfayı değiştirir. Yerine varsayılan arama motorunu yüklemek için boş bırakın.</string>
+    <string name="libs_text">Kütüphaneler</string>
+    <string name="link_error">Bu URL bilinmiyor</string>
+    <string name="links_text">Daha fazlası</string>
+    <string name="menu_add">Kısayol ekle</string>
+    <string name="menu_bookmark">Yer imleri</string>
+    <string name="menu_clear">HEPSİNİ TEMİZLE</string>
+    <string name="menu_continue">Devam et</string>
+    <string name="menu_copy">Bağlantıyı kopyala</string>
+    <string name="menu_dekstop">Masaüstü görünümü</string>
+    <string name="menu_delete">Sil</string>
+    <string name="menu_history">Geçmiş</string>
+    <string name="menu_home">Anasayfa</string>
+    <string name="menu_new">Yeni sekme</string>
+    <string name="menu_open">Aç</string>
+    <string name="menu_open_copy_link">Bağlantıyı kopyala</string>
+    <string name="menu_open_new">Yeni bir sekmede aç</string>
+    <string name="menu_open_new_link">Bu bağlantıyı yeni bir sekmede aç</string>
+    <string name="menu_open_save_bookmark">Yer imlerine ekle</string>
+    <string name="menu_open_share_link">Bağlantıyı paylaş</string>
+    <string name="menu_private">Özel Mod</string>
+    <string name="menu_refresh">Yenile</string>
+    <string name="menu_rename">Yeniden adlandır</string>
+    <string name="menu_save_image">Görüntüyü kaydet</string>
+    <string name="menu_search_words">Sayfada bul</string>
+    <string name="menu_settings">Ayarlar</string>
+    <string name="menu_share">Paylaş</string>
+    <string name="msg_upload_failed">Yükleme başarısız> :(</string>
+    <string name="navbar_tint">Gezinti Çubuğu Rengi</string>
+    <string name="navbar_tint_summary">Gezinti çubuğunu uygulamanın renk şemasına tonlar. Bunun, fiziksel gezinti düğmesi olan cihazlarda çalışmayacağını unutmayın.</string>
+    <string name="new_incognito_tab">Yeni özel sekme</string>
+    <string name="new_tab">Yeni sekme</string>
+    <string name="no_connection">Colombo\'yu kullanmak için bir internet bağlantınız olmalı</string>
+    <string name="pref_adblock">AdBlock [BETA]</string>
+    <string name="pref_adblock_summary">Daha iyi gezinti için reklamları engelleyin</string>
+    <string name="pref_cookies">Çerezler</string>
+    <string name="pref_cookies_summary">Çerezler, sunucular tarafından giriş bilgilerinizi hatırlamak için kullanılır</string>
+    <string name="pref_dynamic_colors">Dinamik Renkler</string>
+    <string name="pref_dynamic_colors_summary">Renk şemasının web sitesine bağlı olarak değişip değişmeyeceğini etkiler</string>
+    <string name="pref_font">Özel Yazı Tipi</string>
+    <string name="pref_font_summary">Roboto yerine özel yazı tipi kullanın</string>
+    <string name="pref_header_about">Colombo Hakkında</string>
+    <string name="pref_header_appearance">Görünüm</string>
+    <string name="pref_header_appearance_summary">Colombo\'ya daha iyi bir görünüm verin</string>
+    <string name="pref_header_general">Genel</string>
+    <string name="pref_header_general_summary">Siteler için genel seçenekler ve daha fazlası</string>
+    <string name="pref_header_intro">Kılavuz</string>
+    <string name="pref_header_tutorial_summary">Colombo\'nun nasıl kullanılacağını öğrenin</string>
+    <string name="pref_javascript">JavaScript</string>
+    <string name="pref_javascript_summary">Bir web sitesi yüklendiğinde JavaScript\'in çalıştırılıp çalıştırılmayacağını değiştirir</string>
+    <string name="pref_light_icons">Koyu durum çubuğu simgeleri</string>
+    <string name="pref_light_icons_summary">Durum çubuğundaki simgeler koyu renkte olacak ve renk temalarının renkleri hafif olacak</string>
+    <string name="pref_location">Konum Hizmetleri</string>
+    <string name="pref_location_summary">Web sitelerinin konumunuza erişmesine izin ver</string>
+    <string name="pref_plugins">Eklentiler</string>
+    <string name="pref_plugins_summary">Bazı web sitelerinin düzgün çalışması için eklentilere ihtiyaç duyulmaktadır</string>
+    <string name="pref_sticky_header">Aramayı gizle</string>
+    <string name="pref_sticky_header_summary">Daha kapsamlı bir tarama deneyimi için sayfa kaydırıldığında aramayı gizle</string>
+    <string name="pref_zoom">Yakınlaştırma</string>
+    <string name="pref_zoom_summary">Çimdik hareketi kullanarak web sitelerinin yakınlaştırılmasını ve uzaklaştırılmasını sağlar</string>
+    <string name="rename_bookmark_title">Yer imini yeniden adlandırmak mı istiyorsunuz?</string>
+    <string name="restart_colombo">Değişiklikleri uygulamak için Colombo\'yu yeniden başlatın.</string>
+    <string name="search_engines">Arama Motorunu Değiştir</string>
+    <string name="search_engines_summary">Tarayıcı girişi bir URL değilse kullanılan arama motorunu değiştirir</string>
+    <string msgid="146198913615257606" name="search_menu_title">"Ara"</string>
+    <string name="search_open_dialog">Dışarıda Aç</string>
+    <string name="search_open_dialog_summary">Diğer uygulamalarla açılabilen bağlantıların nasıl işleneceğini değiştirin</string>
+    <string name="search_query">Ara</string>
+    <string name="shortcut_disabled">Kısayol kullanılamıyor</string>
+    <string msgid="2869576371154716097" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="tabs_error">Sekmeler Lollipop ve üst sürümler için kullanılabilir</string>
+    <string name="team_text">Takım</string>
+    <string name="title_1">Jestler</string>
+    <string name="title_2">Favorileriniz</string>
+    <string name="title_3">İçerik</string>
+    <string name="title_activity_about">Hakkında</string>
+    <string name="title_activity_history">Geçmiş</string>
+    <string name="tutorial">Öğreticiyi geçmek ister misiniz?</string>
+    <string name="url_search">Aranan Metin</string>
+    <string name="url_search_summary">Aradığınız sayfayı URL\'nin yerine gösterin</string>
+</resources>

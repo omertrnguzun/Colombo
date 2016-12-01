@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/debug/mipmap-xhdpi/ic_home_shortcut.png",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/src/main/res/mipmap-xhdpi/ic_home_shortcut.png"
+    },
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/debug/mipmap-xhdpi/ic_launcher.png",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
+    }
+]

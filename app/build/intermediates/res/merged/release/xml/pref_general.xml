@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/general_1_title">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="adblock"
+            android:summary="@string/pref_adblock_summary"
+            android:title="@string/pref_adblock" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="javascript"
+            android:summary="@string/pref_javascript_summary"
+            android:title="@string/pref_javascript" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="location_services"
+            android:summary="@string/pref_location_summary"
+            android:title="@string/pref_location" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="zooming"
+            android:summary="@string/pref_zoom_summary"
+            android:title="@string/pref_zoom" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="cookies"
+            android:summary="@string/pref_cookies_summary"
+            android:title="@string/pref_cookies" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="plugins"
+            android:summary="@string/pref_plugins_summary"
+            android:title="@string/pref_plugins" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/general_2_title">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/search_engines_titles"
+            android:entryValues="@array/search_engines_values"
+            android:key="search_engine"
+            android:summary="@string/search_engines_summary"
+            android:title="@string/search_engines" />
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="homepage"
+            android:summary="@string/homepage_sumamry"
+            android:title="@string/homepage" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/search_open_dialog_titles"
+            android:entryValues="@array/search_open_dialog_values"
+            android:key="show_open_dialog"
+            android:summary="@string/search_open_dialog_summary"
+            android:title="@string/search_open_dialog" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/general_3_title">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="hw_acceleration"
+            android:summary="@string/home_hw_description"
+            android:title="@string/home_hw" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="home_bookmarks"
+            android:summary="@string/home_bookmarks_description"
+            android:title="@string/home_bookmarks" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="gestures"
+            android:summary="@string/gestures_description"
+            android:title="@string/gestures" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="title_search"
+            android:summary="@string/url_search_summary"
+            android:title="@string/url_search" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

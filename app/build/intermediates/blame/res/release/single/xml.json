@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/release/xml/searchable.xml",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/src/main/res/xml/searchable.xml"
+    },
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/release/xml/pref_general.xml",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/src/main/res/xml/pref_general.xml"
+    },
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/release/xml/pref_appearance.xml",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/src/main/res/xml/pref_appearance.xml"
+    }
+]

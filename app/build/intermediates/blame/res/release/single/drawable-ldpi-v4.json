@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/release/drawable-ldpi-v4/ic_skip.png",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/exploded-aar/com.heinrichreimersoftware/material-intro/1.5.4/res/drawable-ldpi-v4/ic_skip.png"
+    },
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/release/drawable-ldpi-v4/ic_next.png",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/exploded-aar/com.heinrichreimersoftware/material-intro/1.5.4/res/drawable-ldpi-v4/ic_next.png"
+    },
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/release/drawable-ldpi-v4/ic_finish.png",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/exploded-aar/com.heinrichreimersoftware/material-intro/1.5.4/res/drawable-ldpi-v4/ic_finish.png"
+    },
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/release/drawable-ldpi-v4/md_nav_back.png",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/exploded-aar/com.afollestad.material-dialogs/core/0.8.6.1/res/drawable-ldpi-v4/md_nav_back.png"
+    },
+    {
+        "merged": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/res/merged/release/drawable-ldpi-v4/ic_previous.png",
+        "source": "/Users/riccardobusetti/StudioProjects/Colombo/app/build/intermediates/exploded-aar/com.heinrichreimersoftware/material-intro/1.5.4/res/drawable-ldpi-v4/ic_previous.png"
+    }
+]
