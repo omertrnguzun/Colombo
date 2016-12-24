@@ -1,6 +1,7 @@
 package com.synthform.colombo.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ public class CustomGestureDetector extends GestureDetector.SimpleOnGestureListen
                 return true;
             }
         } catch (Exception e) {
+            Log.e("gestureExceptio", e.toString());
         }
         return false;
     }

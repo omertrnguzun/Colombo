@@ -430,17 +430,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Snackbar.make(coordinatorLayout, R.string.msg_upload_failed, Snackbar.LENGTH_SHORT).show();
         }
-
-        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
-            ArrayList<String> matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            if (matches != null && matches.size() > 0) {
-                String searchWrd = matches.get(0);
-                if (!TextUtils.isEmpty(searchWrd)) {
-                    materialSearchView.setQuery(searchWrd, false);
-                }
-            }
-            return;
-        }
     }
 
     @Override
@@ -1751,6 +1740,7 @@ public class MainActivity extends AppCompatActivity {
                     if (!webView.getUrl().equals(cardData.get(pos).getCode())) {
                         webView.loadUrl(cardData.get(pos).getCode());
                     }
+                    materialSearchView.setSearchText(cardData.get(pos).getName());
                 }
             });
 
