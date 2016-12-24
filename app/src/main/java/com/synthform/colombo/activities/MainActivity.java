@@ -622,7 +622,7 @@ public class MainActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    @Override
+    /*@Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
@@ -632,7 +632,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         webView.restoreState(savedInstanceState);
-    }
+    }*/
 
     @Override
     protected void onStart() {
@@ -703,6 +703,7 @@ public class MainActivity extends AppCompatActivity {
 
         progressBarFrame = (RelativeLayout) findViewById(R.id.progress_container);
         progressBarFrame.setVisibility(View.GONE);
+        ExpandAnimationUtil.expand(progressBarFrame);
 
         cardSearch = (CardView) findViewById(R.id.card_search); // CardView with SearchView
         search = findViewById(R.id.search); // FrameLayout of cardSearch
@@ -1681,16 +1682,13 @@ public class MainActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap facIcon) {
             super.onPageStarted(view, url, facIcon);
             checkInternet();
-            ExpandAnimationUtil.expand(progressBarFrame);
             progressBar.setProgress(0);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            ExpandAnimationUtil.collapse(progressBarFrame);
-            progressBar.setProgress(100);
-
+            progressBar.setProgress(0);
             if (AppStatus.getInstance(MainActivity.this).isOnline()) {
                 if (prefs.getBoolean("title_search", true)) {
                     title.setText(webView.getTitle());
