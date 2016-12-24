@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Colombo</string>
-    <string name="app_name_private" translatable="false">Private</string>
 
     <string name="search_query">Ara</string>
 
@@ -141,7 +140,7 @@
     <string name="add_bookmark_content">Yer iminize bir isim verin!</string>
     <string name="tabs_error"><![CDATA[Sekmeler Lollipop ve üst sürümler için kullanılabilir]]></string>
     <string name="rename_bookmark_title">Yer imini yeniden adlandırmak mı istiyorsunuz?</string>
-    <string name="delete_bookmark_title" translatable="false">Yer imi silinsin mi?</string>
+    <string name="delete_bookmark_title">Yer imi silinsin mi?</string>
     <string name="delete_bookmark_positive">SİL</string>
     <string name="delete_bookmark_negative">İPTAL</string>
     <string name="url_search_summary">Aradığınız sayfayı URL\'nin yerine gösterin</string>
