@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Colombo</string>
+    <string name="app_name_private" translatable="false">Özel</string>
 
     <string name="search_query">Ara</string>
 
@@ -13,7 +14,7 @@
     <string name="dialog_ok">TAMAM</string>
     <string name="dialog_cancel">İPTAL</string>
 
-    <string name="msg_upload_failed">Yükleme başarısız> :(</string>
+    <string name="msg_upload_failed">Yükleme başarısız >:(</string>
 
     <string name="pref_header_appearance">Görünüm</string>
 
@@ -21,13 +22,13 @@
     <string name="pref_dynamic_colors_summary">Renk şemasının web sitesine bağlı olarak değişip değişmeyeceğini etkiler</string>
 
     <string name="navbar_tint">Gezinti Çubuğu Rengi</string>
-    <string name="navbar_tint_summary">Gezinti çubuğunu uygulamanın renk şemasına tonlar. Bunun, fiziksel gezinti düğmesi olan cihazlarda çalışmayacağını unutmayın.</string>
+    <string name="navbar_tint_summary">Gezinti çubuğunu web sitesinin renk şemasına tonlar. Bunun, fiziksel gezinti düğmesi olan cihazlarda çalışmayacağını unutmayın.</string>
 
     <string name="pref_javascript">JavaScript</string>
-    <string name="pref_javascript_summary">Bir web sitesi yüklendiğinde JavaScript\'in çalıştırılıp çalıştırılmayacağını değiştirir</string>
+    <string name="pref_javascript_summary">Bir web sitesi yüklendiğinde JavaScript'in çalıştırılıp çalıştırılmayacağını değiştirir</string>
 
     <string name="pref_location">Konum Hizmetleri</string>
-    <string name="pref_location_summary">Web sitelerinin konumunuza erişmesine izin ver</string>
+    <string name="pref_location_summary">Web sitelerinin konumunuza erişmesine izin verir</string>
 
     <string name="pref_zoom">Yakınlaştırma</string>
     <string name="pref_zoom_summary">Çimdik hareketi kullanarak web sitelerinin yakınlaştırılmasını ve uzaklaştırılmasını sağlar</string>
@@ -38,31 +39,31 @@
     <string name="search_engines_summary">Tarayıcı girişi bir URL değilse kullanılan arama motorunu değiştirir</string>
 
     <string name="pref_light_icons">Koyu durum çubuğu simgeleri</string>
-    <string name="pref_light_icons_summary">Durum çubuğundaki simgeler koyu renkte olacak ve renk temalarının renkleri hafif olacak</string>
+    <string name="pref_light_icons_summary">Durum çubuğundaki simgeler koyu renkte olur ve renk temalarının renkleri açık olur</string>
 
-    <string name="pref_header_tutorial_summary">Colombo\'nun nasıl kullanılacağını öğrenin</string>
+    <string name="pref_header_tutorial_summary">Colombo'nun nasıl kullanılacağını öğrenin</string>
 
     <string name="pref_header_intro">Kılavuz</string>
 
-    <string name="search_open_dialog">Dışarıda Aç</string>
-    <string name="search_open_dialog_summary">Diğer uygulamalarla açılabilen bağlantıların nasıl işleneceğini değiştirin</string>
+    <string name="search_open_dialog">Harici Aç</string>
+    <string name="search_open_dialog_summary">Diğer uygulamalar ile açılabilen bağlantıların nasıl işleneceğini değiştirin</string>
 
     <string name="pref_cookies">Çerezler</string>
     <string name="pref_cookies_summary">Çerezler, sunucular tarafından giriş bilgilerinizi hatırlamak için kullanılır</string>
 
     <string name="homepage">Anasayfa</string>
-    <string name="homepage_sumamry">Tarayıcı açıldığında yüklenen ilk sayfayı değiştirir. Yerine varsayılan arama motorunu yüklemek için boş bırakın.</string>
+    <string name="homepage_sumamry">Tarayıcı açıldığındaki yüklenen ilk sayfayı değiştirir. Yerine varsayılan arama motorunu yüklemek için boş bırakın.</string>
 
     <string name="home_bookmarks">Yer imleri anasayfası</string>
-    <string name="home_bookmarks_description">Başlangıçta, ana sayfa olarak yer imleri ekranını başlatın</string>
+    <string name="home_bookmarks_description">Başlangıçta, ana sayfa olarak yer imleri ekranını başlatır</string>
 
     <string name="pref_sticky_header">Aramayı gizle</string>
-    <string name="pref_sticky_header_summary">Daha kapsamlı bir tarama deneyimi için sayfa kaydırıldığında aramayı gizle</string>
+    <string name="pref_sticky_header_summary">Daha kapsamlı bir tarama deneyimi için sayfa kaydırıldığında aramayı gizler</string>
 
     <string name="pref_adblock">AdBlock [BETA]</string>
-    <string name="pref_adblock_summary">Daha iyi gezinti için reklamları engelleyin</string>
+    <string name="pref_adblock_summary">Daha iyi gezinti için reklamları engeller</string>
 
-    <string name="pref_font_summary">Roboto yerine özel yazı tipi kullanın</string>
+    <string name="pref_font_summary">Roboto yerine özel yazı tipini kullanır</string>
     <string name="pref_font">Özel Yazı Tipi</string>
 
     <string-array name="search_engines_titles">
@@ -81,7 +82,7 @@
 
     <string-array name="search_open_dialog_titles">
         <item>Her zaman aç</item>
-        <item>Uygulamayı aç (varsa)</item>
+        <item>Uygulamayı aç (Eğer varsa)</item>
         <item>Bağlantıyı aç</item>
     </string-array>
 
@@ -113,7 +114,7 @@
     <string name="appearence_1_title">UI</string>
     <string name="appearence_2_title">UX</string>
 
-    <string name="title_1">Jestler</string>
+        <string name="title_1">Hareketler</string>
     <string name="description_1">Yatay olarak hızlıca kaydırarak tarama geçmişinizde ileri ve geri gidin</string>
 
     <string name="title_2">Favorileriniz</string>
@@ -121,14 +122,14 @@
     <string name="title_3">İçerik</string>
     <string name="description_3">İstediğiniz eylemi seçmek için bir bağlantıya veya görüntüye uzun basın</string>
 
-    <string name="gestures">Jestler</string>
+    <string name="gestures">Hareketler</string>
     <string name="gestures_description">Soldan sağa veya tersine hızlıca kaydırarak geçmişinizde gezinebilirsiniz</string>
 
     <string name="menu_search_words">Sayfada bul</string>
 
     <string name="menu_bookmark">Yer imleri</string>
     <string name="app_name_incognito">Gizli Colombo</string>
-    <string name="no_connection">Colombo\'yu kullanmak için bir internet bağlantınız olmalı</string>
+    <string name="no_connection">Colombo'yu kullanmak için bir internet bağlantınız olmalı</string>
     <string name="tutorial">Öğreticiyi geçmek ister misiniz?</string>
     <string name="description_about">Hızlı, hafif ve</string>
     <string name="description_about_2">güzel bir tarayıcı</string>
@@ -138,14 +139,14 @@
 
     <string name="add_bookmark_title">Yer imi olarak ekleyin</string>
     <string name="add_bookmark_content">Yer iminize bir isim verin!</string>
-    <string name="tabs_error"><![CDATA[Sekmeler Lollipop ve üst sürümler için kullanılabilir]]></string>
+    <string name="tabs_error"><![CDATA[Sekmeler Lollipop ve üstü sürümler için kullanılabilir]]></string>
     <string name="rename_bookmark_title">Yer imini yeniden adlandırmak mı istiyorsunuz?</string>
     <string name="delete_bookmark_title">Yer imi silinsin mi?</string>
     <string name="delete_bookmark_positive">SİL</string>
     <string name="delete_bookmark_negative">İPTAL</string>
     <string name="url_search_summary">Aradığınız sayfayı URL\'nin yerine gösterin</string>
     <string name="url_search">Aranan Metin</string>
-    <string name="restart_colombo">Değişiklikleri uygulamak için Colombo\'yu yeniden başlatın.</string>
+    <string name="restart_colombo">Değişiklikleri uygulamak için Colombo'yu yeniden başlatın.</string>
     <string name="link_error">Bu URL bilinmiyor</string>
     <string name="pref_plugins">Eklentiler</string>
     <string name="pref_plugins_summary">Bazı web sitelerinin düzgün çalışması için eklentilere ihtiyaç duyulmaktadır</string>
@@ -164,7 +165,7 @@
 
     <string name="title_activity_about">Hakkında</string>
     <string name="pref_header_general_summary">Siteler için genel seçenekler ve daha fazlası</string>
-    <string name="pref_header_appearance_summary">Colombo\'ya daha iyi bir görünüm verin</string>
+    <string name="pref_header_appearance_summary">Colombo'ya daha iyi bir görünüm verin</string>
 
     <string name="new_tab">Yeni sekme</string>
     <string name="new_incognito_tab">Yeni özel sekme</string>
