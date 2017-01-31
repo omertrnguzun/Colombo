@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Colombo</string>
-    <string name="app_name_private" translatable="false">Özel</string>
+    <string name="app_name_private" translatable="false">Private</string>
 
     <string name="search_query">Ara</string>
 
     <string name="menu_home">Anasayfa</string>
     <string name="menu_refresh">Yenile</string>
-    <string name="menu_private">Özel Mod</string>
+    <string name="menu_private">Gizli Mod</string>
     <string name="menu_share">Paylaş</string>
     <string name="menu_settings">Ayarlar</string>
 
@@ -55,13 +55,13 @@
     <string name="homepage_sumamry">Tarayıcı açıldığındaki yüklenen ilk sayfayı değiştirir. Yerine varsayılan arama motorunu yüklemek için boş bırakın.</string>
 
     <string name="home_bookmarks">Yer imleri anasayfası</string>
-    <string name="home_bookmarks_description">Başlangıçta, ana sayfa olarak yer imleri ekranını başlatır</string>
+    <string name="home_bookmarks_description">Başlangıçta, ana sayfa olarak yer imleri sayfasını başlatır</string>
 
     <string name="pref_sticky_header">Aramayı gizle</string>
     <string name="pref_sticky_header_summary">Daha kapsamlı bir tarama deneyimi için sayfa kaydırıldığında aramayı gizler</string>
 
     <string name="pref_adblock">AdBlock [BETA]</string>
-    <string name="pref_adblock_summary">Daha iyi gezinti için reklamları engeller</string>
+    <string name="pref_adblock_summary">Daha iyi bir gezinti için reklamları engeller</string>
 
     <string name="pref_font_summary">Roboto yerine özel yazı tipini kullanır</string>
     <string name="pref_font">Özel Yazı Tipi</string>
@@ -114,15 +114,15 @@
     <string name="appearence_1_title">UI</string>
     <string name="appearence_2_title">UX</string>
 
-        <string name="title_1">Hareketler</string>
-    <string name="description_1">Yatay olarak hızlıca kaydırarak tarama geçmişinizde ileri ve geri gidin</string>
+        <string name="title_1">Jestler</string>
+    <string name="description_1">Yatay olarak hızlıca kaydırarak tarama geçmişinizde ileriye ve geriye gidin</string>
 
     <string name="title_2">Favorileriniz</string>
-    <string name="description_2">Bir yer işaretini kaydetmek için arama çubuğuna uzun basın</string>
+    <string name="description_2">Bir yer imi kaydetmek için arama çubuğuna uzun basın</string>
     <string name="title_3">İçerik</string>
     <string name="description_3">İstediğiniz eylemi seçmek için bir bağlantıya veya görüntüye uzun basın</string>
 
-    <string name="gestures">Hareketler</string>
+    <string name="gestures">Jestler</string>
     <string name="gestures_description">Soldan sağa veya tersine hızlıca kaydırarak geçmişinizde gezinebilirsiniz</string>
 
     <string name="menu_search_words">Sayfada bul</string>
@@ -130,7 +130,7 @@
     <string name="menu_bookmark">Yer imleri</string>
     <string name="app_name_incognito">Gizli Colombo</string>
     <string name="no_connection">Colombo'yu kullanmak için bir internet bağlantınız olmalı</string>
-    <string name="tutorial">Öğreticiyi geçmek ister misiniz?</string>
+    <string name="tutorial">Öğreticiye geçmek ister misiniz?</string>
     <string name="description_about">Hızlı, hafif ve</string>
     <string name="description_about_2">güzel bir tarayıcı</string>
     <string name="team_text">Takım</string>
@@ -168,7 +168,7 @@
     <string name="pref_header_appearance_summary">Colombo'ya daha iyi bir görünüm verin</string>
 
     <string name="new_tab">Yeni sekme</string>
-    <string name="new_incognito_tab">Yeni özel sekme</string>
+    <string name="new_incognito_tab">Yeni gizli sekme</string>
     <string name="shortcut_disabled">Kısayol kullanılamıyor</string>
     <string name="menu_copy">Bağlantıyı kopyala</string>
 
